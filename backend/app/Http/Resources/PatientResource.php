@@ -18,6 +18,7 @@ class PatientResource extends BaseResource
             $includesData = [];
             $data = [
                 'id'              => $this->id,
+                'mrn'             => $this->mrn,
                 'title'           => $this->title,
                 'first_name'      => $this->first_name,
                 'middle_name'     => $this->middle_name,

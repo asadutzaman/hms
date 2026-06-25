@@ -82,6 +82,8 @@ class Patient extends BaseModel
         'created_by'    => 'integer',
         'updated_by'    => 'integer',
         'status'        => 'integer',
+        // String
+        'mrn'           => 'string',
         // Decimal
         'amount'        => 'decimal:4',
         //Date

@@ -46,6 +46,8 @@ import _StockTransferApi from './Inventory/StockTransfer.api'
 import _StockTransferApprovalApi from './Inventory/StockTransferApproval.api'
 // Report
 import _ReportInvApi from './Inventory/ReportInv.api'
+// PATIENT
+import _PatientApi from './Patient/Patient.api'
 
 export const FackApi = new _FackApi()
 export const OauthApi = new _OauthApi()
@@ -95,3 +97,5 @@ export const StockTransferApi = new _StockTransferApi()
 export const StockTransferApprovalApi = new _StockTransferApprovalApi()
 // Report
 export const ReportInvApi = new _ReportInvApi()
+// PATIENT
+export const PatientApi = new _PatientApi()

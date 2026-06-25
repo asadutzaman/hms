@@ -174,6 +174,28 @@ export const LeftSidebarMenu = [
 
   {
     type: 'group',
+    title: 'Patient Management',
+    hidden: false,
+    children: [
+      {
+        type: 'item',
+        title: 'Patients',
+        permission: 'auth:patient:menuAccess',
+        link: {
+          to: '/admin/patient/list',
+          exactMatch: true,
+          externalUrl: false,
+          openInNewTab: false,
+        },
+        icon: 'people',
+        subParent: false,
+        subChildren: [],
+      },
+    ],
+  },
+
+  {
+    type: 'group',
     title: 'Back Office Setup',
     hidden: true,
     children: [

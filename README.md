@@ -90,3 +90,7 @@ Password: 123456
 ```
 
 #
+
+# run db seed json file for permission
+php artisan db:seed PermissionsSeeder
+hms/patientPermission.json

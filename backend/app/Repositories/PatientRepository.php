@@ -16,7 +16,7 @@ class PatientRepository extends BaseRepository
 
     protected $oDataService;
 
-    protected $fieldSearchable = ['first_name', 'mrn'];
+    protected $fieldSearchable = ['first_name', 'last_name', 'primary_phone', 'mrn'];
 
     public function __construct()
     {

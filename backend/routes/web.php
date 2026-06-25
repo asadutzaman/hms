@@ -1124,4 +1124,31 @@ Route::prefix('api')->group(function () {
 
     // EXPORT
     Route::group(['prefix' => 'export', 'middleware' => ['restrictIp', 'authVerify']], function () {});
+
+    // PATIENT
+    Route::group(['prefix' => 'patient', 'middleware' => ['restrictIp', 'authVerify']], function () {
+        // Bulk Actions
+        Route::post('/bulk', [App\Http\Controllers\PatientController::class, 'bulk']);
+
+        // Drop Down List
+        Route::get('/dropdown', [App\Http\Controllers\PatientController::class, 'dropdown']);
+
+        // Get All
+        Route::get('/', [App\Http\Controllers\PatientController::class, 'index']);
+
+        // Get One
+        Route::get('/{id}', [App\Http\Controllers\PatientController::class, 'show']);
+
+        // Create
+        Route::post('/', [App\Http\Controllers\PatientController::class, 'store']);
+
+        // Update (Check Validation)
+        Route::put('/{id}', [App\Http\Controllers\PatientController::class, 'update']);
+
+        // Update Partial (Without Validation)
+        Route::patch('/{id}', [App\Http\Controllers\PatientController::class, 'updateFields']);
+
+        // Delete
+        Route::delete('/{id}', [App\Http\Controllers\PatientController::class, 'destroy']);
+    });
 });

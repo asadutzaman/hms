@@ -6,11 +6,6 @@ use Illuminate\Support\Facades\Schema;
 
 class CreatePatientsTable extends Migration
 {
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
     public function up()
     {
         Schema::create('patients', function (Blueprint $table) {
@@ -24,7 +19,7 @@ class CreatePatientsTable extends Migration
             $table->string('first_name', 100);
             $table->string('middle_name', 100)->nullable();
             $table->string('last_name', 100);
-            $table->string('full_name')->virtualAs('CONCAT_WS(" ", first_name, middle_name, last_name)');
+            // $table->string('full_name')->virtualAs('CONCAT_WS(" ", first_name, middle_name, last_name)');
 
             // Demographics
             $table->date('date_of_birth');
@@ -43,26 +38,27 @@ class CreatePatientsTable extends Migration
             $table->string('emergency_contact_phone', 20)->nullable();
             $table->string('emergency_contact_relation', 50)->nullable();
 
-            // Addresses
+            // Current Address
             $table->text('current_address')->nullable();
             $table->string('current_city', 50)->nullable();
             $table->string('current_state', 50)->nullable();
             $table->string('current_country', 50)->nullable();
             $table->string('current_pincode', 10)->nullable();
 
+            // Permanent Address
             $table->text('permanent_address')->nullable();
             $table->string('permanent_city', 50)->nullable();
             $table->string('permanent_state', 50)->nullable();
             $table->string('permanent_country', 50)->nullable();
             $table->string('permanent_pincode', 10)->nullable();
 
-            // IDs
+            // ID Documents
             $table->string('pan_number', 14)->nullable()->unique();
             $table->string('voter_id', 20)->nullable()->unique();
             $table->string('driving_license', 20)->nullable()->unique();
             $table->string('passport_number', 20)->nullable()->unique();
 
-            // Medical
+            // Medical History
             $table->text('known_allergies')->nullable();
             $table->text('chronic_diseases')->nullable();
             $table->text('current_medications')->nullable();
@@ -78,42 +74,35 @@ class CreatePatientsTable extends Migration
             $table->string('insurance_group_number', 50)->nullable();
             $table->string('insurance_phone', 20)->nullable();
 
-            // Status
-            $table->enum('status', ['active', 'inactive', 'deceased', 'archived'])->default('active');
+            // Flags
             $table->boolean('is_sensitive')->default(false);
             $table->boolean('is_vip')->default(false);
             $table->boolean('consent_signed')->default(false);
             $table->timestamp('consent_signed_at')->nullable();
             $table->text('special_notes')->nullable();
 
-            // Audit
+            // Audit & Tracking
             $table->timestamp('registration_date')->useCurrent();
             $table->timestamp('last_visit_date')->nullable();
             $table->integer('total_visits')->default(0);
             $table->foreignId('registered_by')->nullable()->constrained('users')->nullOnDelete();
-            $table->foreignId('updated_by')->nullable()->constrained('users')->nullOnDelete();
 
+            // Standard columns
             $table->unsignedBigInteger('created_by')->nullable();
             $table->unsignedBigInteger('updated_by')->nullable();
+            $table->integer('sort_order')->default(0);
+            $table->tinyInteger('status')->default(1);
             $table->softDeletes();
             $table->timestamps();
-            $table->integer('sort_order')->default(0);
-            $table->boolean('status')->default(1);
 
             // Indexes
             $table->index(['first_name', 'last_name']);
             $table->index(['date_of_birth', 'gender']);
             $table->index(['status', 'deleted_at']);
-            $table->index(['city', 'state']);
-            $table->index(['mrn']);
+            $table->index(['current_city', 'current_state']);
         });
     }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
     public function down()
     {
         Schema::dropIfExists('patients');
