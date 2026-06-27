@@ -1136,6 +1136,12 @@ Route::prefix('api')->group(function () {
         // Get All
         Route::get('/', [App\Http\Controllers\PatientController::class, 'index']);
 
+        // Static sub-paths must be declared BEFORE the /{id} catch-all,
+        // otherwise Laravel matches e.g. "get-by-where" as $id and passes it
+        // to the bigint `id` column, which Postgres rejects with:
+        //   SQLSTATE[22P02]: invalid input syntax for type bigint
+        Route::get('/get-by-where', [App\Http\Controllers\PatientController::class, 'getByWhere']);
+
         // Get One
         Route::get('/{id}', [App\Http\Controllers\PatientController::class, 'show']);
 
@@ -1150,5 +1156,70 @@ Route::prefix('api')->group(function () {
 
         // Delete
         Route::delete('/{id}', [App\Http\Controllers\PatientController::class, 'destroy']);
+    });
+
+    // APPOINTMENT
+    Route::group(['prefix' => 'appointment', 'middleware' => ['restrictIp', 'authVerify']], function () {
+        // Bulk Actions
+        Route::post('/bulk', [App\Http\Controllers\AppointmentController::class, 'bulk']);
+
+        // Drop Down List
+        Route::get('/dropdown', [App\Http\Controllers\AppointmentController::class, 'dropdown']);
+
+        // Standard CRUD
+        Route::get('/', [App\Http\Controllers\AppointmentController::class, 'index']);
+        Route::get('/{id}', [App\Http\Controllers\AppointmentController::class, 'show']);
+        Route::post('/', [App\Http\Controllers\AppointmentController::class, 'store']);
+        Route::put('/{id}', [App\Http\Controllers\AppointmentController::class, 'update']);
+        Route::patch('/{id}', [App\Http\Controllers\AppointmentController::class, 'updateFields']);
+        Route::delete('/{id}', [App\Http\Controllers\AppointmentController::class, 'destroy']);
+
+        // Walk-in quick entry (force type=WALK_IN server-side)
+        Route::post('/walk-in', [App\Http\Controllers\AppointmentController::class, 'walkIn']);
+
+        // Lifecycle actions
+        Route::post('/{id}/cancel', [App\Http\Controllers\AppointmentController::class, 'cancel']);
+        Route::post('/{id}/reschedule', [App\Http\Controllers\AppointmentController::class, 'reschedule']);
+        Route::post('/{id}/check-in', [App\Http\Controllers\AppointmentController::class, 'checkIn']);
+        Route::post('/{id}/start', [App\Http\Controllers\AppointmentController::class, 'startConsultation']);
+        Route::post('/{id}/complete', [App\Http\Controllers\AppointmentController::class, 'complete']);
+        Route::post('/{id}/no-show', [App\Http\Controllers\AppointmentController::class, 'noShow']);
+
+        // Query helpers
+        Route::get('/available-slots', [App\Http\Controllers\AppointmentController::class, 'availableSlots']);
+        Route::get('/queue/doctor/{doctorId}', [App\Http\Controllers\AppointmentController::class, 'queue']);
+        Route::get('/{id}/audit-log', [App\Http\Controllers\AppointmentController::class, 'auditLog']);
+    });
+
+    // DOCTOR SCHEDULE
+    Route::group(['prefix' => 'doctor-schedule', 'middleware' => ['restrictIp', 'authVerify']], function () {
+        Route::post('/bulk', [App\Http\Controllers\DoctorScheduleController::class, 'bulk']);
+        Route::get('/dropdown', [App\Http\Controllers\DoctorScheduleController::class, 'dropdown']);
+        Route::get('/', [App\Http\Controllers\DoctorScheduleController::class, 'index']);
+        Route::get('/{id}', [App\Http\Controllers\DoctorScheduleController::class, 'show']);
+        Route::post('/', [App\Http\Controllers\DoctorScheduleController::class, 'store']);
+        Route::put('/{id}', [App\Http\Controllers\DoctorScheduleController::class, 'update']);
+        Route::patch('/{id}', [App\Http\Controllers\DoctorScheduleController::class, 'updateFields']);
+        Route::delete('/{id}', [App\Http\Controllers\DoctorScheduleController::class, 'destroy']);
+
+        // Slot materialization
+        Route::post('/{id}/generate-slots', [App\Http\Controllers\DoctorScheduleController::class, 'generateSlots']);
+        Route::get('/available-slots', [App\Http\Controllers\DoctorScheduleController::class, 'availableSlots']);
+    });
+
+    // APPOINTMENT WAITLIST
+    Route::group(['prefix' => 'appointment-waitlist', 'middleware' => ['restrictIp', 'authVerify']], function () {
+        Route::post('/bulk', [App\Http\Controllers\AppointmentWaitlistController::class, 'bulk']);
+        Route::get('/dropdown', [App\Http\Controllers\AppointmentWaitlistController::class, 'dropdown']);
+        Route::get('/', [App\Http\Controllers\AppointmentWaitlistController::class, 'index']);
+        Route::get('/{id}', [App\Http\Controllers\AppointmentWaitlistController::class, 'show']);
+        Route::post('/', [App\Http\Controllers\AppointmentWaitlistController::class, 'store']);
+        Route::put('/{id}', [App\Http\Controllers\AppointmentWaitlistController::class, 'update']);
+        Route::patch('/{id}', [App\Http\Controllers\AppointmentWaitlistController::class, 'updateFields']);
+        Route::delete('/{id}', [App\Http\Controllers\AppointmentWaitlistController::class, 'destroy']);
+
+        Route::post('/{id}/notify', [App\Http\Controllers\AppointmentWaitlistController::class, 'notify']);
+        Route::post('/{id}/convert', [App\Http\Controllers\AppointmentWaitlistController::class, 'convert']);
+        Route::post('/{id}/expire', [App\Http\Controllers\AppointmentWaitlistController::class, 'expire']);
     });
 });

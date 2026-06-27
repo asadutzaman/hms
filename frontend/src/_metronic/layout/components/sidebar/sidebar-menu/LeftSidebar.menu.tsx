@@ -196,6 +196,79 @@ export const LeftSidebarMenu = [
 
   {
     type: 'group',
+    title: 'Appointment Management',
+    hidden: false,
+    children: [
+      {
+        type: 'item',
+        title: 'Appointments',
+        permission: 'auth:appointment:menuAccess',
+        link: { to: '/' },
+        icon: 'calendar',
+        subParent: true,
+        subChildren: [
+          {
+            type: 'item',
+            title: 'All Appointments',
+            permission: 'auth:appointment:menuAccess',
+            link: {
+              to: '/admin/appointment/list',
+              exactMatch: true,
+              externalUrl: false,
+              openInNewTab: false,
+            },
+          },
+          {
+            type: 'item',
+            title: 'New Appointment',
+            permission: 'auth:appointment:create',
+            link: {
+              to: '/admin/appointment/create',
+              exactMatch: true,
+              externalUrl: false,
+              openInNewTab: false,
+            },
+          },
+          {
+            type: 'item',
+            title: 'Walk-in',
+            permission: 'auth:appointment:create',
+            link: {
+              to: '/admin/appointment/walk-in',
+              exactMatch: true,
+              externalUrl: false,
+              openInNewTab: false,
+            },
+          },
+          {
+            type: 'item',
+            title: 'Queue Board',
+            permission: 'auth:appointment:view',
+            link: {
+              to: '/admin/appointment/queue',
+              exactMatch: true,
+              externalUrl: false,
+              openInNewTab: false,
+            },
+          },
+          {
+            type: 'item',
+            title: 'Doctor Schedules',
+            permission: 'auth:doctor-schedule:menuAccess',
+            link: {
+              to: '/admin/appointment/schedules',
+              exactMatch: true,
+              externalUrl: false,
+              openInNewTab: false,
+            },
+          },
+        ],
+      },
+    ],
+  },
+
+  {
+    type: 'group',
     title: 'Back Office Setup',
     hidden: true,
     children: [

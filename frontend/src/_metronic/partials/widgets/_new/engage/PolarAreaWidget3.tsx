@@ -122,7 +122,7 @@ const PolarAreaWidget3 = ({
       <div className="card-header pt-5 ribbon ribbon-top ribbon-vertical">
         {ribbon}
         <h3 className="card-title d-flex align-items-center justify-content-between w-100">
-          <span className="fw-bold text-gray-900">{t(title)}</span>
+          <span className="fw-bold text-gray-900">{t(title!)}</span>
           <button
             type="button"
             className="btn btn-light-primary me-3 float-end"

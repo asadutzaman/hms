@@ -48,6 +48,10 @@ import _StockTransferApprovalApi from './Inventory/StockTransferApproval.api'
 import _ReportInvApi from './Inventory/ReportInv.api'
 // PATIENT
 import _PatientApi from './Patient/Patient.api'
+// APPOINTMENT
+import _AppointmentApi from './Appointment/Appointment.api'
+import _DoctorScheduleApi from './DoctorSchedule/DoctorSchedule.api'
+import _AppointmentWaitlistApi from './AppointmentWaitlist/AppointmentWaitlist.api'
 
 export const FackApi = new _FackApi()
 export const OauthApi = new _OauthApi()
@@ -99,3 +103,7 @@ export const StockTransferApprovalApi = new _StockTransferApprovalApi()
 export const ReportInvApi = new _ReportInvApi()
 // PATIENT
 export const PatientApi = new _PatientApi()
+// APPOINTMENT
+export const AppointmentApi = new _AppointmentApi()
+export const DoctorScheduleApi = new _DoctorScheduleApi()
+export const AppointmentWaitlistApi = new _AppointmentWaitlistApi()
