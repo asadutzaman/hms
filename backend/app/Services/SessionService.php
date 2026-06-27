@@ -168,31 +168,31 @@ class SessionService
     public function getUserData()
     {
         return [
-            'id' => $this->userData->id ?? '',
-            'uuid' => $this->userData->uuid ?? '',
-            'name' => $this->userData->name ?? '',
-            'email' => $this->userData->email ?? '',
-            'phone' => $this->userData->phone ?? '',
-            'branch_id' => $this->userData->branch_id ?? '',
-            'logistic_id' => $this->userData->logistic_id ?? '',
-            'is_verified' => $this->userData->is_verified ?? '',
-            'status' => $this->userData->status ?? '',
+            'id' => $this->userData->id ?? null,
+            'uuid' => $this->userData->uuid ?? null,
+            'name' => $this->userData->name ?? null,
+            'email' => $this->userData->email ?? null,
+            'phone' => $this->userData->phone ?? null,
+            'branch_id' => $this->userData->branch_id ?? null,
+            'logistic_id' => $this->userData->logistic_id ?? null,
+            'is_verified' => $this->userData->is_verified ?? null,
+            'status' => $this->userData->status ?? null,
         ];
     }
 
     public function getUserId()
     {
-        return $this->userData->id ?? '';
+        return $this->userData->id ?? null;
     }
 
     public function getUserDesignationId()
     {
-        return $this->userData->designation_id ?? '';
+        return $this->userData->designation_id ?? null;
     }
 
     public function getUserDepartmentId()
     {
-        return $this->userData->department_id ?? '';
+        return $this->userData->department_id ?? null;
     }
 
     public function getUserGroupIds()
@@ -242,7 +242,7 @@ class SessionService
 
     public function getOrganogramId()
     {
-        return $this->organogramId ?? '';
+        return $this->organogramId ?? null;
     }
 
     public function getAllUserAssignedOrganogramIds()

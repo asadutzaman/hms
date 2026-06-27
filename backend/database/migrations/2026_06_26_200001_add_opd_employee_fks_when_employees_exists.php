@@ -46,15 +46,19 @@ class AddOpdEmployeeFksWhenEmployeesExists extends Migration
             ['opd_bill_payments',        'paid_by',       'fk_opd_bill_paid_by',      'set null'],
         ];
 
+        $prefix = DB::getTablePrefix();
+        $employeesTable = $prefix . 'employees';
+
         foreach ($fks as [$table, $column, $name, $onDelete]) {
             if (!Schema::hasTable($table) || !Schema::hasColumn($table, $column)) {
                 continue;
             }
             try {
                 $onDeleteSql = $onDelete === 'restrict' ? 'RESTRICT' : 'SET NULL';
+                $prefixedTable = $prefix . $table;
                 DB::statement(
-                    "ALTER TABLE {$table} ADD CONSTRAINT {$name} " .
-                    "FOREIGN KEY ({$column}) REFERENCES employees(id) ON DELETE {$onDeleteSql}"
+                    "ALTER TABLE {$prefixedTable} ADD CONSTRAINT {$name} " .
+                    "FOREIGN KEY ({$column}) REFERENCES {$employeesTable}(id) ON DELETE {$onDeleteSql}"
                 );
             } catch (\Throwable $e) {
                 // FK already exists or constraint conflict — ignore (idempotent).
@@ -76,36 +80,28 @@ class AddOpdEmployeeFksWhenEmployeesExists extends Migration
             'fk_opd_bill_paid_by',
         ];
 
-        foreach ($names as $name) {
-            try {
-                DB::statement("ALTER TABLE opd_visits DROP CONSTRAINT IF EXISTS {$name}");
-            } catch (\Throwable $e) {
-                // ignore — table might not exist
+        $tables = [
+            'opd_visits',
+            'opd_visit_audit_logs',
+            'opd_prescriptions',
+            'opd_investigation_orders',
+            'opd_bills',
+            'opd_bill_payments',
+        ];
+
+        $prefix = DB::getTablePrefix();
+
+        foreach ($tables as $table) {
+            if (!Schema::hasTable($table)) {
+                continue;
             }
-            try {
-                DB::statement("ALTER TABLE opd_visit_audit_logs DROP CONSTRAINT IF EXISTS {$name}");
-            } catch (\Throwable $e) {
-                // ignore
-            }
-            try {
-                DB::statement("ALTER TABLE opd_prescriptions DROP CONSTRAINT IF EXISTS {$name}");
-            } catch (\Throwable $e) {
-                // ignore
-            }
-            try {
-                DB::statement("ALTER TABLE opd_investigation_orders DROP CONSTRAINT IF EXISTS {$name}");
-            } catch (\Throwable $e) {
-                // ignore
-            }
-            try {
-                DB::statement("ALTER TABLE opd_bills DROP CONSTRAINT IF EXISTS {$name}");
-            } catch (\Throwable $e) {
-                // ignore
-            }
-            try {
-                DB::statement("ALTER TABLE opd_bill_payments DROP CONSTRAINT IF EXISTS {$name}");
-            } catch (\Throwable $e) {
-                // ignore
+            $prefixedTable = $prefix . $table;
+            foreach ($names as $name) {
+                try {
+                    DB::statement("ALTER TABLE {$prefixedTable} DROP CONSTRAINT IF EXISTS {$name}");
+                } catch (\Throwable $e) {
+                    // ignore
+                }
             }
         }
     }

@@ -252,7 +252,6 @@ class OpdDemoSeeder extends Seeder
             [
                 'first_name'        => 'Rahim',
                 'last_name'         => 'Uddin',
-                'full_name'         => 'Rahim Uddin',
                 'date_of_birth'     => '1985-04-12',
                 'gender'            => 'male',
                 'blood_group'       => 'B+',
@@ -271,7 +270,6 @@ class OpdDemoSeeder extends Seeder
             [
                 'first_name'        => 'Karima',
                 'last_name'         => 'Begum',
-                'full_name'         => 'Karima Begum',
                 'date_of_birth'     => '1992-09-23',
                 'gender'            => 'female',
                 'blood_group'       => 'O+',

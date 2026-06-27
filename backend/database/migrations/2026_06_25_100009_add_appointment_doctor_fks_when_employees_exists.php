@@ -36,6 +36,7 @@ class AddAppointmentDoctorFksWhenEmployeesExists extends Migration
                 continue;
             }
 
+            $prefixedTable = DB::getTablePrefix() . $table;
             $constraintName = $table . '_doctor_id_foreign';
 
             $exists = DB::selectOne(
@@ -48,8 +49,8 @@ class AddAppointmentDoctorFksWhenEmployeesExists extends Migration
             }
 
             DB::statement(
-                "ALTER TABLE {$table} ADD CONSTRAINT {$constraintName} " .
-                "FOREIGN KEY (doctor_id) REFERENCES employees(id) ON DELETE {$onDelete}"
+                "ALTER TABLE {$prefixedTable} ADD CONSTRAINT {$constraintName} " .
+                "FOREIGN KEY (doctor_id) REFERENCES " . DB::getTablePrefix() . "employees(id) ON DELETE {$onDelete}"
             );
         }
     }
@@ -66,8 +67,12 @@ class AddAppointmentDoctorFksWhenEmployeesExists extends Migration
         ];
 
         foreach ($tables as $table) {
+            if (! Schema::hasTable($table)) {
+                continue;
+            }
+            $prefixedTable = DB::getTablePrefix() . $table;
             $constraintName = $table . '_doctor_id_foreign';
-            DB::statement("ALTER TABLE {$table} DROP CONSTRAINT IF EXISTS {$constraintName}");
+            DB::statement("ALTER TABLE {$prefixedTable} DROP CONSTRAINT IF EXISTS {$constraintName}");
         }
     }
 }

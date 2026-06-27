@@ -67,8 +67,6 @@ return new class extends Migration
             $table->string('uuid', 64)->nullable()->unique();
             $table->timestamps();
             $table->softDeletes();
-
-            $table->index('status');
         });
     }
 
