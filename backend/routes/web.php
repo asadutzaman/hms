@@ -1222,4 +1222,146 @@ Route::prefix('api')->group(function () {
         Route::post('/{id}/convert', [App\Http\Controllers\AppointmentWaitlistController::class, 'convert']);
         Route::post('/{id}/expire', [App\Http\Controllers\AppointmentWaitlistController::class, 'expire']);
     });
+
+    // OPD VISIT
+    Route::group(['prefix' => 'opd-visit', 'middleware' => ['restrictIp', 'authVerify']], function () {
+        Route::post('/bulk', [App\Http\Controllers\OpdVisitController::class, 'bulk']);
+        Route::get('/dropdown', [App\Http\Controllers\OpdVisitController::class, 'dropdown']);
+        Route::get('/', [App\Http\Controllers\OpdVisitController::class, 'index']);
+        Route::get('/today', [App\Http\Controllers\OpdVisitController::class, 'today']);
+        Route::get('/{id}', [App\Http\Controllers\OpdVisitController::class, 'show']);
+        Route::post('/', [App\Http\Controllers\OpdVisitController::class, 'store']);
+        Route::put('/{id}', [App\Http\Controllers\OpdVisitController::class, 'update']);
+        Route::patch('/{id}', [App\Http\Controllers\OpdVisitController::class, 'updateFields']);
+        Route::delete('/{id}', [App\Http\Controllers\OpdVisitController::class, 'destroy']);
+
+        Route::post('/{id}/transition', [App\Http\Controllers\OpdVisitController::class, 'transition']);
+        Route::post('/{id}/cancel', [App\Http\Controllers\OpdVisitController::class, 'cancel']);
+        Route::get('/{id}/audit-log', [App\Http\Controllers\OpdVisitController::class, 'auditLog']);
+    });
+
+    // OPD VITAL
+    Route::group(['prefix' => 'opd-vital', 'middleware' => ['restrictIp', 'authVerify']], function () {
+        Route::post('/bulk', [App\Http\Controllers\OpdVitalController::class, 'bulk']);
+        Route::get('/dropdown', [App\Http\Controllers\OpdVitalController::class, 'dropdown']);
+        Route::get('/', [App\Http\Controllers\OpdVitalController::class, 'index']);
+        Route::get('/{id}', [App\Http\Controllers\OpdVitalController::class, 'show']);
+        Route::post('/', [App\Http\Controllers\OpdVitalController::class, 'store']);
+        Route::put('/{id}', [App\Http\Controllers\OpdVitalController::class, 'update']);
+        Route::patch('/{id}', [App\Http\Controllers\OpdVitalController::class, 'updateFields']);
+        Route::delete('/{id}', [App\Http\Controllers\OpdVitalController::class, 'destroy']);
+    });
+
+    // OPD DIAGNOSIS
+    Route::group(['prefix' => 'opd-diagnosis', 'middleware' => ['restrictIp', 'authVerify']], function () {
+        Route::post('/bulk', [App\Http\Controllers\OpdDiagnosisController::class, 'bulk']);
+        Route::get('/dropdown', [App\Http\Controllers\OpdDiagnosisController::class, 'dropdown']);
+        Route::get('/', [App\Http\Controllers\OpdDiagnosisController::class, 'index']);
+        Route::get('/{id}', [App\Http\Controllers\OpdDiagnosisController::class, 'show']);
+        Route::post('/', [App\Http\Controllers\OpdDiagnosisController::class, 'store']);
+        Route::put('/{id}', [App\Http\Controllers\OpdDiagnosisController::class, 'update']);
+        Route::patch('/{id}', [App\Http\Controllers\OpdDiagnosisController::class, 'updateFields']);
+        Route::delete('/{id}', [App\Http\Controllers\OpdDiagnosisController::class, 'destroy']);
+    });
+
+    // OPD PRESCRIPTION
+    Route::group(['prefix' => 'opd-prescription', 'middleware' => ['restrictIp', 'authVerify']], function () {
+        Route::post('/bulk', [App\Http\Controllers\OpdPrescriptionController::class, 'bulk']);
+        Route::get('/dropdown', [App\Http\Controllers\OpdPrescriptionController::class, 'dropdown']);
+        Route::get('/', [App\Http\Controllers\OpdPrescriptionController::class, 'index']);
+        Route::get('/{id}', [App\Http\Controllers\OpdPrescriptionController::class, 'show']);
+        Route::post('/', [App\Http\Controllers\OpdPrescriptionController::class, 'store']);
+        Route::put('/{id}', [App\Http\Controllers\OpdPrescriptionController::class, 'update']);
+        Route::patch('/{id}', [App\Http\Controllers\OpdPrescriptionController::class, 'updateFields']);
+        Route::delete('/{id}', [App\Http\Controllers\OpdPrescriptionController::class, 'destroy']);
+    });
+
+    // OPD PRESCRIPTION ITEM
+    Route::group(['prefix' => 'opd-prescription-item', 'middleware' => ['restrictIp', 'authVerify']], function () {
+        Route::post('/bulk', [App\Http\Controllers\OpdPrescriptionItemController::class, 'bulk']);
+        Route::get('/dropdown', [App\Http\Controllers\OpdPrescriptionItemController::class, 'dropdown']);
+        Route::get('/', [App\Http\Controllers\OpdPrescriptionItemController::class, 'index']);
+        Route::get('/{id}', [App\Http\Controllers\OpdPrescriptionItemController::class, 'show']);
+        Route::post('/', [App\Http\Controllers\OpdPrescriptionItemController::class, 'store']);
+        Route::put('/{id}', [App\Http\Controllers\OpdPrescriptionItemController::class, 'update']);
+        Route::patch('/{id}', [App\Http\Controllers\OpdPrescriptionItemController::class, 'updateFields']);
+        Route::delete('/{id}', [App\Http\Controllers\OpdPrescriptionItemController::class, 'destroy']);
+    });
+
+    // OPD INVESTIGATION ORDER
+    Route::group(['prefix' => 'opd-investigation-order', 'middleware' => ['restrictIp', 'authVerify']], function () {
+        Route::post('/bulk', [App\Http\Controllers\OpdInvestigationOrderController::class, 'bulk']);
+        Route::get('/dropdown', [App\Http\Controllers\OpdInvestigationOrderController::class, 'dropdown']);
+        Route::get('/', [App\Http\Controllers\OpdInvestigationOrderController::class, 'index']);
+        Route::get('/{id}', [App\Http\Controllers\OpdInvestigationOrderController::class, 'show']);
+        Route::post('/', [App\Http\Controllers\OpdInvestigationOrderController::class, 'store']);
+        Route::put('/{id}', [App\Http\Controllers\OpdInvestigationOrderController::class, 'update']);
+        Route::patch('/{id}', [App\Http\Controllers\OpdInvestigationOrderController::class, 'updateFields']);
+        Route::delete('/{id}', [App\Http\Controllers\OpdInvestigationOrderController::class, 'destroy']);
+    });
+
+    // OPD INVESTIGATION ORDER ITEM
+    Route::group(['prefix' => 'opd-investigation-order-item', 'middleware' => ['restrictIp', 'authVerify']], function () {
+        Route::post('/bulk', [App\Http\Controllers\OpdInvestigationOrderItemController::class, 'bulk']);
+        Route::get('/dropdown', [App\Http\Controllers\OpdInvestigationOrderItemController::class, 'dropdown']);
+        Route::get('/', [App\Http\Controllers\OpdInvestigationOrderItemController::class, 'index']);
+        Route::get('/{id}', [App\Http\Controllers\OpdInvestigationOrderItemController::class, 'show']);
+        Route::post('/', [App\Http\Controllers\OpdInvestigationOrderItemController::class, 'store']);
+        Route::put('/{id}', [App\Http\Controllers\OpdInvestigationOrderItemController::class, 'update']);
+        Route::patch('/{id}', [App\Http\Controllers\OpdInvestigationOrderItemController::class, 'updateFields']);
+        Route::delete('/{id}', [App\Http\Controllers\OpdInvestigationOrderItemController::class, 'destroy']);
+    });
+
+    // OPD BILL
+    Route::group(['prefix' => 'opd-bill', 'middleware' => ['restrictIp', 'authVerify']], function () {
+        Route::post('/bulk', [App\Http\Controllers\OpdBillController::class, 'bulk']);
+        Route::get('/dropdown', [App\Http\Controllers\OpdBillController::class, 'dropdown']);
+        Route::get('/', [App\Http\Controllers\OpdBillController::class, 'index']);
+        Route::get('/by-visit/{visitId}', [App\Http\Controllers\OpdBillController::class, 'byVisit']);
+        Route::get('/{id}', [App\Http\Controllers\OpdBillController::class, 'show']);
+        Route::post('/', [App\Http\Controllers\OpdBillController::class, 'store']);
+        Route::post('/generate/{visitId}', [App\Http\Controllers\OpdBillController::class, 'generate']);
+        Route::put('/{id}', [App\Http\Controllers\OpdBillController::class, 'update']);
+        Route::patch('/{id}', [App\Http\Controllers\OpdBillController::class, 'updateFields']);
+        Route::delete('/{id}', [App\Http\Controllers\OpdBillController::class, 'destroy']);
+        Route::post('/{id}/payment', [App\Http\Controllers\OpdBillController::class, 'recordPayment']);
+        Route::post('/{id}/waive', [App\Http\Controllers\OpdBillController::class, 'waive']);
+        Route::get('/{id}/print', [App\Http\Controllers\OpdBillController::class, 'print']);
+    });
+
+    // OPD BILL ITEM
+    Route::group(['prefix' => 'opd-bill-item', 'middleware' => ['restrictIp', 'authVerify']], function () {
+        Route::post('/bulk', [App\Http\Controllers\OpdBillItemController::class, 'bulk']);
+        Route::get('/dropdown', [App\Http\Controllers\OpdBillItemController::class, 'dropdown']);
+        Route::get('/', [App\Http\Controllers\OpdBillItemController::class, 'index']);
+        Route::get('/{id}', [App\Http\Controllers\OpdBillItemController::class, 'show']);
+        Route::post('/', [App\Http\Controllers\OpdBillItemController::class, 'store']);
+        Route::put('/{id}', [App\Http\Controllers\OpdBillItemController::class, 'update']);
+        Route::patch('/{id}', [App\Http\Controllers\OpdBillItemController::class, 'updateFields']);
+        Route::delete('/{id}', [App\Http\Controllers\OpdBillItemController::class, 'destroy']);
+    });
+
+    // OPD BILL PAYMENT
+    Route::group(['prefix' => 'opd-bill-payment', 'middleware' => ['restrictIp', 'authVerify']], function () {
+        Route::post('/bulk', [App\Http\Controllers\OpdBillPaymentController::class, 'bulk']);
+        Route::get('/dropdown', [App\Http\Controllers\OpdBillPaymentController::class, 'dropdown']);
+        Route::get('/', [App\Http\Controllers\OpdBillPaymentController::class, 'index']);
+        Route::get('/{id}', [App\Http\Controllers\OpdBillPaymentController::class, 'show']);
+        Route::post('/', [App\Http\Controllers\OpdBillPaymentController::class, 'store']);
+        Route::put('/{id}', [App\Http\Controllers\OpdBillPaymentController::class, 'update']);
+        Route::patch('/{id}', [App\Http\Controllers\OpdBillPaymentController::class, 'updateFields']);
+        Route::delete('/{id}', [App\Http\Controllers\OpdBillPaymentController::class, 'destroy']);
+    });
+
+    // LAB TEST
+    Route::group(['prefix' => 'lab-test', 'middleware' => ['restrictIp', 'authVerify']], function () {
+        Route::post('/bulk', [App\Http\Controllers\LabTestController::class, 'bulk']);
+        Route::get('/dropdown', [App\Http\Controllers\LabTestController::class, 'dropdown']);
+        Route::get('/', [App\Http\Controllers\LabTestController::class, 'index']);
+        Route::get('/{id}', [App\Http\Controllers\LabTestController::class, 'show']);
+        Route::post('/', [App\Http\Controllers\LabTestController::class, 'store']);
+        Route::put('/{id}', [App\Http\Controllers\LabTestController::class, 'update']);
+        Route::patch('/{id}', [App\Http\Controllers\LabTestController::class, 'updateFields']);
+        Route::delete('/{id}', [App\Http\Controllers\LabTestController::class, 'destroy']);
+    });
 });

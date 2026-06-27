@@ -2,10 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use App\Validators\OpdBillValidator;
-use App\Repositories\OpdBillRepository;
+use App\Exceptions\ValidatorException;
 use App\Http\Resources\OpdBillResource;
+use App\Repositories\OpdBillRepository;
+use App\Services\Opd\OpdBillService;
 use App\Traits\Controller\RestControllerTrait;
+use App\Validators\OpdBillValidator;
+use App\Validators\OpdBillPaymentValidator;
+use Carbon\Carbon;
+use Exception;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\ValidationException;
 
 class OpdBillController extends Controller
 {
@@ -22,8 +31,110 @@ class OpdBillController extends Controller
     public function __construct(OpdBillRepository $repository, OpdBillValidator $validator)
     {
         $this->repository = $repository;
-        $this->validator = $validator;
-        $this->resource = OpdBillResource::class;
+        $this->validator  = $validator;
+        $this->resource   = OpdBillResource::class;
     }
 
+    /**
+     * POST /opd-bill/generate/{visitId} — generate bill for a visit.
+     */
+    public function generate(Request $request, $visitId)
+    {
+        DB::beginTransaction();
+        try {
+            $extras = $request->all();
+            $actorId = Auth::id();
+            $result = app(OpdBillService::class)->generate($visitId, $actorId, $extras);
+
+            DB::commit();
+            $response = new $this->resource($result->fresh(), false);
+            return $this->successResourceResponse($response);
+        } catch (ValidationException $e) {
+            DB::rollBack();
+            throw new ValidatorException($e);
+        } catch (Exception $e) {
+            DB::rollBack();
+            $this->errorResponse($e->getMessage());
+        }
+    }
+
+    /**
+     * POST /opd-bill/{id}/payment — record a payment.
+     */
+    public function recordPayment(Request $request, $id)
+    {
+        DB::beginTransaction();
+        try {
+            $this->validate($request, (new OpdBillPaymentValidator())->rules());
+            $data = $request->all();
+            $actorId = Auth::id();
+            $result = app(OpdBillService::class)->recordPayment($id, $data, $actorId);
+
+            DB::commit();
+            $response = new $this->resource($result->fresh(), false);
+            return $this->successResourceResponse($response);
+        } catch (ValidationException $e) {
+            DB::rollBack();
+            throw new ValidatorException($e);
+        } catch (Exception $e) {
+            DB::rollBack();
+            $this->errorResponse($e->getMessage());
+        }
+    }
+
+    /**
+     * POST /opd-bill/{id}/waive — waive the bill.
+     */
+    public function waive(Request $request, $id)
+    {
+        DB::beginTransaction();
+        try {
+            $request->validate([
+                'reason' => ['required', 'string', 'max:500'],
+            ]);
+            $reason = $request->input('reason');
+            $actorId = Auth::id();
+            $result = app(OpdBillService::class)->waive($id, $actorId, $reason);
+
+            DB::commit();
+            $response = new $this->resource($result->fresh(), false);
+            return $this->successResourceResponse($response);
+        } catch (ValidationException $e) {
+            DB::rollBack();
+            throw new ValidatorException($e);
+        } catch (Exception $e) {
+            DB::rollBack();
+            $this->errorResponse($e->getMessage());
+        }
+    }
+
+    /**
+     * GET /opd-bill/by-visit/{visitId} — get bill by visit id.
+     */
+    public function byVisit(Request $request, $visitId)
+    {
+        try {
+            $bill = app(OpdBillService::class)->findForVisit($visitId);
+            if (!$bill) {
+                $this->errorResponse('Bill not found for this visit.', 404);
+            }
+            $response = new $this->resource($bill, false);
+            return $this->successResourceResponse($response);
+        } catch (\Exception $e) {
+            $this->errorResponse($e->getMessage());
+        }
+    }
+
+    /**
+     * GET /opd-bill/{id}/print — get printable bill HTML.
+     */
+    public function print(Request $request, $id)
+    {
+        try {
+            $html = app(OpdBillService::class)->renderPrint($id);
+            return response($html)->header('Content-Type', 'text/html');
+        } catch (\Exception $e) {
+            $this->errorResponse($e->getMessage());
+        }
+    }
 }

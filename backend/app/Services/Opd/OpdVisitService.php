@@ -49,7 +49,7 @@ class OpdVisitService
             // If linked to an appointment, ensure the appointment is not already used
             $apptId = $data['appointment_id'] ?? null;
             if ($apptId) {
-                $appt = Appointment::query()->lockForUpdate()->find($apptId);
+                $appt = \App\Models\Appointment::query()->lockForUpdate()->find($apptId);
                 if (!$appt) {
                     throw new ApiException('Linked appointment does not exist.', 422);
                 }
@@ -62,8 +62,16 @@ class OpdVisitService
                 }
             }
 
+            // Generate OPD No using per-day sequence
+            $visitDate = $data['visit_date'] ?? now()->toDateString();
+            $data['opd_no'] = $this->visitRepo->generateOpdNo($visitDate);
+
+            // Generate token number
+            if (empty($data['token_number']) && !empty($data['doctor_id'])) {
+                $data['token_number'] = $this->visitRepo->getNextTokenNumber($data['doctor_id'], $visitDate);
+            }
+
             $visit = $this->visitRepo->create(array_merge($data, [
-                'status'      => $data['status'] ?? OpdVisitStatusEnum::WAITING,
                 'created_by'  => $actorId,
                 'updated_by'  => $actorId,
                 'created_at'  => now(),

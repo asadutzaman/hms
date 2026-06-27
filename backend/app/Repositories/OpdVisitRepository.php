@@ -336,4 +336,31 @@ class OpdVisitRepository extends BaseRepository
             OpdVisitActionEnum::STATUS_CHANGE,
         );
     }
+
+    public function getNextTokenNumber(int $doctorId, string $dateYmd): int
+    {
+        $max = $this->newQuery()
+            ->whereDate('visit_date', $dateYmd)
+            ->where('doctor_id', $doctorId)
+            ->max('token_number');
+
+        return ((int) $max) + 1;
+    }
+
+    public function getByDate(string $dateYmd)
+    {
+        return $this->newQuery()
+            ->with(['patient', 'doctor', 'department'])
+            ->whereDate('visit_date', $dateYmd)
+            ->orderBy('token_number')
+            ->get();
+    }
+
+    public function getAuditLogs(int $visitId)
+    {
+        return OpdVisitAuditLog::query()
+            ->where('opd_visit_id', $visitId)
+            ->orderByDesc('created_at')
+            ->get();
+    }
 }
