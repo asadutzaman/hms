@@ -1,0 +1,1015 @@
+{
+  "resource": {
+    "permission_type": "RESOURCE",
+    "name": "opd",
+    "display_name": "OPD",
+    "resource_uri": "opd",
+    "controller_name": "OpdVisitController",
+    "server_url_prefix": "auth",
+    "component": "COMMON"
+  },
+  "scopes": [
+    {
+      "scope": "auth:opd:menuAccess",
+      "display_name": "Menu Access",
+      "actions": [
+        {
+          "http_method": "GET",
+          "action_name": "index",
+          "uri": "/opd-visit"
+        }
+      ]
+    },
+    {
+      "scope": "auth:opd:list",
+      "display_name": "List",
+      "actions": [
+        {
+          "http_method": "GET",
+          "action_name": "index",
+          "uri": "/opd-visit"
+        },
+        {
+          "http_method": "GET",
+          "action_name": "dropdown",
+          "uri": "/opd-visit/dropdown"
+        },
+        {
+          "http_method": "GET",
+          "action_name": "today",
+          "uri": "/opd-visit/today"
+        }
+      ]
+    },
+    {
+      "scope": "auth:opd:view",
+      "display_name": "View",
+      "actions": [
+        {
+          "http_method": "GET",
+          "action_name": "show",
+          "uri": "/opd-visit/*"
+        },
+        {
+          "http_method": "GET",
+          "action_name": "auditLog",
+          "uri": "/opd-visit/*/audit-log"
+        }
+      ]
+    },
+    {
+      "scope": "auth:opd:create",
+      "display_name": "Create",
+      "actions": [
+        {
+          "http_method": "POST",
+          "action_name": "store",
+          "uri": "/opd-visit"
+        }
+      ]
+    },
+    {
+      "scope": "auth:opd:edit",
+      "display_name": "Edit",
+      "actions": [
+        {
+          "http_method": "PUT",
+          "action_name": "update",
+          "uri": "/opd-visit/*"
+        },
+        {
+          "http_method": "PATCH",
+          "action_name": "updateFields",
+          "uri": "/opd-visit/*"
+        },
+        {
+          "http_method": "POST",
+          "action_name": "transition",
+          "uri": "/opd-visit/*/transition"
+        }
+      ]
+    },
+    {
+      "scope": "auth:opd:delete",
+      "display_name": "Delete",
+      "actions": [
+        {
+          "http_method": "DELETE",
+          "action_name": "destroy",
+          "uri": "/opd-visit/*"
+        },
+        {
+          "http_method": "POST",
+          "action_name": "cancel",
+          "uri": "/opd-visit/*/cancel"
+        }
+      ]
+    },
+    {
+      "scope": "auth:opd:multiSelect",
+      "display_name": "Multiple Selection",
+      "actions": [
+        {
+          "http_method": "POST",
+          "action_name": "bulk",
+          "uri": "/opd-visit/bulk"
+        }
+      ]
+    },
+    {
+      "scope": "auth:opd-vital:menuAccess",
+      "display_name": "Menu Access",
+      "actions": [
+        {
+          "http_method": "GET",
+          "action_name": "index",
+          "uri": "/opd-vital"
+        }
+      ]
+    },
+    {
+      "scope": "auth:opd-vital:list",
+      "display_name": "List",
+      "actions": [
+        {
+          "http_method": "GET",
+          "action_name": "index",
+          "uri": "/opd-vital"
+        },
+        {
+          "http_method": "GET",
+          "action_name": "dropdown",
+          "uri": "/opd-vital/dropdown"
+        }
+      ]
+    },
+    {
+      "scope": "auth:opd-vital:view",
+      "display_name": "View",
+      "actions": [
+        {
+          "http_method": "GET",
+          "action_name": "show",
+          "uri": "/opd-vital/*"
+        }
+      ]
+    },
+    {
+      "scope": "auth:opd-vital:create",
+      "display_name": "Create",
+      "actions": [
+        {
+          "http_method": "POST",
+          "action_name": "store",
+          "uri": "/opd-vital"
+        }
+      ]
+    },
+    {
+      "scope": "auth:opd-vital:edit",
+      "display_name": "Edit",
+      "actions": [
+        {
+          "http_method": "PUT",
+          "action_name": "update",
+          "uri": "/opd-vital/*"
+        },
+        {
+          "http_method": "PATCH",
+          "action_name": "updateFields",
+          "uri": "/opd-vital/*"
+        }
+      ]
+    },
+    {
+      "scope": "auth:opd-vital:delete",
+      "display_name": "Delete",
+      "actions": [
+        {
+          "http_method": "DELETE",
+          "action_name": "destroy",
+          "uri": "/opd-vital/*"
+        }
+      ]
+    },
+    {
+      "scope": "auth:opd-vital:multiSelect",
+      "display_name": "Multiple Selection",
+      "actions": [
+        {
+          "http_method": "POST",
+          "action_name": "bulk",
+          "uri": "/opd-vital/bulk"
+        }
+      ]
+    },
+    {
+      "scope": "auth:opd-diagnosis:menuAccess",
+      "display_name": "Menu Access",
+      "actions": [
+        {
+          "http_method": "GET",
+          "action_name": "index",
+          "uri": "/opd-diagnosis"
+        }
+      ]
+    },
+    {
+      "scope": "auth:opd-diagnosis:list",
+      "display_name": "List",
+      "actions": [
+        {
+          "http_method": "GET",
+          "action_name": "index",
+          "uri": "/opd-diagnosis"
+        },
+        {
+          "http_method": "GET",
+          "action_name": "dropdown",
+          "uri": "/opd-diagnosis/dropdown"
+        }
+      ]
+    },
+    {
+      "scope": "auth:opd-diagnosis:view",
+      "display_name": "View",
+      "actions": [
+        {
+          "http_method": "GET",
+          "action_name": "show",
+          "uri": "/opd-diagnosis/*"
+        }
+      ]
+    },
+    {
+      "scope": "auth:opd-diagnosis:create",
+      "display_name": "Create",
+      "actions": [
+        {
+          "http_method": "POST",
+          "action_name": "store",
+          "uri": "/opd-diagnosis"
+        }
+      ]
+    },
+    {
+      "scope": "auth:opd-diagnosis:edit",
+      "display_name": "Edit",
+      "actions": [
+        {
+          "http_method": "PUT",
+          "action_name": "update",
+          "uri": "/opd-diagnosis/*"
+        },
+        {
+          "http_method": "PATCH",
+          "action_name": "updateFields",
+          "uri": "/opd-diagnosis/*"
+        }
+      ]
+    },
+    {
+      "scope": "auth:opd-diagnosis:delete",
+      "display_name": "Delete",
+      "actions": [
+        {
+          "http_method": "DELETE",
+          "action_name": "destroy",
+          "uri": "/opd-diagnosis/*"
+        }
+      ]
+    },
+    {
+      "scope": "auth:opd-diagnosis:multiSelect",
+      "display_name": "Multiple Selection",
+      "actions": [
+        {
+          "http_method": "POST",
+          "action_name": "bulk",
+          "uri": "/opd-diagnosis/bulk"
+        }
+      ]
+    },
+    {
+      "scope": "auth:opd-prescription:menuAccess",
+      "display_name": "Menu Access",
+      "actions": [
+        {
+          "http_method": "GET",
+          "action_name": "index",
+          "uri": "/opd-prescription"
+        }
+      ]
+    },
+    {
+      "scope": "auth:opd-prescription:list",
+      "display_name": "List",
+      "actions": [
+        {
+          "http_method": "GET",
+          "action_name": "index",
+          "uri": "/opd-prescription"
+        },
+        {
+          "http_method": "GET",
+          "action_name": "dropdown",
+          "uri": "/opd-prescription/dropdown"
+        }
+      ]
+    },
+    {
+      "scope": "auth:opd-prescription:view",
+      "display_name": "View",
+      "actions": [
+        {
+          "http_method": "GET",
+          "action_name": "show",
+          "uri": "/opd-prescription/*"
+        }
+      ]
+    },
+    {
+      "scope": "auth:opd-prescription:create",
+      "display_name": "Create",
+      "actions": [
+        {
+          "http_method": "POST",
+          "action_name": "store",
+          "uri": "/opd-prescription"
+        }
+      ]
+    },
+    {
+      "scope": "auth:opd-prescription:edit",
+      "display_name": "Edit",
+      "actions": [
+        {
+          "http_method": "PUT",
+          "action_name": "update",
+          "uri": "/opd-prescription/*"
+        },
+        {
+          "http_method": "PATCH",
+          "action_name": "updateFields",
+          "uri": "/opd-prescription/*"
+        }
+      ]
+    },
+    {
+      "scope": "auth:opd-prescription:delete",
+      "display_name": "Delete",
+      "actions": [
+        {
+          "http_method": "DELETE",
+          "action_name": "destroy",
+          "uri": "/opd-prescription/*"
+        }
+      ]
+    },
+    {
+      "scope": "auth:opd-prescription:multiSelect",
+      "display_name": "Multiple Selection",
+      "actions": [
+        {
+          "http_method": "POST",
+          "action_name": "bulk",
+          "uri": "/opd-prescription/bulk"
+        }
+      ]
+    },
+    {
+      "scope": "auth:opd-prescription-item:menuAccess",
+      "display_name": "Menu Access",
+      "actions": [
+        {
+          "http_method": "GET",
+          "action_name": "index",
+          "uri": "/opd-prescription-item"
+        }
+      ]
+    },
+    {
+      "scope": "auth:opd-prescription-item:list",
+      "display_name": "List",
+      "actions": [
+        {
+          "http_method": "GET",
+          "action_name": "index",
+          "uri": "/opd-prescription-item"
+        },
+        {
+          "http_method": "GET",
+          "action_name": "dropdown",
+          "uri": "/opd-prescription-item/dropdown"
+        }
+      ]
+    },
+    {
+      "scope": "auth:opd-prescription-item:view",
+      "display_name": "View",
+      "actions": [
+        {
+          "http_method": "GET",
+          "action_name": "show",
+          "uri": "/opd-prescription-item/*"
+        }
+      ]
+    },
+    {
+      "scope": "auth:opd-prescription-item:create",
+      "display_name": "Create",
+      "actions": [
+        {
+          "http_method": "POST",
+          "action_name": "store",
+          "uri": "/opd-prescription-item"
+        }
+      ]
+    },
+    {
+      "scope": "auth:opd-prescription-item:edit",
+      "display_name": "Edit",
+      "actions": [
+        {
+          "http_method": "PUT",
+          "action_name": "update",
+          "uri": "/opd-prescription-item/*"
+        },
+        {
+          "http_method": "PATCH",
+          "action_name": "updateFields",
+          "uri": "/opd-prescription-item/*"
+        }
+      ]
+    },
+    {
+      "scope": "auth:opd-prescription-item:delete",
+      "display_name": "Delete",
+      "actions": [
+        {
+          "http_method": "DELETE",
+          "action_name": "destroy",
+          "uri": "/opd-prescription-item/*"
+        }
+      ]
+    },
+    {
+      "scope": "auth:opd-prescription-item:multiSelect",
+      "display_name": "Multiple Selection",
+      "actions": [
+        {
+          "http_method": "POST",
+          "action_name": "bulk",
+          "uri": "/opd-prescription-item/bulk"
+        }
+      ]
+    },
+    {
+      "scope": "auth:opd-investigation-order:menuAccess",
+      "display_name": "Menu Access",
+      "actions": [
+        {
+          "http_method": "GET",
+          "action_name": "index",
+          "uri": "/opd-investigation-order"
+        }
+      ]
+    },
+    {
+      "scope": "auth:opd-investigation-order:list",
+      "display_name": "List",
+      "actions": [
+        {
+          "http_method": "GET",
+          "action_name": "index",
+          "uri": "/opd-investigation-order"
+        },
+        {
+          "http_method": "GET",
+          "action_name": "dropdown",
+          "uri": "/opd-investigation-order/dropdown"
+        }
+      ]
+    },
+    {
+      "scope": "auth:opd-investigation-order:view",
+      "display_name": "View",
+      "actions": [
+        {
+          "http_method": "GET",
+          "action_name": "show",
+          "uri": "/opd-investigation-order/*"
+        }
+      ]
+    },
+    {
+      "scope": "auth:opd-investigation-order:create",
+      "display_name": "Create",
+      "actions": [
+        {
+          "http_method": "POST",
+          "action_name": "store",
+          "uri": "/opd-investigation-order"
+        }
+      ]
+    },
+    {
+      "scope": "auth:opd-investigation-order:edit",
+      "display_name": "Edit",
+      "actions": [
+        {
+          "http_method": "PUT",
+          "action_name": "update",
+          "uri": "/opd-investigation-order/*"
+        },
+        {
+          "http_method": "PATCH",
+          "action_name": "updateFields",
+          "uri": "/opd-investigation-order/*"
+        }
+      ]
+    },
+    {
+      "scope": "auth:opd-investigation-order:delete",
+      "display_name": "Delete",
+      "actions": [
+        {
+          "http_method": "DELETE",
+          "action_name": "destroy",
+          "uri": "/opd-investigation-order/*"
+        }
+      ]
+    },
+    {
+      "scope": "auth:opd-investigation-order:multiSelect",
+      "display_name": "Multiple Selection",
+      "actions": [
+        {
+          "http_method": "POST",
+          "action_name": "bulk",
+          "uri": "/opd-investigation-order/bulk"
+        }
+      ]
+    },
+    {
+      "scope": "auth:opd-investigation-order-item:menuAccess",
+      "display_name": "Menu Access",
+      "actions": [
+        {
+          "http_method": "GET",
+          "action_name": "index",
+          "uri": "/opd-investigation-order-item"
+        }
+      ]
+    },
+    {
+      "scope": "auth:opd-investigation-order-item:list",
+      "display_name": "List",
+      "actions": [
+        {
+          "http_method": "GET",
+          "action_name": "index",
+          "uri": "/opd-investigation-order-item"
+        },
+        {
+          "http_method": "GET",
+          "action_name": "dropdown",
+          "uri": "/opd-investigation-order-item/dropdown"
+        }
+      ]
+    },
+    {
+      "scope": "auth:opd-investigation-order-item:view",
+      "display_name": "View",
+      "actions": [
+        {
+          "http_method": "GET",
+          "action_name": "show",
+          "uri": "/opd-investigation-order-item/*"
+        }
+      ]
+    },
+    {
+      "scope": "auth:opd-investigation-order-item:create",
+      "display_name": "Create",
+      "actions": [
+        {
+          "http_method": "POST",
+          "action_name": "store",
+          "uri": "/opd-investigation-order-item"
+        }
+      ]
+    },
+    {
+      "scope": "auth:opd-investigation-order-item:edit",
+      "display_name": "Edit",
+      "actions": [
+        {
+          "http_method": "PUT",
+          "action_name": "update",
+          "uri": "/opd-investigation-order-item/*"
+        },
+        {
+          "http_method": "PATCH",
+          "action_name": "updateFields",
+          "uri": "/opd-investigation-order-item/*"
+        }
+      ]
+    },
+    {
+      "scope": "auth:opd-investigation-order-item:delete",
+      "display_name": "Delete",
+      "actions": [
+        {
+          "http_method": "DELETE",
+          "action_name": "destroy",
+          "uri": "/opd-investigation-order-item/*"
+        }
+      ]
+    },
+    {
+      "scope": "auth:opd-investigation-order-item:multiSelect",
+      "display_name": "Multiple Selection",
+      "actions": [
+        {
+          "http_method": "POST",
+          "action_name": "bulk",
+          "uri": "/opd-investigation-order-item/bulk"
+        }
+      ]
+    },
+    {
+      "scope": "auth:opd-bill:menuAccess",
+      "display_name": "Menu Access",
+      "actions": [
+        {
+          "http_method": "GET",
+          "action_name": "index",
+          "uri": "/opd-bill"
+        }
+      ]
+    },
+    {
+      "scope": "auth:opd-bill:list",
+      "display_name": "List",
+      "actions": [
+        {
+          "http_method": "GET",
+          "action_name": "index",
+          "uri": "/opd-bill"
+        },
+        {
+          "http_method": "GET",
+          "action_name": "dropdown",
+          "uri": "/opd-bill/dropdown"
+        },
+        {
+          "http_method": "GET",
+          "action_name": "byVisit",
+          "uri": "/opd-bill/by-visit/*"
+        }
+      ]
+    },
+    {
+      "scope": "auth:opd-bill:view",
+      "display_name": "View",
+      "actions": [
+        {
+          "http_method": "GET",
+          "action_name": "show",
+          "uri": "/opd-bill/*"
+        },
+        {
+          "http_method": "GET",
+          "action_name": "print",
+          "uri": "/opd-bill/*/print"
+        }
+      ]
+    },
+    {
+      "scope": "auth:opd-bill:create",
+      "display_name": "Create",
+      "actions": [
+        {
+          "http_method": "POST",
+          "action_name": "store",
+          "uri": "/opd-bill"
+        },
+        {
+          "http_method": "POST",
+          "action_name": "generate",
+          "uri": "/opd-bill/generate/*"
+        }
+      ]
+    },
+    {
+      "scope": "auth:opd-bill:edit",
+      "display_name": "Edit",
+      "actions": [
+        {
+          "http_method": "PUT",
+          "action_name": "update",
+          "uri": "/opd-bill/*"
+        },
+        {
+          "http_method": "PATCH",
+          "action_name": "updateFields",
+          "uri": "/opd-bill/*"
+        },
+        {
+          "http_method": "POST",
+          "action_name": "recordPayment",
+          "uri": "/opd-bill/*/payment"
+        },
+        {
+          "http_method": "POST",
+          "action_name": "waive",
+          "uri": "/opd-bill/*/waive"
+        }
+      ]
+    },
+    {
+      "scope": "auth:opd-bill:delete",
+      "display_name": "Delete",
+      "actions": [
+        {
+          "http_method": "DELETE",
+          "action_name": "destroy",
+          "uri": "/opd-bill/*"
+        }
+      ]
+    },
+    {
+      "scope": "auth:opd-bill:multiSelect",
+      "display_name": "Multiple Selection",
+      "actions": [
+        {
+          "http_method": "POST",
+          "action_name": "bulk",
+          "uri": "/opd-bill/bulk"
+        }
+      ]
+    },
+    {
+      "scope": "auth:opd-bill-item:menuAccess",
+      "display_name": "Menu Access",
+      "actions": [
+        {
+          "http_method": "GET",
+          "action_name": "index",
+          "uri": "/opd-bill-item"
+        }
+      ]
+    },
+    {
+      "scope": "auth:opd-bill-item:list",
+      "display_name": "List",
+      "actions": [
+        {
+          "http_method": "GET",
+          "action_name": "index",
+          "uri": "/opd-bill-item"
+        },
+        {
+          "http_method": "GET",
+          "action_name": "dropdown",
+          "uri": "/opd-bill-item/dropdown"
+        }
+      ]
+    },
+    {
+      "scope": "auth:opd-bill-item:view",
+      "display_name": "View",
+      "actions": [
+        {
+          "http_method": "GET",
+          "action_name": "show",
+          "uri": "/opd-bill-item/*"
+        }
+      ]
+    },
+    {
+      "scope": "auth:opd-bill-item:create",
+      "display_name": "Create",
+      "actions": [
+        {
+          "http_method": "POST",
+          "action_name": "store",
+          "uri": "/opd-bill-item"
+        }
+      ]
+    },
+    {
+      "scope": "auth:opd-bill-item:edit",
+      "display_name": "Edit",
+      "actions": [
+        {
+          "http_method": "PUT",
+          "action_name": "update",
+          "uri": "/opd-bill-item/*"
+        },
+        {
+          "http_method": "PATCH",
+          "action_name": "updateFields",
+          "uri": "/opd-bill-item/*"
+        }
+      ]
+    },
+    {
+      "scope": "auth:opd-bill-item:delete",
+      "display_name": "Delete",
+      "actions": [
+        {
+          "http_method": "DELETE",
+          "action_name": "destroy",
+          "uri": "/opd-bill-item/*"
+        }
+      ]
+    },
+    {
+      "scope": "auth:opd-bill-item:multiSelect",
+      "display_name": "Multiple Selection",
+      "actions": [
+        {
+          "http_method": "POST",
+          "action_name": "bulk",
+          "uri": "/opd-bill-item/bulk"
+        }
+      ]
+    },
+    {
+      "scope": "auth:opd-bill-payment:menuAccess",
+      "display_name": "Menu Access",
+      "actions": [
+        {
+          "http_method": "GET",
+          "action_name": "index",
+          "uri": "/opd-bill-payment"
+        }
+      ]
+    },
+    {
+      "scope": "auth:opd-bill-payment:list",
+      "display_name": "List",
+      "actions": [
+        {
+          "http_method": "GET",
+          "action_name": "index",
+          "uri": "/opd-bill-payment"
+        },
+        {
+          "http_method": "GET",
+          "action_name": "dropdown",
+          "uri": "/opd-bill-payment/dropdown"
+        }
+      ]
+    },
+    {
+      "scope": "auth:opd-bill-payment:view",
+      "display_name": "View",
+      "actions": [
+        {
+          "http_method": "GET",
+          "action_name": "show",
+          "uri": "/opd-bill-payment/*"
+        }
+      ]
+    },
+    {
+      "scope": "auth:opd-bill-payment:create",
+      "display_name": "Create",
+      "actions": [
+        {
+          "http_method": "POST",
+          "action_name": "store",
+          "uri": "/opd-bill-payment"
+        }
+      ]
+    },
+    {
+      "scope": "auth:opd-bill-payment:edit",
+      "display_name": "Edit",
+      "actions": [
+        {
+          "http_method": "PUT",
+          "action_name": "update",
+          "uri": "/opd-bill-payment/*"
+        },
+        {
+          "http_method": "PATCH",
+          "action_name": "updateFields",
+          "uri": "/opd-bill-payment/*"
+        }
+      ]
+    },
+    {
+      "scope": "auth:opd-bill-payment:delete",
+      "display_name": "Delete",
+      "actions": [
+        {
+          "http_method": "DELETE",
+          "action_name": "destroy",
+          "uri": "/opd-bill-payment/*"
+        }
+      ]
+    },
+    {
+      "scope": "auth:opd-bill-payment:multiSelect",
+      "display_name": "Multiple Selection",
+      "actions": [
+        {
+          "http_method": "POST",
+          "action_name": "bulk",
+          "uri": "/opd-bill-payment/bulk"
+        }
+      ]
+    },
+    {
+      "scope": "auth:lab-test:menuAccess",
+      "display_name": "Menu Access",
+      "actions": [
+        {
+          "http_method": "GET",
+          "action_name": "index",
+          "uri": "/lab-test"
+        }
+      ]
+    },
+    {
+      "scope": "auth:lab-test:list",
+      "display_name": "List",
+      "actions": [
+        {
+          "http_method": "GET",
+          "action_name": "index",
+          "uri": "/lab-test"
+        },
+        {
+          "http_method": "GET",
+          "action_name": "dropdown",
+          "uri": "/lab-test/dropdown"
+        }
+      ]
+    },
+    {
+      "scope": "auth:lab-test:view",
+      "display_name": "View",
+      "actions": [
+        {
+          "http_method": "GET",
+          "action_name": "show",
+          "uri": "/lab-test/*"
+        }
+      ]
+    },
+    {
+      "scope": "auth:lab-test:create",
+      "display_name": "Create",
+      "actions": [
+        {
+          "http_method": "POST",
+          "action_name": "store",
+          "uri": "/lab-test"
+        }
+      ]
+    },
+    {
+      "scope": "auth:lab-test:edit",
+      "display_name": "Edit",
+      "actions": [
+        {
+          "http_method": "PUT",
+          "action_name": "update",
+          "uri": "/lab-test/*"
+        },
+        {
+          "http_method": "PATCH",
+          "action_name": "updateFields",
+          "uri": "/lab-test/*"
+        }
+      ]
+    },
+    {
+      "scope": "auth:lab-test:delete",
+      "display_name": "Delete",
+      "actions": [
+        {
+          "http_method": "DELETE",
+          "action_name": "destroy",
+          "uri": "/lab-test/*"
+        }
+      ]
+    },
+    {
+      "scope": "auth:lab-test:multiSelect",
+      "display_name": "Multiple Selection",
+      "actions": [
+        {
+          "http_method": "POST",
+          "action_name": "bulk",
+          "uri": "/lab-test/bulk"
+        }
+      ]
+    }
+  ]
+}

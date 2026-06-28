@@ -32,6 +32,33 @@ class PatientController extends Controller
         $this->resource   = PatientResource::class;
     }
 
+    /**
+     * Override the trait's getByWhere (which returns a single `first()` row
+     * via successResourceResponse) with a paginated collection so the
+     * autocomplete-style callers reading `data.results` get an array.
+     *
+     * URL: GET /patient/get-by-where?$search=...&$top=10
+     */
+    public function getByWhere()
+    {
+        try {
+            if (!isset($this->repository)) {
+                $this->errorResponse('Repository not defined');
+            }
+
+            $result = $this->repository->list();
+            $result['results'] = $this->resource::collection(
+                $result['results']->map(function ($item) {
+                    return new $this->resource($item, true);
+                })
+            );
+
+            return $this->successResourceCollectionResponse($result);
+        } catch (\Exception $e) {
+            $this->errorResponse($e->getMessage());
+        }
+    }
+
     public function store(Request $request)
     {
         DB::beginTransaction();

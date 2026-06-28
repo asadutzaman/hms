@@ -6,6 +6,7 @@ const RESOURCE_ENDPOINT = `${CONSTANT_CONFIG.SERVER_PREFIX}/patient`
 const endpoints = {
     list: () => `${RESOURCE_ENDPOINT}`,
     getById: (id: any) => `${RESOURCE_ENDPOINT}/${id}`,
+    getByWhere: () => `${RESOURCE_ENDPOINT}/get-by-where`,
     create: () => `${RESOURCE_ENDPOINT}`,
     update: (id: Number) => `${RESOURCE_ENDPOINT}/${id}`,
     updatePartial: (id: Number) => `${RESOURCE_ENDPOINT}/${id}`,
@@ -23,6 +24,11 @@ export default class PatientApi {
     public getById = (id: any): AxiosPromise<any> => {
         const url = endpoints.getById(id);
         return HttpService.get(url);
+    }
+
+    public getByWhere = (params = {}, headers = {}): AxiosPromise<any> => {
+        const url = endpoints.getByWhere();
+        return HttpService.get(url, params, headers);
     }
 
     public create = (payload = {}, params = {}, headers = {}): AxiosPromise<any> => {

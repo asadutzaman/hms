@@ -50,6 +50,22 @@ import _ReportInvApi from './Inventory/ReportInv.api'
 import _EmployeeApi from './Company/Employee.api'
 // PATIENT
 import _PatientApi from './Patient/Patient.api'
+// APPOINTMENT
+import _AppointmentApi from './Appointment/Appointment.api'
+import _DoctorScheduleApi from './DoctorSchedule/DoctorSchedule.api'
+import _AppointmentWaitlistApi from './AppointmentWaitlist/AppointmentWaitlist.api'
+// OPD
+import _OpdVisitApi from './OpdVisit/OpdVisit.api'
+import _OpdVitalApi from './OpdVital/OpdVital.api'
+import _OpdDiagnosisApi from './OpdDiagnosis/OpdDiagnosis.api'
+import _OpdPrescriptionApi from './OpdPrescription/OpdPrescription.api'
+import _OpdPrescriptionItemApi from './OpdPrescriptionItem/OpdPrescriptionItem.api'
+import _OpdInvestigationOrderApi from './OpdInvestigationOrder/OpdInvestigationOrder.api'
+import _OpdInvestigationOrderItemApi from './OpdInvestigationOrderItem/OpdInvestigationOrderItem.api'
+import _OpdBillApi from './OpdBill/OpdBill.api'
+import _OpdBillItemApi from './OpdBillItem/OpdBillItem.api'
+import _OpdBillPaymentApi from './OpdBillPayment/OpdBillPayment.api'
+import _LabTestApi from './LabTest/LabTest.api'
 
 export const FackApi = new _FackApi()
 export const OauthApi = new _OauthApi()
@@ -103,3 +119,19 @@ export const ReportInvApi = new _ReportInvApi()
 export const PatientApi = new _PatientApi()
 // COMPANY
 export const EmployeeApi = new _EmployeeApi()
+// APPOINTMENT
+export const AppointmentApi = new _AppointmentApi()
+export const DoctorScheduleApi = new _DoctorScheduleApi()
+export const AppointmentWaitlistApi = new _AppointmentWaitlistApi()
+// OPD
+export const OpdVisitApi = new _OpdVisitApi()
+export const OpdVitalApi = new _OpdVitalApi()
+export const OpdDiagnosisApi = new _OpdDiagnosisApi()
+export const OpdPrescriptionApi = new _OpdPrescriptionApi()
+export const OpdPrescriptionItemApi = new _OpdPrescriptionItemApi()
+export const OpdInvestigationOrderApi = new _OpdInvestigationOrderApi()
+export const OpdInvestigationOrderItemApi = new _OpdInvestigationOrderItemApi()
+export const OpdBillApi = new _OpdBillApi()
+export const OpdBillItemApi = new _OpdBillItemApi()
+export const OpdBillPaymentApi = new _OpdBillPaymentApi()
+export const LabTestApi = new _LabTestApi()

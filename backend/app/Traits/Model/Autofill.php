@@ -37,7 +37,7 @@ trait Autofill
             $sessionService = (new SessionService())->init();
             $userData = $sessionService->getUserData();
             if (Schema::hasColumn($model->getTable(), 'updated_by')) {
-                $model->updated_by = Arr::get($userData, 'id', Arr::get($model, 'updated_by', null));
+                $model->updated_by = Arr::get($userData, 'id', Arr::get($model, 'updated_by', null)) ?: Arr::get($model, 'updated_by', null);
             }
         });
 
@@ -45,7 +45,7 @@ trait Autofill
             $sessionService = (new SessionService())->init();
             $userData = $sessionService->getUserData();
             if (Schema::hasColumn($model->getTable(), 'deleted_by')) {
-                $model->deleted_by = Arr::get($userData, 'id', Arr::get($model, 'deleted_by', null));
+                $model->deleted_by = Arr::get($userData, 'id', Arr::get($model, 'deleted_by', null)) ?: Arr::get($model, 'deleted_by', null);
                 $model->save();
             }
         });

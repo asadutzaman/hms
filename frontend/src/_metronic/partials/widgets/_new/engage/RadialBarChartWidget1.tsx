@@ -89,7 +89,7 @@ const RadialBarChartWidget1 = ({
       <div className="card-header pt-5 ribbon ribbon-top ribbon-vertical">
         {ribbon}
         <h3 className="card-title align-items-start flex-column">
-          <span className="fw-bold text-gray-900">{t(title)}</span>
+          <span className="fw-bold text-gray-900">{t(title!)}</span>
         </h3>
       </div>
       <div className="card-body pt-0">

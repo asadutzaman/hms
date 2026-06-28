@@ -1,0 +1,349 @@
+{
+  "resource": {
+    "permission_type": "RESOURCE",
+    "name": "appointment",
+    "display_name": "Appointment",
+    "resource_uri": "appointment",
+    "controller_name": "AppointmentController",
+    "server_url_prefix": "auth",
+    "component": "COMMON"
+  },
+  "scopes": [
+    {
+      "scope": "auth:appointment:menuAccess",
+      "display_name": "Menu Access",
+      "actions": [
+        {
+          "http_method": "GET",
+          "action_name": "index",
+          "uri": "/appointment"
+        }
+      ]
+    },
+    {
+      "scope": "auth:appointment:list",
+      "display_name": "List",
+      "actions": [
+        {
+          "http_method": "GET",
+          "action_name": "index",
+          "uri": "/appointment"
+        },
+        {
+          "http_method": "GET",
+          "action_name": "dropdown",
+          "uri": "/appointment/dropdown"
+        },
+        {
+          "http_method": "GET",
+          "action_name": "availableSlots",
+          "uri": "/appointment/available-slots"
+        },
+        {
+          "http_method": "GET",
+          "action_name": "queue",
+          "uri": "/appointment/queue/doctor/*"
+        }
+      ]
+    },
+    {
+      "scope": "auth:appointment:view",
+      "display_name": "View",
+      "actions": [
+        {
+          "http_method": "GET",
+          "action_name": "show",
+          "uri": "/appointment/*"
+        },
+        {
+          "http_method": "GET",
+          "action_name": "auditLog",
+          "uri": "/appointment/*/audit-log"
+        }
+      ]
+    },
+    {
+      "scope": "auth:appointment:create",
+      "display_name": "Create",
+      "actions": [
+        {
+          "http_method": "POST",
+          "action_name": "store",
+          "uri": "/appointment"
+        },
+        {
+          "http_method": "POST",
+          "action_name": "walkIn",
+          "uri": "/appointment/walk-in"
+        },
+        {
+          "http_method": "POST",
+          "action_name": "checkIn",
+          "uri": "/appointment/*/check-in"
+        }
+      ]
+    },
+    {
+      "scope": "auth:appointment:edit",
+      "display_name": "Edit",
+      "actions": [
+        {
+          "http_method": "PUT",
+          "action_name": "update",
+          "uri": "/appointment/*"
+        },
+        {
+          "http_method": "PATCH",
+          "action_name": "updateFields",
+          "uri": "/appointment/*"
+        },
+        {
+          "http_method": "POST",
+          "action_name": "reschedule",
+          "uri": "/appointment/*/reschedule"
+        },
+        {
+          "http_method": "POST",
+          "action_name": "startConsultation",
+          "uri": "/appointment/*/start"
+        },
+        {
+          "http_method": "POST",
+          "action_name": "complete",
+          "uri": "/appointment/*/complete"
+        }
+      ]
+    },
+    {
+      "scope": "auth:appointment:delete",
+      "display_name": "Delete",
+      "actions": [
+        {
+          "http_method": "DELETE",
+          "action_name": "destroy",
+          "uri": "/appointment/*"
+        },
+        {
+          "http_method": "POST",
+          "action_name": "cancel",
+          "uri": "/appointment/*/cancel"
+        },
+        {
+          "http_method": "POST",
+          "action_name": "noShow",
+          "uri": "/appointment/*/no-show"
+        }
+      ]
+    },
+    {
+      "scope": "auth:appointment:multiSelect",
+      "display_name": "Multiple Selection",
+      "actions": [
+        {
+          "http_method": "POST",
+          "action_name": "bulk",
+          "uri": "/appointment/bulk"
+        }
+      ]
+    },
+    {
+      "scope": "auth:doctor-schedule:menuAccess",
+      "display_name": "Menu Access",
+      "actions": [
+        {
+          "http_method": "GET",
+          "action_name": "index",
+          "uri": "/doctor-schedule"
+        }
+      ]
+    },
+    {
+      "scope": "auth:doctor-schedule:list",
+      "display_name": "List",
+      "actions": [
+        {
+          "http_method": "GET",
+          "action_name": "index",
+          "uri": "/doctor-schedule"
+        },
+        {
+          "http_method": "GET",
+          "action_name": "dropdown",
+          "uri": "/doctor-schedule/dropdown"
+        },
+        {
+          "http_method": "GET",
+          "action_name": "availableSlots",
+          "uri": "/doctor-schedule/available-slots"
+        }
+      ]
+    },
+    {
+      "scope": "auth:doctor-schedule:view",
+      "display_name": "View",
+      "actions": [
+        {
+          "http_method": "GET",
+          "action_name": "show",
+          "uri": "/doctor-schedule/*"
+        }
+      ]
+    },
+    {
+      "scope": "auth:doctor-schedule:create",
+      "display_name": "Create",
+      "actions": [
+        {
+          "http_method": "POST",
+          "action_name": "store",
+          "uri": "/doctor-schedule"
+        },
+        {
+          "http_method": "POST",
+          "action_name": "generateSlots",
+          "uri": "/doctor-schedule/*/generate-slots"
+        }
+      ]
+    },
+    {
+      "scope": "auth:doctor-schedule:edit",
+      "display_name": "Edit",
+      "actions": [
+        {
+          "http_method": "PUT",
+          "action_name": "update",
+          "uri": "/doctor-schedule/*"
+        },
+        {
+          "http_method": "PATCH",
+          "action_name": "updateFields",
+          "uri": "/doctor-schedule/*"
+        }
+      ]
+    },
+    {
+      "scope": "auth:doctor-schedule:delete",
+      "display_name": "Delete",
+      "actions": [
+        {
+          "http_method": "DELETE",
+          "action_name": "destroy",
+          "uri": "/doctor-schedule/*"
+        }
+      ]
+    },
+    {
+      "scope": "auth:doctor-schedule:multiSelect",
+      "display_name": "Multiple Selection",
+      "actions": [
+        {
+          "http_method": "POST",
+          "action_name": "bulk",
+          "uri": "/doctor-schedule/bulk"
+        }
+      ]
+    },
+    {
+      "scope": "auth:appointment-waitlist:menuAccess",
+      "display_name": "Menu Access",
+      "actions": [
+        {
+          "http_method": "GET",
+          "action_name": "index",
+          "uri": "/appointment-waitlist"
+        }
+      ]
+    },
+    {
+      "scope": "auth:appointment-waitlist:list",
+      "display_name": "List",
+      "actions": [
+        {
+          "http_method": "GET",
+          "action_name": "index",
+          "uri": "/appointment-waitlist"
+        },
+        {
+          "http_method": "GET",
+          "action_name": "dropdown",
+          "uri": "/appointment-waitlist/dropdown"
+        }
+      ]
+    },
+    {
+      "scope": "auth:appointment-waitlist:view",
+      "display_name": "View",
+      "actions": [
+        {
+          "http_method": "GET",
+          "action_name": "show",
+          "uri": "/appointment-waitlist/*"
+        }
+      ]
+    },
+    {
+      "scope": "auth:appointment-waitlist:create",
+      "display_name": "Create",
+      "actions": [
+        {
+          "http_method": "POST",
+          "action_name": "store",
+          "uri": "/appointment-waitlist"
+        },
+        {
+          "http_method": "POST",
+          "action_name": "notify",
+          "uri": "/appointment-waitlist/*/notify"
+        }
+      ]
+    },
+    {
+      "scope": "auth:appointment-waitlist:edit",
+      "display_name": "Edit",
+      "actions": [
+        {
+          "http_method": "PUT",
+          "action_name": "update",
+          "uri": "/appointment-waitlist/*"
+        },
+        {
+          "http_method": "PATCH",
+          "action_name": "updateFields",
+          "uri": "/appointment-waitlist/*"
+        },
+        {
+          "http_method": "POST",
+          "action_name": "convert",
+          "uri": "/appointment-waitlist/*/convert"
+        }
+      ]
+    },
+    {
+      "scope": "auth:appointment-waitlist:delete",
+      "display_name": "Delete",
+      "actions": [
+        {
+          "http_method": "DELETE",
+          "action_name": "destroy",
+          "uri": "/appointment-waitlist/*"
+        },
+        {
+          "http_method": "POST",
+          "action_name": "expire",
+          "uri": "/appointment-waitlist/*/expire"
+        }
+      ]
+    },
+    {
+      "scope": "auth:appointment-waitlist:multiSelect",
+      "display_name": "Multiple Selection",
+      "actions": [
+        {
+          "http_method": "POST",
+          "action_name": "bulk",
+          "uri": "/appointment-waitlist/bulk"
+        }
+      ]
+    }
+  ]
+}

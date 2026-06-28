@@ -207,6 +207,141 @@ export const LeftSidebarMenu = [
 
   {
     type: 'group',
+    title: 'Appointment Management',
+    hidden: false,
+    children: [
+      {
+        type: 'item',
+        title: 'Appointments',
+        permission: 'auth:appointment:menuAccess',
+        link: { to: '/' },
+        icon: 'calendar',
+        subParent: true,
+        subChildren: [
+          {
+            type: 'item',
+            title: 'All Appointments',
+            permission: 'auth:appointment:menuAccess',
+            link: {
+              to: '/admin/appointment/list',
+              exactMatch: true,
+              externalUrl: false,
+              openInNewTab: false,
+            },
+          },
+          {
+            type: 'item',
+            title: 'New Appointment',
+            permission: 'auth:appointment:create',
+            link: {
+              to: '/admin/appointment/create',
+              exactMatch: true,
+              externalUrl: false,
+              openInNewTab: false,
+            },
+          },
+          {
+            type: 'item',
+            title: 'Walk-in',
+            permission: 'auth:appointment:create',
+            link: {
+              to: '/admin/appointment/walk-in',
+              exactMatch: true,
+              externalUrl: false,
+              openInNewTab: false,
+            },
+          },
+          {
+            type: 'item',
+            title: 'Queue Board',
+            permission: 'auth:appointment:view',
+            link: {
+              to: '/admin/appointment/queue',
+              exactMatch: true,
+              externalUrl: false,
+              openInNewTab: false,
+            },
+          },
+          {
+            type: 'item',
+            title: 'Doctor Schedules',
+            permission: 'auth:doctor-schedule:menuAccess',
+            link: {
+              to: '/admin/appointment/schedules',
+              exactMatch: true,
+              externalUrl: false,
+              openInNewTab: false,
+            },
+          },
+        ],
+      },
+    ],
+  },
+
+  {
+    type: 'group',
+    title: 'OPD Management',
+    hidden: false,
+    children: [
+      {
+        type: 'item',
+        title: 'OPD Visits',
+        permission: 'auth:opd:menuAccess',
+        link: { to: '/' },
+        icon: 'medical-diagram',
+        subParent: true,
+        subChildren: [
+          {
+            type: 'item',
+            title: 'All Visits',
+            permission: 'auth:opd:list',
+            link: {
+              to: '/admin/opd/list',
+              exactMatch: true,
+              externalUrl: false,
+              openInNewTab: false,
+            },
+          },
+          {
+            type: 'item',
+            title: 'New Visit',
+            permission: 'auth:opd:create',
+            link: {
+              to: '/admin/opd/create',
+              exactMatch: true,
+              externalUrl: false,
+              openInNewTab: false,
+            },
+          },
+          {
+            type: 'item',
+            title: 'Today\'s Queue',
+            permission: 'auth:opd:view',
+            link: {
+              to: '/admin/opd/queue',
+              exactMatch: true,
+              externalUrl: false,
+              openInNewTab: false,
+            },
+          },
+          {
+            type: 'item',
+            title: 'Lab Tests',
+            permission: 'auth:opd:menuAccess',
+            link: {
+              to: '/admin/opd/lab-tests',
+              exactMatch: true,
+              externalUrl: false,
+              openInNewTab: false,
+            },
+          },
+        ],
+      },
+    ],
+  },
+
+  {
+    type: 'group',
     title: 'Back Office Setup',
     hidden: true,
     children: [
