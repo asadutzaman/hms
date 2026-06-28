@@ -46,6 +46,8 @@ import _StockTransferApi from './Inventory/StockTransfer.api'
 import _StockTransferApprovalApi from './Inventory/StockTransferApproval.api'
 // Report
 import _ReportInvApi from './Inventory/ReportInv.api'
+// COMPANY
+import _EmployeeApi from './Company/Employee.api'
 // PATIENT
 import _PatientApi from './Patient/Patient.api'
 
@@ -99,3 +101,5 @@ export const StockTransferApprovalApi = new _StockTransferApprovalApi()
 export const ReportInvApi = new _ReportInvApi()
 // PATIENT
 export const PatientApi = new _PatientApi()
+// COMPANY
+export const EmployeeApi = new _EmployeeApi()

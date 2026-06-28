@@ -56,21 +56,21 @@
   - Add lazy import and `<Route path='/patient/*'>` in `AdminRoutes.tsx`
   - _Requirements: 1.1, 2.1_
 
-- [ ] 3. Build Employee frontend module
-- [ ] 3.1 Create Employee API service file
+- [x] 3. Build Employee frontend module
+- [x] 3.1 Create Employee API service file
   - Create `frontend/src/app/api/Company/Employee.api.ts` following existing API file patterns
   - Endpoint base: `/employee`; include all standard methods plus `getByUserId`
   - Register `EmployeeApi` export in `frontend/src/app/api/index.tsx`
   - _Requirements: 3.1, 3.5_
 
-- [ ] 3.2 Create Employee List, Form, and View components
+- [x] 3.2 Create Employee List, Form, and View components
   - Create `frontend/src/app/modules/company/components/Employee/` with Actions, List, Form, View subfolders
   - List columns: Employee ID, Name (EN), Designation, Mobile, Joining Date, Status, Actions
   - Filter: search (name/employee_id), designation filter, status filter
   - Form fields: name_en, name_bn, employee_id, designation_id, gender, mobile, dob, joining_date, employee_type, employee_category, status
   - _Requirements: 3.1, 3.2, 3.3, 3.5_
 
-- [ ] 3.3 Wire Employee into CompanyRoutes and AdminRoutes
+- [x] 3.3 Wire Employee into CompanyRoutes and AdminRoutes
   - Add `/employee` route to existing or new `CompanyRoutes.tsx` in `modules/company/`
   - Add lazy `CompanyRoutes` import and route path `/company/*` in `AdminRoutes.tsx` if not present
   - _Requirements: 3.1_

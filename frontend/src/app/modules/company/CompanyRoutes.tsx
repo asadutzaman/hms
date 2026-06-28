@@ -7,6 +7,7 @@ import ApplicationSettingsController from './components/ApplicationSetting/View/
 import WorkflowListController from './components/Workflow/List/WorkflowList.controller'
 import ApproverGroupListController from './components/ApproverGroup/List/ApproverGroupList.controller'
 import GovtHolidayListController from './components/GovtHollday/List/GovtHolidayList.controller'
+import EmployeeListController from './components/Employee/List/EmployeeList.controller'
 
 const CompanyRoutes = () => {
   return (
@@ -18,6 +19,7 @@ const CompanyRoutes = () => {
       <Route path={'/workflow-configuration'} element={<WorkflowListController />} />
       <Route path={'/approver-group'} element={<ApproverGroupListController />} />
       <Route path={'/govt-holiday'} element={<GovtHolidayListController />} />
+      <Route path={'/employee'} element={<EmployeeListController />} />
     </Routes>
   )
 }
