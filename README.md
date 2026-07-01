@@ -1,4 +1,4 @@
-# **_Logistics Inventory Management System_**
+# **_HMS_**
 
 ## Backend Configuration
 
