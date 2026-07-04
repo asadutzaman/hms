@@ -5,49 +5,28 @@ import OpdVisitAddOrEditForm from './OpdVisitForm.form'
 import {useCrudFormService} from 'src/app/hooks/crud/useCrudFormService'
 
 const initialState = {
-  modalTitle: 'Book OpdVisit',
+  modalTitle: 'New OPD Visit',
   itemData: {},
   fields: {
     patient_id: null,
-    // Inline patient fields (when booking for a new patient)
-    new_patient_first_name: null,
-    new_patient_last_name: null,
-    new_patient_primary_phone: null,
-    new_patient_date_of_birth: null,
-    new_patient_gender: null,
-    // Schedule fields
     doctor_id: null,
     department_id: null,
-    chamber_id: null,
-    schedule_id: null,
-    OpdVisit_slot_id: null,
-    OpdVisit_date: null,
-    start_time: null,
-    end_time: null,
-    duration_minutes: null,
+    appointment_id: null,
+    visit_type: 'walk_in',
+    visit_date: null,
     token_number: null,
-    source: 'online',
-    consultation_mode: 'in_person',
-    consultation_fee: null,
-    follow_up_fee: null,
-    reason: null,
-    symptoms: null,
-    notes: null,
-    internal_notes: null,
-    referral_doctor_id: null,
-    referral_notes: null,
-    is_follow_up: false,
-    parent_OpdVisit_id: null,
-    send_sms_reminder: true,
-    send_email_reminder: false,
-    status: 1,
+    chief_complaint: null,
+    history: null,
+    examination: null,
+    clinical_notes: null,
+    advice: null,
   },
   isNewRecord: true,
   loading: false,
   message: {
     network_error: 'A network error occurred. Please try again later.',
-    create_success: 'OpdVisit booked successfully.',
-    update_success: 'OpdVisit updated successfully.',
+    create_success: 'OPD visit created successfully.',
+    update_success: 'OPD visit updated successfully.',
   },
 }
 
@@ -75,7 +54,7 @@ const OpdVisitFormController: FC<any> = (props) => {
   useEffect(() => {
     if (entityId && isShowForm) {
       setIsNewRecord(false)
-      setModalTitle('Edit OpdVisit')
+      setModalTitle('Edit OPD Visit')
       resetForm()
       loadData()
     } else {
@@ -93,29 +72,15 @@ const OpdVisitFormController: FC<any> = (props) => {
         patient_id: d.patient_id,
         doctor_id: d.doctor_id,
         department_id: d.department_id,
-        chamber_id: d.chamber_id,
-        schedule_id: d.schedule_id,
-        OpdVisit_slot_id: d.OpdVisit_slot_id,
-        OpdVisit_date: d.OpdVisit_date,
-        start_time: d.start_time,
-        end_time: d.end_time,
-        duration_minutes: d.duration_minutes,
+        appointment_id: d.appointment_id,
+        visit_type: d.visit_type,
+        visit_date: d.visit_date,
         token_number: d.token_number,
-        source: d.source,
-        consultation_mode: d.consultation_mode,
-        consultation_fee: d.consultation_fee,
-        follow_up_fee: d.follow_up_fee,
-        reason: d.reason,
-        symptoms: d.symptoms,
-        notes: d.notes,
-        internal_notes: d.internal_notes,
-        referral_doctor_id: d.referral_doctor_id,
-        referral_notes: d.referral_notes,
-        is_follow_up: d.is_follow_up,
-        parent_OpdVisit_id: d.parent_OpdVisit_id,
-        send_sms_reminder: d.send_sms_reminder,
-        send_email_reminder: d.send_email_reminder,
-        status: d.status,
+        chief_complaint: d.chief_complaint,
+        history: d.history,
+        examination: d.examination,
+        clinical_notes: d.clinical_notes,
+        advice: d.advice,
       }
       handleChange(initFormData)
       formRef.setFieldsValue(initFormData)
@@ -137,7 +102,7 @@ const OpdVisitFormController: FC<any> = (props) => {
     BaseCrudFormService.handleUpdate({...values})
 
   return (
-    <div className='form-page-container form-page-container-OpdVisit'>
+    <div className='form-page-container form-page-container-opd-visit'>
       <DrawerForm
         drawerWidth='80%'
         loading={loading}

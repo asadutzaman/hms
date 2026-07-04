@@ -1,21 +1,6 @@
 import React, {FC, useEffect, useState} from 'react'
-import {
-  Form,
-  Input,
-  Select,
-  InputNumber,
-  DatePicker,
-  TimePicker,
-  Switch,
-  Tabs,
-  Row,
-  Col,
-  Divider,
-  AutoComplete,
-} from 'antd'
+import {Form, Input, Select, InputNumber, DatePicker, Tabs, Row, Col, AutoComplete, Alert} from 'antd'
 import {PatientApi, DepartmentApi} from 'src/app/api'
-import {OpdVisitApi} from 'src/app/api'
-import {DateTimeUtils, Message} from 'src/app/utils'
 
 const {TextArea} = Input
 const {Option} = Select
@@ -26,27 +11,18 @@ interface PatientOption {
   full_name: string
   primary_phone: string
   mrn: number
-  patient_no: string
 }
 
-interface SlotOption {
-  id: number
-  start_time: string
-  end_time: string
-  available: boolean
-  label?: string
-}
-
-const OpdVisitAddOrEditForm: FC<any> = ({formRef, isNewRecord}) => {
+const OpdVisitAddOrEditForm: FC<any> = ({formRef, isNewRecord, itemData}) => {
   const [patientOptions, setPatientOptions] = useState<PatientOption[]>([])
   const [patientSearch, setPatientSearch] = useState<string>('')
   const [departments, setDepartments] = useState<any[]>([])
-  const [submittingInlinePatient, setSubmittingInlinePatient] = useState(false)
 
-  const watchedDoctorId = Form.useWatch('doctor_id', formRef)
-  const watchedDepartmentId = Form.useWatch('department_id', formRef)
-  const watchedIsNewPatient = Form.useWatch('use_new_patient', formRef)
   const watchedPatientId = Form.useWatch('patient_id', formRef)
+
+  // Once a visit reaches a terminal status (closed/cancelled), clinical fields
+  // become read-only — mirrors OpdVisitStatusEnum::isTerminal() in the backend.
+  const isLocked = !isNewRecord && !!itemData?.is_terminal
 
   useEffect(() => {
     DepartmentApi.dropdown({status: 1})
@@ -54,7 +30,6 @@ const OpdVisitAddOrEditForm: FC<any> = ({formRef, isNewRecord}) => {
       .catch(() => setDepartments([]))
   }, [])
 
-  // Patient search (debounced simple)
   useEffect(() => {
     if (!patientSearch || patientSearch.length < 2) {
       setPatientOptions([])
@@ -67,122 +42,53 @@ const OpdVisitAddOrEditForm: FC<any> = ({formRef, isNewRecord}) => {
 
   return (
     <div className='form-page-content'>
-      <Tabs defaultActiveKey='patient'>
-        {/* ============= PATIENT TAB ============= */}
-        <TabPane tab='Patient' key='patient'>
-          <Row gutter={[16, 16]}>
-            <Col span={24}>
-              <Form.Item name='use_new_patient' label='Patient Type' valuePropName='checked'>
-                <Switch
-                  checkedChildren='New Patient'
-                  unCheckedChildren='Existing Patient'
-                />
-              </Form.Item>
-            </Col>
+      {isLocked && (
+        <Alert
+          type='warning'
+          showIcon
+          className='mb-4'
+          message={`This visit is ${itemData?.status?.replace('_', ' ')} — clinical notes are read-only.`}
+        />
+      )}
 
-            {!watchedIsNewPatient && (
-              <>
-                <Col md={12} xs={24}>
-                  <Form.Item
-                    name='patient_id'
-                    label='Search Patient'
-                    rules={[
-                      {
-                        required: !watchedIsNewPatient,
-                        message: 'Please select a patient',
-                      },
-                    ]}
-                  >
-                    <AutoComplete
-                      placeholder='Search by name, phone or MRN'
-                      onSearch={setPatientSearch}
-                      onSelect={(_value: any, option: any) => {
-                        formRef.setFieldsValue({patient_id: option.id})
-                      }}
-                      allowClear
-                    >
-                      {patientOptions.map((p) => (
-                        <AutoComplete.Option key={p.id} value={p.id}>
-                          <div>
-                            <strong>{p.full_name}</strong>{' '}
-                            <span className='text-muted'>({p.patient_no})</span>
-                          </div>
-                          <div className='text-muted fs-7'>
-                            {p.primary_phone} • MRN {p.mrn}
-                          </div>
-                        </AutoComplete.Option>
-                      ))}
-                    </AutoComplete>
-                  </Form.Item>
-                  {watchedPatientId && patientOptions.length > 0 && (
-                    <div className='text-muted fs-7 mb-3'>
-                      Selected patient ID: <strong>{watchedPatientId}</strong>
-                    </div>
-                  )}
-                </Col>
-              </>
-            )}
-
-            {watchedIsNewPatient && (
-              <>
-                <Col md={8} xs={24}>
-                  <Form.Item
-                    name='new_patient_first_name'
-                    label='First Name'
-                    rules={[{required: true, message: 'First name is required'}]}
-                  >
-                    <Input placeholder='First name' />
-                  </Form.Item>
-                </Col>
-                <Col md={8} xs={24}>
-                  <Form.Item name='new_patient_last_name' label='Last Name'>
-                    <Input placeholder='Last name' />
-                  </Form.Item>
-                </Col>
-                <Col md={8} xs={24}>
-                  <Form.Item
-                    name='new_patient_primary_phone'
-                    label='Primary Phone'
-                    rules={[{required: true, message: 'Phone is required'}]}
-                  >
-                    <Input placeholder='01XXXXXXXXX' />
-                  </Form.Item>
-                </Col>
-                <Col md={8} xs={24}>
-                  <Form.Item
-                    name='new_patient_date_of_birth'
-                    label='Date of Birth'
-                    rules={[{required: true, message: 'DOB is required'}]}
-                  >
-                    <DatePicker
-                      format='YYYY-MM-DD'
-                      style={{width: '100%'}}
-                    />
-                  </Form.Item>
-                </Col>
-                <Col md={8} xs={24}>
-                  <Form.Item
-                    name='new_patient_gender'
-                    label='Gender'
-                    rules={[{required: true, message: 'Gender is required'}]}
-                  >
-                    <Select placeholder='Select gender'>
-                      <Option value='male'>Male</Option>
-                      <Option value='female'>Female</Option>
-                      <Option value='other'>Other</Option>
-                      <Option value='unknown'>Unknown</Option>
-                    </Select>
-                  </Form.Item>
-                </Col>
-              </>
-            )}
-          </Row>
-        </TabPane>
-
-        {/* ============= SCHEDULE TAB ============= */}
-        <TabPane tab='Schedule' key='schedule'>
+      <Tabs defaultActiveKey='visit'>
+        {/* ============= VISIT TAB ============= */}
+        <TabPane tab='Patient & Visit' key='visit'>
           <Row gutter={[16, 16]}>
             <Col md={12} xs={24}>
+              <Form.Item
+                name='patient_id'
+                label='Patient'
+                rules={[{required: true, message: 'Please select a patient'}]}
+              >
+                <AutoComplete
+                  disabled={!isNewRecord}
+                  placeholder='Search by name, phone or MRN'
+                  onSearch={setPatientSearch}
+                  onSelect={(_value: any, option: any) => {
+                    formRef.setFieldsValue({patient_id: option.id})
+                  }}
+                  allowClear
+                >
+                  {patientOptions.map((p) => (
+                    <AutoComplete.Option key={p.id} value={p.id}>
+                      <div>
+                        <strong>{p.full_name}</strong>{' '}
+                        <span className='text-muted'>(MRN {p.mrn})</span>
+                      </div>
+                      <div className='text-muted fs-7'>{p.primary_phone}</div>
+                    </AutoComplete.Option>
+                  ))}
+                </AutoComplete>
+              </Form.Item>
+              {watchedPatientId && (
+                <div className='text-muted fs-7 mb-3'>
+                  Selected patient ID: <strong>{watchedPatientId}</strong>
+                </div>
+              )}
+            </Col>
+
+            <Col md={6} xs={24}>
               <Form.Item
                 name='department_id'
                 label='Department'
@@ -193,9 +99,7 @@ const OpdVisitAddOrEditForm: FC<any> = ({formRef, isNewRecord}) => {
                   placeholder='Select department'
                   optionFilterProp='children'
                   filterOption={(input, option: any) =>
-                    option?.children
-                      .toLowerCase()
-                      .indexOf(input.toLowerCase()) >= 0
+                    option?.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
                   }
                 >
                   {departments.map((d: any) => (
@@ -207,29 +111,32 @@ const OpdVisitAddOrEditForm: FC<any> = ({formRef, isNewRecord}) => {
               </Form.Item>
             </Col>
 
-            <Col md={12} xs={24}>
+            <Col md={6} xs={24}>
               <Form.Item
                 name='doctor_id'
                 label='Doctor'
                 rules={[{required: true, message: 'Doctor is required'}]}
               >
-                <Select
-                  showSearch
-                  placeholder='Select doctor'
-                  optionFilterProp='children'
-                  filterOption={(input, option: any) =>
-                    option?.children
-                      .toLowerCase()
-                      .indexOf(input.toLowerCase()) >= 0
-                  }
-                >
-                  {/* Options populated from DoctorScheduleApi.byDoctor */}
-                  <Option value={1}>Dr. Sample</Option>
+                <Input type='number' placeholder='Doctor ID (from employees table)' />
+              </Form.Item>
+            </Col>
+
+            <Col md={6} xs={24}>
+              <Form.Item
+                name='visit_type'
+                label='Visit Type'
+                rules={[{required: true, message: 'Visit type is required'}]}
+              >
+                <Select placeholder='Select visit type'>
+                  <Option value='walk_in'>Walk-in</Option>
+                  <Option value='appointment'>Appointment</Option>
+                  <Option value='follow_up'>Follow-up</Option>
+                  <Option value='emergency'>Emergency</Option>
                 </Select>
               </Form.Item>
             </Col>
 
-            <Col md={8} xs={24}>
+            <Col md={6} xs={24}>
               <Form.Item
                 name='visit_date'
                 label='Visit Date'
@@ -240,163 +147,87 @@ const OpdVisitAddOrEditForm: FC<any> = ({formRef, isNewRecord}) => {
             </Col>
 
             <Col md={6} xs={24}>
+              <Form.Item name='token_number' label='Token Number' tooltip='Auto-assigned if left blank'>
+                <InputNumber min={1} max={9999} style={{width: '100%'}} />
+              </Form.Item>
+            </Col>
+
+            <Col md={6} xs={24}>
               <Form.Item
-                name='consultation_mode'
-                label='Consultation Mode'
-                rules={[{required: true}]}
+                name='appointment_id'
+                label='Linked Appointment'
+                tooltip='If this visit originated from a booked appointment'
               >
-                <Select>
-                  <Option value='in_person'>In Person</Option>
-                  <Option value='telemedicine'>Telemedicine</Option>
-                  <Option value='home_visit'>Home Visit</Option>
-                </Select>
-              </Form.Item>
-            </Col>
-
-            <Col md={6} xs={24}>
-              <Form.Item name='source' label='Source' rules={[{required: true}]}>
-                <Select>
-                  <Option value='online'>Online</Option>
-                  <Option value='walk_in'>Walk-in</Option>
-                  <Option value='phone'>Phone</Option>
-                  <Option value='referral'>Referral</Option>
-                  <Option value='follow_up'>Follow-up</Option>
-                </Select>
-              </Form.Item>
-            </Col>
-
-            <Col md={6} xs={24}>
-              <Form.Item name='consultation_fee' label='Consultation Fee'>
-                <InputNumber
-                  min={0}
-                  style={{width: '100%'}}
-                  placeholder='0.00'
-                />
-              </Form.Item>
-            </Col>
-
-            <Col md={6} xs={24}>
-              <Form.Item name='follow_up_fee' label='Follow-up Fee'>
-                <InputNumber
-                  min={0}
-                  style={{width: '100%'}}
-                  placeholder='0.00'
-                />
+                <InputNumber min={1} style={{width: '100%'}} placeholder='Appointment ID' />
               </Form.Item>
             </Col>
           </Row>
         </TabPane>
 
-        {/* ============= NOTES TAB ============= */}
-        <TabPane tab='Notes' key='notes'>
+        {/* ============= SUBJECTIVE ============= */}
+        <TabPane tab='S · Subjective' key='subjective'>
           <Row gutter={[16, 16]}>
             <Col span={24}>
-              <Form.Item
-                name='reason'
-                label='Reason for Visit'
-                rules={[{required: true, message: 'Reason is required'}]}
-              >
-                <Input placeholder='e.g. Chest pain follow-up' />
+              <Form.Item name='chief_complaint' label='Chief Complaint'>
+                <TextArea rows={2} disabled={isLocked} placeholder="Patient's own description of the problem" />
               </Form.Item>
             </Col>
-
             <Col span={24}>
-              <Form.Item name='symptoms' label='Symptoms'>
-                <TextArea rows={2} placeholder='Current symptoms' />
+              <Form.Item name='history' label='History of Present Illness'>
+                <TextArea rows={4} disabled={isLocked} placeholder='Onset, duration, associated symptoms, relevant past history' />
               </Form.Item>
             </Col>
+          </Row>
+        </TabPane>
 
+        {/* ============= OBJECTIVE ============= */}
+        <TabPane tab='O · Objective' key='objective'>
+          <Row gutter={[16, 16]}>
             <Col span={24}>
-              <Form.Item name='notes' label='Patient Notes'>
-                <TextArea rows={3} placeholder='Notes visible to patient' />
-              </Form.Item>
+              <Alert
+                type='info'
+                showIcon
+                className='mb-3'
+                message='Record vitals (BP, pulse, temperature, SpO2, weight, height) in the Vitals panel on the visit view page.'
+              />
             </Col>
-
             <Col span={24}>
-              <Form.Item
-                name='internal_notes'
-                label='Internal Notes'
-                tooltip='Visible only to staff'
-              >
-                <TextArea rows={3} placeholder='Internal notes' />
+              <Form.Item name='examination' label='Examination Findings'>
+                <TextArea rows={5} disabled={isLocked} placeholder='General and systemic examination findings' />
               </Form.Item>
             </Col>
+          </Row>
+        </TabPane>
 
-            <Col md={12} xs={24}>
-              <Form.Item
-                name='referral_doctor_id'
-                label='Referral Doctor ID'
-                tooltip='If this is a referral, enter referring doctor ID'
-              >
-                <InputNumber
-                  min={1}
-                  style={{width: '100%'}}
-                  placeholder='Doctor ID'
+        {/* ============= ASSESSMENT ============= */}
+        <TabPane tab='A · Assessment' key='assessment'>
+          <Row gutter={[16, 16]}>
+            <Col span={24}>
+              <Alert
+                type='info'
+                showIcon
+                className='mb-3'
+                message='Record structured diagnoses (with ICD-10 code) in the Diagnoses panel on the visit view page.'
+              />
+            </Col>
+            <Col span={24}>
+              <Form.Item name='clinical_notes' label='Clinical Notes / Assessment'>
+                <TextArea rows={5} disabled={isLocked} placeholder='Clinical impression, differential considerations' />
+              </Form.Item>
+            </Col>
+          </Row>
+        </TabPane>
+
+        {/* ============= PLAN ============= */}
+        <TabPane tab='P · Plan' key='plan'>
+          <Row gutter={[16, 16]}>
+            <Col span={24}>
+              <Form.Item name='advice' label='Advice / Plan'>
+                <TextArea
+                  rows={5}
+                  disabled={isLocked}
+                  placeholder='Treatment plan, investigations ordered, advice given, follow-up instructions'
                 />
-              </Form.Item>
-            </Col>
-
-            <Col span={24}>
-              <Form.Item name='referral_notes' label='Referral Notes'>
-                <TextArea rows={2} placeholder='Referral context' />
-              </Form.Item>
-            </Col>
-
-            <Col md={8} xs={24}>
-              <Form.Item
-                name='is_follow_up'
-                label='Follow-up Visit'
-                valuePropName='checked'
-              >
-                <Switch />
-              </Form.Item>
-            </Col>
-
-            <Col md={8} xs={24}>
-              <Form.Item
-                name='parent_OpdVisit_id'
-                label='Parent OpdVisit ID'
-                tooltip='If this is a follow-up, the original OpdVisit ID'
-              >
-                <InputNumber
-                  min={1}
-                  style={{width: '100%'}}
-                  placeholder='Original OpdVisit ID'
-                />
-              </Form.Item>
-            </Col>
-
-            <Col md={8} xs={24}>
-              <Form.Item name='status' label='Status' valuePropName='checked'>
-                <Switch
-                  checkedChildren='Active'
-                  unCheckedChildren='Inactive'
-                  defaultChecked
-                />
-              </Form.Item>
-            </Col>
-
-            <Col span={24}>
-              <Divider plain>Notifications</Divider>
-            </Col>
-
-            <Col md={8} xs={24}>
-              <Form.Item
-                name='send_sms_reminder'
-                label='Send SMS Reminder'
-                valuePropName='checked'
-              >
-                <Switch defaultChecked />
-              </Form.Item>
-            </Col>
-
-            <Col md={8} xs={24}>
-              <Form.Item
-                name='send_email_reminder'
-                label='Send Email Reminder'
-                valuePropName='checked'
-              >
-                <Switch />
               </Form.Item>
             </Col>
           </Row>

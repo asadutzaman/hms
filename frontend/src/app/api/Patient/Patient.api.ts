@@ -13,6 +13,8 @@ const endpoints = {
     delete: (id: Number) => `${RESOURCE_ENDPOINT}/${id}`,
     bulk: () => `${RESOURCE_ENDPOINT}/bulk`,
     dropdown: () => `${RESOURCE_ENDPOINT}/dropdown`,
+    merge: () => `${RESOURCE_ENDPOINT}/merge`,
+    auditLog: (id: any) => `${RESOURCE_ENDPOINT}/${id}/audit-log`,
 }
 
 export default class PatientApi {
@@ -60,4 +62,14 @@ export default class PatientApi {
         const url = endpoints.dropdown();
         return HttpService.get(url, params, headers);
     };
+
+    public merge = (payload = {}, params = {}, headers = {}): AxiosPromise<any> => {
+        const url = endpoints.merge();
+        return HttpService.post(url, payload, params, headers);
+    }
+
+    public auditLog = (id: any, params = {}, headers = {}): AxiosPromise<any> => {
+        const url = endpoints.auditLog(id);
+        return HttpService.get(url, params, headers);
+    }
 }

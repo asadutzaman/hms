@@ -420,10 +420,10 @@ class AppointmentController extends Controller
                     'id'                 => $log->id,
                     'action'             => $log->action,
                     'action_label'       => AppointmentActionEnum::label($log->action),
-                    'old_values'         => $log->old_values,
-                    'new_values'         => $log->new_values,
-                    'performed_by'       => $log->performed_by,
-                    'performed_at'       => $log->performed_at,
+                    'old_values'         => $log->payload['old_values'] ?? null,
+                    'new_values'         => $log->payload['new_values'] ?? null,
+                    'performed_by'       => $log->actor_id,
+                    'performed_at'       => $log->occurred_at,
                     'remarks'            => $log->remarks,
                 ];
             });
@@ -441,10 +441,9 @@ class AppointmentController extends Controller
             AppointmentAuditLog::create([
                 'appointment_id' => $appointmentId,
                 'action'         => $action,
-                'old_values'     => $oldValues ? json_encode($oldValues) : null,
-                'new_values'     => $newValues ? json_encode($newValues) : null,
-                'performed_by'   => Auth::id(),
-                'performed_at'   => Carbon::now(),
+                'payload'        => ['old_values' => $oldValues, 'new_values' => $newValues],
+                'actor_id'       => Auth::id(),
+                'occurred_at'    => Carbon::now(),
                 'remarks'        => $remarks,
             ]);
         } catch (\Exception $e) {

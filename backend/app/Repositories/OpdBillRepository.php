@@ -17,6 +17,7 @@ use App\Models\OpdVisit;
 use App\Services\ODataService;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 use RuntimeException;
 
 class OpdBillRepository extends BaseRepository
@@ -382,6 +383,7 @@ class OpdBillRepository extends BaseRepository
 
             if (!$row) {
                 DB::table('code_sequences')->insert([
+                    'uuid'          => (string) Str::uuid(),
                     'label'         => 'OPD_BILL',
                     'prefix'        => 'BILL',
                     'separator'     => '-',

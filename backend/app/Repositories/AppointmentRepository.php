@@ -48,6 +48,16 @@ class AppointmentRepository extends BaseRepository
             ->get();
     }
 
+    public function getNextTokenNumber(int $doctorId, string $dateYmd): int
+    {
+        $max = $this->newQuery()
+            ->where('doctor_id', $doctorId)
+            ->whereDate('appointment_date', $dateYmd)
+            ->max('token_number');
+
+        return ((int) $max) + 1;
+    }
+
     public function upcomingForPatient(int $patientId, int $limit = 5)
     {
         return $this->newQuery()

@@ -31,24 +31,29 @@ class OpdVitalResource extends BaseResource
             }
 
             $bpDisplay = null;
-            if ($resource->systolic !== null && $resource->diastolic !== null) {
-                $bpDisplay = sprintf('%d/%d', $resource->systolic, $resource->diastolic);
+            if ($resource->bp_systolic !== null && $resource->bp_diastolic !== null) {
+                $bpDisplay = sprintf('%d/%d', $resource->bp_systolic, $resource->bp_diastolic);
             }
 
             $data = [
-                'id'             => $this->id,
-                'uuid'           => $this->uuid,
-                'visit_id'       => $this->visit_id,
-                'systolic'       => $this->systolic,
-                'diastolic'      => $this->diastolic,
-                'pulse'          => $this->pulse,
-                'temperature'    => $this->temperature,
-                'spo2'           => $this->spo2,
-                'weight'         => $this->weight,
-                'height'         => $this->height,
-                'bmi'            => $this->bmi,
-                'notes'          => $this->notes,
-                'taken_at'       => $this->taken_at,
+                'id'                  => $this->id,
+                'uuid'                => $this->uuid,
+                'opd_visit_id'        => $this->opd_visit_id,
+                'patient_id'          => $this->patient_id,
+                'systolic'            => $this->bp_systolic,
+                'diastolic'           => $this->bp_diastolic,
+                'pulse'               => $this->pulse_bpm,
+                'temperature'         => $this->temperature_c,
+                'temperature_method'  => $this->temperature_method,
+                'spo2'                => $this->spo2_pct,
+                'respiratory_rate'    => $this->respiratory_rate,
+                'weight'              => $this->weight_kg,
+                'height'              => $this->height_cm,
+                'bmi'                 => $this->bmi,
+                'blood_glucose_mg_dl' => $this->blood_glucose_mg_dl,
+                'pain_score'          => $this->pain_score,
+                'notes'               => $this->notes,
+                'recorded_at'         => $this->recorded_at,
                 'created_by_name' => $baseData['created_by_name'] ?? null,
                 'updated_by_name' => $baseData['updated_by_name'] ?? null,
                 'created_at'     => $baseData['created_at'] ?? null,

@@ -42,9 +42,9 @@ const OpdVisitListing: FC<any> = (props) => {
 
   const columns = [
     {
-      dataIndex: 'OpdVisit_no',
-      key: 'OpdVisit_no',
-      title: 'OpdVisit #',
+      dataIndex: 'opd_no',
+      key: 'opd_no',
+      title: 'OPD No',
       sorter: true,
       width: '11%',
       render: (text: string, record: any) => (
@@ -91,48 +91,26 @@ const OpdVisitListing: FC<any> = (props) => {
         record.department?.name || '-',
     },
     {
-      dataIndex: 'OpdVisit_date',
-      key: 'OpdVisit_date',
+      dataIndex: 'visit_date',
+      key: 'visit_date',
       title: 'Date',
       sorter: true,
       width: '9%',
       render: (value: any) => DateTimeUtils.formatDate(value),
     },
     {
-      dataIndex: 'start_time',
-      key: 'start_time',
-      title: 'Time',
-      width: '8%',
-      render: (_text: string, record: any) =>
-        record.start_time && record.end_time
-          ? `${record.start_time} - ${record.end_time}`
-          : '-',
-    },
-    {
       dataIndex: 'token_number',
       key: 'token_number',
       title: 'Token',
-      width: '5%',
+      width: '6%',
       align: 'center',
       render: (value: any) => value || '-',
     },
     {
-      dataIndex: 'source',
-      key: 'source',
-      title: 'Source',
-      width: '7%',
-      render: (value: string) =>
-        value ? (
-          <span className='text-capitalize'>{value.replace('_', ' ')}</span>
-        ) : (
-          '-'
-        ),
-    },
-    {
-      dataIndex: 'consultation_mode',
-      key: 'consultation_mode',
-      title: 'Mode',
-      width: '7%',
+      dataIndex: 'visit_type',
+      key: 'visit_type',
+      title: 'Visit Type',
+      width: '10%',
       render: (value: string) =>
         value ? (
           <span className='text-capitalize'>{value.replace('_', ' ')}</span>
@@ -173,7 +151,7 @@ const OpdVisitListing: FC<any> = (props) => {
         className='table-layout'
         rowSelection={false}
         scroll={{y: 500}}
-        rowSelectionPermission='auth:OpdVisit:multiSelect'
+        rowSelectionPermission='auth:opd:multiSelect'
         selectedRowKeys={selectedRowKeys}
         dataSource={listData}
         columns={columns}

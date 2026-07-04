@@ -29,14 +29,18 @@ class OpdPrescriptionResource extends BaseResource
             if ($resource->relationLoaded('items')) {
                 $items = $resource->items;
                 $itemCount = $items->count();
-                $totalAmount = (float) $items->where('status_flag', 1)->sum('amount');
+                $totalAmount = (float) $items->where('status', 1)->sum('amount');
             }
 
             $data = [
                 'id'             => $this->id,
                 'uuid'           => $this->uuid,
-                'visit_id'       => $this->visit_id,
+                'opd_visit_id'   => $this->opd_visit_id,
+                'patient_id'     => $this->patient_id,
                 'prescribed_by'  => $this->prescribed_by,
+                'prescribed_at'  => $this->prescribed_at,
+                'advice'         => $this->advice,
+                'follow_up_date' => $this->follow_up_date,
                 'notes'          => $this->notes,
                 'is_printed'     => (bool) $this->is_printed,
                 'printed_at'     => $this->printed_at,

@@ -3,6 +3,8 @@ import {Tabs, Tag, Descriptions, Badge} from 'antd'
 import {DateTimeUtils} from 'src/app/utils'
 import EditAction from 'src/app/components/Actions/EditAction'
 import DeleteAction from 'src/app/components/Actions/DeleteAction'
+import AuditLogPanel from 'src/app/components/AuditLog/AuditLogPanel'
+import {PatientApi} from 'src/app/api'
 import {PatientAction} from '../Actions/Patient.actions'
 
 // Helper to capitalise first letter
@@ -215,6 +217,14 @@ const PatientView: FC<any> = ({itemData, handleCallbackFunc}) => {
     </Descriptions>
   )
 
+  // ── TAB: AUDIT LOG ────────────────────────────────────────────────────────
+  const auditLogTab = (
+    <AuditLogPanel
+      fetchFn={() => PatientApi.auditLog(itemData.id)}
+      reloadKey={itemData.id}
+    />
+  )
+
   const tabItems = [
     {key: 'personal', label: 'Personal', children: personalTab},
     {key: 'contact', label: 'Contact', children: contactTab},
@@ -222,6 +232,7 @@ const PatientView: FC<any> = ({itemData, handleCallbackFunc}) => {
     {key: 'medical', label: 'Medical History', children: medicalTab},
     {key: 'insurance', label: 'Insurance', children: insuranceTab},
     {key: 'flags', label: 'Flags & Notes', children: flagsTab},
+    {key: 'audit', label: 'Audit Log', children: auditLogTab},
   ]
 
   return (

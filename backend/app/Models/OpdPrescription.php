@@ -73,6 +73,8 @@ class OpdPrescription extends BaseModel
 
     public function items(): HasMany
     {
-        return $this->hasMany(OpdPrescriptionItem::class, 'opd_prescription_id')->orderBy('sequence');
+        return $this->hasMany(OpdPrescriptionItem::class, 'opd_prescription_id')
+            ->where('status', 1)
+            ->orderBy('sequence');
     }
 }

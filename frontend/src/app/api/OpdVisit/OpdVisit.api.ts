@@ -17,6 +17,9 @@ const endpoints = {
   transition: (id: any) => `${RESOURCE_ENDPOINT}/${id}/transition`,
   cancel: (id: any) => `${RESOURCE_ENDPOINT}/${id}/cancel`,
   auditLog: (id: any) => `${RESOURCE_ENDPOINT}/${id}/audit-log`,
+  displayBoard: () => `${RESOURCE_ENDPOINT}/display-board`,
+  call: (id: any) => `${RESOURCE_ENDPOINT}/${id}/call`,
+  scheduleFollowUp: (id: any) => `${RESOURCE_ENDPOINT}/${id}/follow-up`,
 }
 
 export default class OpdVisitApi {
@@ -56,4 +59,13 @@ export default class OpdVisitApi {
 
   public auditLog = (id: any, params = {}, headers = {}): AxiosPromise<any> =>
     HttpService.get(endpoints.auditLog(id), params, headers)
+
+  public displayBoard = (params = {}, headers = {}): AxiosPromise<any> =>
+    HttpService.get(endpoints.displayBoard(), params, headers)
+
+  public call = (id: any, payload = {}, params = {}, headers = {}): AxiosPromise<any> =>
+    HttpService.post(endpoints.call(id), payload, params, headers)
+
+  public scheduleFollowUp = (id: any, payload = {}, params = {}, headers = {}): AxiosPromise<any> =>
+    HttpService.post(endpoints.scheduleFollowUp(id), payload, params, headers)
 }

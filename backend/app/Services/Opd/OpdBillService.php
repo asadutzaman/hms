@@ -3,6 +3,7 @@
 namespace App\Services\Opd;
 
 use App\Enums\OpdBillStatusEnum;
+use App\Enums\OpdVisitActionEnum;
 use App\Enums\OpdVisitStatusEnum;
 use App\Exceptions\ApiException;
 use App\Models\OpdBill;
@@ -12,11 +13,18 @@ use App\Repositories\OpdBillRepository;
 use App\Repositories\OpdVisitRepository;
 use App\Validators\OpdBillPaymentValidator;
 use App\Validators\OpdBillValidator;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 class OpdBillService
 {
+    /**
+     * Discounts above this percentage of the bill subtotal require supervisor
+     * approval instead of being applied immediately.
+     */
+    protected const DISCOUNT_APPROVAL_THRESHOLD_PERCENT = 10.0;
+
     protected $billRepo;
     protected $paymentRepo;
     protected $visitRepo;
@@ -91,6 +99,220 @@ class OpdBillService
     }
 
     /**
+     * Record a single collection made up of multiple payment modes at once
+     * (e.g. part cash + part card). Each entry is validated and recorded via
+     * recordPayment() so bill totals/status and the OPD visit audit log stay
+     * consistent with single-mode payments.
+     */
+    public function recordSplitPayment(int $billId, array $payments, int $actorId): OpdBill
+    {
+        if (empty($payments)) {
+            throw new ApiException('At least one payment is required.', 422);
+        }
+
+        $bill = $this->billRepo->findById($billId);
+        if (!$bill) {
+            throw new ApiException('Bill not found.', 404);
+        }
+
+        $sum = array_sum(array_map(fn ($p) => (float) ($p['amount'] ?? 0), $payments));
+        if ($sum <= 0) {
+            throw new ApiException('Total payment amount must be greater than zero.', 422);
+        }
+        if (round($sum, 2) > round((float) $bill->balance, 2)) {
+            throw new ApiException(
+                "Total payment ({$sum}) exceeds the outstanding balance ({$bill->balance}).",
+                422,
+            );
+        }
+
+        return DB::transaction(function () use ($billId, $payments, $actorId) {
+            $result = null;
+            foreach ($payments as $payment) {
+                $result = $this->recordPayment($billId, array_merge($payment, [
+                    'paid_at' => $payment['paid_at'] ?? now(),
+                ]), $actorId);
+            }
+            return $result;
+        });
+    }
+
+    /**
+     * Render a payment receipt as a downloadable PDF.
+     */
+    public function renderReceiptPdf(int $billId)
+    {
+        $bill = $this->billRepo->findById($billId);
+        if (!$bill) {
+            throw new ApiException('Bill not found.', 404);
+        }
+
+        $bill->loadMissing(['items', 'payments', 'visit.patient', 'visit.doctor']);
+
+        $pdf = Pdf::loadView('pdf.opd_receipt', ['bill' => $bill]);
+
+        return $pdf->stream("receipt-{$bill->bill_no}.pdf");
+    }
+
+    /**
+     * Apply a discount to a bill. Discounts within
+     * DISCOUNT_APPROVAL_THRESHOLD_PERCENT of the subtotal are applied
+     * immediately; larger discounts are held as pending until a supervisor
+     * approves them via approveDiscount().
+     */
+    public function applyDiscount(int $billId, float $amount, string $type, ?string $reason, int $actorId): OpdBill
+    {
+        return DB::transaction(function () use ($billId, $amount, $type, $reason, $actorId) {
+            $bill = $this->billRepo->newQuery()->lockForUpdate()->find($billId);
+            if (!$bill) {
+                throw new ApiException('Bill not found.', 404);
+            }
+            if (in_array($bill->status, [OpdBillStatusEnum::PAID, OpdBillStatusEnum::WAIVED], true)) {
+                throw new ApiException("Cannot apply a discount to a bill that is already {$bill->status}.", 422);
+            }
+            if (!in_array($type, ['flat', 'percent'], true)) {
+                throw new ApiException('Discount type must be flat or percent.', 422);
+            }
+            if ($amount <= 0) {
+                throw new ApiException('Discount amount must be greater than zero.', 422);
+            }
+
+            $subtotal = (float) $bill->subtotal;
+            $discountAmount = $type === 'percent'
+                ? round($subtotal * $amount / 100, 2)
+                : round($amount, 2);
+
+            if ($discountAmount > $subtotal) {
+                throw new ApiException('Discount cannot exceed the bill subtotal.', 422);
+            }
+
+            $thresholdAmount = round($subtotal * self::DISCOUNT_APPROVAL_THRESHOLD_PERCENT / 100, 2);
+            $visit = OpdVisit::query()->find($bill->opd_visit_id);
+
+            if ($discountAmount <= $thresholdAmount) {
+                $bill->discount              = $discountAmount;
+                $bill->discount_type         = $type;
+                $bill->discount_reason       = $reason;
+                $bill->discount_status       = 'approved';
+                $bill->discount_approved_by  = $actorId;
+                $bill->discount_approved_at  = now();
+                $bill->pending_discount      = 0;
+                $bill->total   = max(0.0, round($subtotal - $discountAmount + (float) $bill->tax, 2));
+                $bill->balance = max(0.0, round($bill->total - (float) $bill->paid, 2));
+                $bill->save();
+
+                if ($visit) {
+                    $this->visitRepo->logAudit(
+                        $visit,
+                        OpdVisitActionEnum::DISCOUNT_APPROVED,
+                        null,
+                        null,
+                        $actorId,
+                        "Discount of {$discountAmount} auto-approved (within threshold)",
+                        ['bill_id' => $bill->id, 'amount' => $discountAmount],
+                    );
+                }
+            } else {
+                $bill->discount_type    = $type;
+                $bill->discount_reason  = $reason;
+                $bill->discount_status  = 'pending_approval';
+                $bill->pending_discount = $discountAmount;
+                $bill->save();
+
+                if ($visit) {
+                    $this->visitRepo->logAudit(
+                        $visit,
+                        OpdVisitActionEnum::DISCOUNT_REQUESTED,
+                        null,
+                        null,
+                        $actorId,
+                        "Discount of {$discountAmount} requires supervisor approval (exceeds threshold)",
+                        ['bill_id' => $bill->id, 'amount' => $discountAmount],
+                    );
+                }
+            }
+
+            return $bill->fresh(['items', 'payments']);
+        });
+    }
+
+    /**
+     * Approve a pending discount, applying it to the bill total/balance.
+     */
+    public function approveDiscount(int $billId, int $actorId): OpdBill
+    {
+        return DB::transaction(function () use ($billId, $actorId) {
+            $bill = $this->billRepo->newQuery()->lockForUpdate()->find($billId);
+            if (!$bill) {
+                throw new ApiException('Bill not found.', 404);
+            }
+            if ($bill->discount_status !== 'pending_approval') {
+                throw new ApiException('This bill has no pending discount to approve.', 422);
+            }
+
+            $discountAmount = (float) $bill->pending_discount;
+            $bill->discount             = $discountAmount;
+            $bill->discount_status      = 'approved';
+            $bill->discount_approved_by = $actorId;
+            $bill->discount_approved_at = now();
+            $bill->pending_discount     = 0;
+            $bill->total   = max(0.0, round((float) $bill->subtotal - $discountAmount + (float) $bill->tax, 2));
+            $bill->balance = max(0.0, round($bill->total - (float) $bill->paid, 2));
+            $bill->save();
+
+            $visit = OpdVisit::query()->find($bill->opd_visit_id);
+            if ($visit) {
+                $this->visitRepo->logAudit(
+                    $visit,
+                    OpdVisitActionEnum::DISCOUNT_APPROVED,
+                    null,
+                    null,
+                    $actorId,
+                    "Discount of {$discountAmount} approved by supervisor",
+                    ['bill_id' => $bill->id, 'amount' => $discountAmount],
+                );
+            }
+
+            return $bill->fresh(['items', 'payments']);
+        });
+    }
+
+    /**
+     * Reject a pending discount request; the bill is left unchanged.
+     */
+    public function rejectDiscount(int $billId, int $actorId, string $reason): OpdBill
+    {
+        return DB::transaction(function () use ($billId, $actorId, $reason) {
+            $bill = $this->billRepo->newQuery()->lockForUpdate()->find($billId);
+            if (!$bill) {
+                throw new ApiException('Bill not found.', 404);
+            }
+            if ($bill->discount_status !== 'pending_approval') {
+                throw new ApiException('This bill has no pending discount to reject.', 422);
+            }
+
+            $bill->discount_status  = 'rejected';
+            $bill->pending_discount = 0;
+            $bill->save();
+
+            $visit = OpdVisit::query()->find($bill->opd_visit_id);
+            if ($visit) {
+                $this->visitRepo->logAudit(
+                    $visit,
+                    OpdVisitActionEnum::DISCOUNT_REJECTED,
+                    null,
+                    null,
+                    $actorId,
+                    'Discount rejected: ' . $reason,
+                    ['bill_id' => $bill->id],
+                );
+            }
+
+            return $bill->fresh(['items', 'payments']);
+        });
+    }
+
+    /**
      * Waive/cancel a bill with a reason. Not allowed on fully paid bills.
      */
     public function waive(int $billId, int $actorId, string $reason): OpdBill
@@ -111,7 +333,7 @@ class OpdBillService
 
     public function find(int $id): ?OpdBill
     {
-        return $this->billRepo->find($id);
+        return $this->billRepo->findById($id);
     }
 
     public function findForVisit(int $visitId): ?OpdBill
@@ -137,16 +359,17 @@ class OpdBillService
      */
     public function renderPrint(int $billId): string
     {
-        $bill = $this->billRepo->find($billId);
+        $bill = $this->billRepo->findById($billId);
         if (!$bill) {
             throw new ApiException('Bill not found.', 404);
         }
 
         $bill->loadMissing(['items', 'payments', 'visit.patient', 'visit.doctor']);
 
-        $patientName = $bill->visit->patient->name ?? '-';
-        $doctorName  = $bill->visit->doctor->name  ?? '-';
-        $billDate    = $bill->bill_date ?? now()->toDateString();
+        $patient = $bill->visit->patient ?? null;
+        $patientName = $patient ? trim(($patient->first_name ?? '') . ' ' . ($patient->last_name ?? '')) : '-';
+        $doctorName  = $bill->visit->doctor->name_en ?? $bill->visit->doctor->name ?? '-';
+        $billDate    = $bill->billed_at ?? now()->toDateString();
 
         $itemsHtml = '';
         foreach ($bill->items as $it) {
@@ -156,7 +379,7 @@ class OpdBillService
                 e((string) $it->description),
                 e((string) $it->quantity),
                 (float) $it->unit_price,
-                (float) $it->amount,
+                (float) $it->line_total,
             );
         }
 

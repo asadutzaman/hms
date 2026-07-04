@@ -77,6 +77,22 @@ const QueueController: FC<any> = () => {
     return () => clearInterval(interval)
   }, [autoRefresh, fetchQueue])
 
+  const callToken = async (id: number) => {
+    setActingId(id)
+    try {
+      await OpdVisitApi.call(id)
+      notification.success({message: 'Token called to display board'})
+      await fetchQueue()
+    } catch (e: any) {
+      notification.error({
+        message: 'Failed to call token',
+        description: e?.response?.data?.message || e?.message || 'Unknown error',
+      })
+    } finally {
+      setActingId(null)
+    }
+  }
+
   const actionCall = async (id: number, toStatus: string) => {
     setActingId(id)
     try {
@@ -159,6 +175,16 @@ const QueueController: FC<any> = () => {
       </Row>
 
       <div className='mt-2 d-flex gap-1 flex-wrap'>
+        {appt.status === 'waiting' && (
+          <Tooltip title='Announce this token on the display board'>
+            <Button
+              size='small'
+              onClick={() => callToken(appt.id)}
+            >
+              {appt.called_at ? 'Re-call Token' : 'Call Token'}
+            </Button>
+          </Tooltip>
+        )}
         {appt.status === 'waiting' && (
           <Tooltip title='Mark vitals taken'>
             <Button

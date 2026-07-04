@@ -15,9 +15,14 @@ const endpoints = {
     dropdown: () => `${RESOURCE_ENDPOINT}/dropdown`,
     generate: (id: any) => `${RESOURCE_ENDPOINT}/generate/${id}`,
     recordPayment: (id: any) => `${RESOURCE_ENDPOINT}/${id}/payment`,
+    recordSplitPayment: (id: any) => `${RESOURCE_ENDPOINT}/${id}/payments`,
     waive: (id: any) => `${RESOURCE_ENDPOINT}/${id}/waive`,
+    applyDiscount: (id: any) => `${RESOURCE_ENDPOINT}/${id}/discount`,
+    approveDiscount: (id: any) => `${RESOURCE_ENDPOINT}/${id}/discount/approve`,
+    rejectDiscount: (id: any) => `${RESOURCE_ENDPOINT}/${id}/discount/reject`,
     byVisit: (id: any) => `${RESOURCE_ENDPOINT}/by-visit/${id}`,
     print: (id: any) => `${RESOURCE_ENDPOINT}/${id}/print`,
+    receiptPdf: (id: any) => `${RESOURCE_ENDPOINT}/${id}/receipt-pdf`,
 }
 
 export default class OpdBillApi {
@@ -51,12 +56,27 @@ export default class OpdBillApi {
     public recordPayment = (id: any, payload = {}, params = {}, headers = {}): AxiosPromise<any> =>
         HttpService.post(endpoints.recordPayment(id), payload, params, headers)
 
+    public recordSplitPayment = (id: any, payload = {}, params = {}, headers = {}): AxiosPromise<any> =>
+        HttpService.post(endpoints.recordSplitPayment(id), payload, params, headers)
+
     public waive = (id: any, payload = {}, params = {}, headers = {}): AxiosPromise<any> =>
         HttpService.post(endpoints.waive(id), payload, params, headers)
+
+    public applyDiscount = (id: any, payload = {}, params = {}, headers = {}): AxiosPromise<any> =>
+        HttpService.post(endpoints.applyDiscount(id), payload, params, headers)
+
+    public approveDiscount = (id: any, params = {}, headers = {}): AxiosPromise<any> =>
+        HttpService.post(endpoints.approveDiscount(id), {}, params, headers)
+
+    public rejectDiscount = (id: any, payload = {}, params = {}, headers = {}): AxiosPromise<any> =>
+        HttpService.post(endpoints.rejectDiscount(id), payload, params, headers)
 
     public byVisit = (id: any, params = {}, headers = {}): AxiosPromise<any> =>
         HttpService.get(endpoints.byVisit(id), params, headers)
 
     public print = (id: any, params = {}, headers = {}): AxiosPromise<any> =>
         HttpService.get(endpoints.print(id), params, headers)
+
+    public receiptPdf = (id: any): AxiosPromise<any> =>
+        HttpService.get(endpoints.receiptPdf(id), {}, {}, 'blob')
 }

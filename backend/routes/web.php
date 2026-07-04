@@ -1142,8 +1142,14 @@ Route::prefix('api')->group(function () {
         //   SQLSTATE[22P02]: invalid input syntax for type bigint
         Route::get('/get-by-where', [App\Http\Controllers\PatientController::class, 'getByWhere']);
 
+        // Merge duplicate patient records
+        Route::post('/merge', [App\Http\Controllers\PatientController::class, 'merge']);
+
         // Get One
         Route::get('/{id}', [App\Http\Controllers\PatientController::class, 'show']);
+
+        // Audit trail
+        Route::get('/{id}/audit-log', [App\Http\Controllers\PatientController::class, 'auditLog']);
 
         // Create
         Route::post('/', [App\Http\Controllers\PatientController::class, 'store']);
@@ -1229,6 +1235,7 @@ Route::prefix('api')->group(function () {
         Route::get('/dropdown', [App\Http\Controllers\OpdVisitController::class, 'dropdown']);
         Route::get('/', [App\Http\Controllers\OpdVisitController::class, 'index']);
         Route::get('/today', [App\Http\Controllers\OpdVisitController::class, 'today']);
+        Route::get('/display-board', [App\Http\Controllers\OpdVisitController::class, 'displayBoard']);
         Route::get('/{id}', [App\Http\Controllers\OpdVisitController::class, 'show']);
         Route::post('/', [App\Http\Controllers\OpdVisitController::class, 'store']);
         Route::put('/{id}', [App\Http\Controllers\OpdVisitController::class, 'update']);
@@ -1237,6 +1244,8 @@ Route::prefix('api')->group(function () {
 
         Route::post('/{id}/transition', [App\Http\Controllers\OpdVisitController::class, 'transition']);
         Route::post('/{id}/cancel', [App\Http\Controllers\OpdVisitController::class, 'cancel']);
+        Route::post('/{id}/call', [App\Http\Controllers\OpdVisitController::class, 'call']);
+        Route::post('/{id}/follow-up', [App\Http\Controllers\OpdVisitController::class, 'scheduleFollowUp']);
         Route::get('/{id}/audit-log', [App\Http\Controllers\OpdVisitController::class, 'auditLog']);
     });
 
@@ -1269,6 +1278,8 @@ Route::prefix('api')->group(function () {
         Route::post('/bulk', [App\Http\Controllers\OpdPrescriptionController::class, 'bulk']);
         Route::get('/dropdown', [App\Http\Controllers\OpdPrescriptionController::class, 'dropdown']);
         Route::get('/', [App\Http\Controllers\OpdPrescriptionController::class, 'index']);
+        Route::post('/visit/{visitId}', [App\Http\Controllers\OpdPrescriptionController::class, 'saveForVisit']);
+        Route::get('/{id}/pdf', [App\Http\Controllers\OpdPrescriptionController::class, 'pdf']);
         Route::get('/{id}', [App\Http\Controllers\OpdPrescriptionController::class, 'show']);
         Route::post('/', [App\Http\Controllers\OpdPrescriptionController::class, 'store']);
         Route::put('/{id}', [App\Http\Controllers\OpdPrescriptionController::class, 'update']);
@@ -1325,8 +1336,13 @@ Route::prefix('api')->group(function () {
         Route::patch('/{id}', [App\Http\Controllers\OpdBillController::class, 'updateFields']);
         Route::delete('/{id}', [App\Http\Controllers\OpdBillController::class, 'destroy']);
         Route::post('/{id}/payment', [App\Http\Controllers\OpdBillController::class, 'recordPayment']);
+        Route::post('/{id}/payments', [App\Http\Controllers\OpdBillController::class, 'recordSplitPayment']);
         Route::post('/{id}/waive', [App\Http\Controllers\OpdBillController::class, 'waive']);
+        Route::post('/{id}/discount', [App\Http\Controllers\OpdBillController::class, 'applyDiscount']);
+        Route::post('/{id}/discount/approve', [App\Http\Controllers\OpdBillController::class, 'approveDiscount']);
+        Route::post('/{id}/discount/reject', [App\Http\Controllers\OpdBillController::class, 'rejectDiscount']);
         Route::get('/{id}/print', [App\Http\Controllers\OpdBillController::class, 'print']);
+        Route::get('/{id}/receipt-pdf', [App\Http\Controllers\OpdBillController::class, 'receiptPdf']);
     });
 
     // OPD BILL ITEM

@@ -44,6 +44,11 @@
           "http_method": "GET",
           "action_name": "getByWhere",
           "uri": "/patient/getByWhere"
+        },
+        {
+          "http_method": "GET",
+          "action_name": "auditLog",
+          "uri": "/patient/*/audit-log"
         }
       ]
     },
@@ -71,6 +76,17 @@
           "http_method": "PATCH",
           "action_name": "updateFields",
           "uri": "/patient/*"
+        }
+      ]
+    },
+    {
+      "scope": "auth:patient:merge",
+      "display_name": "Merge Duplicate Records",
+      "actions": [
+        {
+          "http_method": "POST",
+          "action_name": "merge",
+          "uri": "/patient/merge"
         }
       ]
     },

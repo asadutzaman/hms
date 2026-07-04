@@ -6,6 +6,7 @@ import OpdVisitFormController from './components/OpdVisit/Form/OpdVisitForm.cont
 import OpdVisitViewController from './components/OpdVisit/View/OpdVisitView.controller'
 import WalkInController from './components/WalkIn/WalkIn.controller'
 import QueueController from './components/Queue/Queue.controller'
+import DisplayBoardController from './components/DisplayBoard/DisplayBoard.controller'
 
 import DoctorScheduleListController from './components/DoctorSchedule/List/DoctorScheduleList.controller'
 import DoctorScheduleFormController from './components/DoctorSchedule/Form/DoctorScheduleForm.controller'
@@ -26,6 +27,7 @@ const OpdVisitRoutes = () => {
       {/* Walk-in & Queue */}
       <Route path='walk-in' element={<WalkInController />} />
       <Route path='queue' element={<QueueController />} />
+      <Route path='display-board' element={<DisplayBoardController />} />
 
       {/* Doctor Schedule CRUD */}
       <Route path='schedules' element={<DoctorScheduleListController />} />

@@ -20,23 +20,23 @@ const endpoints = {
     // booking lifecycle
     availableSlots: () => `${RESOURCE_ENDPOINT}/available-slots`,
     book: () => `${RESOURCE_ENDPOINT}/book`,
-    reschedule: (id: any) => `${RESOURCE_ENDPOINT}/reschedule/${id}`,
-    cancel: (id: any) => `${RESOURCE_ENDPOINT}/cancel/${id}`,
+    reschedule: (id: any) => `${RESOURCE_ENDPOINT}/${id}/reschedule`,
+    cancel: (id: any) => `${RESOURCE_ENDPOINT}/${id}/cancel`,
     confirm: (id: any) => `${RESOURCE_ENDPOINT}/confirm/${id}`,
-    checkIn: (id: any) => `${RESOURCE_ENDPOINT}/check-in/${id}`,
+    checkIn: (id: any) => `${RESOURCE_ENDPOINT}/${id}/check-in`,
     walkIn: () => `${RESOURCE_ENDPOINT}/walk-in`,
-    startConsultation: (id: any) => `${RESOURCE_ENDPOINT}/start-consultation/${id}`,
-    complete: (id: any) => `${RESOURCE_ENDPOINT}/complete/${id}`,
-    markNoShow: (id: any) => `${RESOURCE_ENDPOINT}/no-show/${id}`,
+    startConsultation: (id: any) => `${RESOURCE_ENDPOINT}/${id}/start`,
+    complete: (id: any) => `${RESOURCE_ENDPOINT}/${id}/complete`,
+    markNoShow: (id: any) => `${RESOURCE_ENDPOINT}/${id}/no-show`,
     startBreak: (id: any) => `${RESOURCE_ENDPOINT}/start-break/${id}`,
     endBreak: (id: any) => `${RESOURCE_ENDPOINT}/end-break/${id}`,
 
     // ops board
-    queue: () => `${RESOURCE_ENDPOINT}/queue`,
+    queue: (doctorId: any) => `${RESOURCE_ENDPOINT}/queue/doctor/${doctorId}`,
     dashboard: () => `${RESOURCE_ENDPOINT}/dashboard`,
 
     // audit
-    auditLog: (id: any) => `${RESOURCE_ENDPOINT}/audit-log/${id}`,
+    auditLog: (id: any) => `${RESOURCE_ENDPOINT}/${id}/audit-log`,
 
     // stats
     stats: () => `${RESOURCE_ENDPOINT}/stats`,
@@ -112,8 +112,8 @@ export default class AppointmentApi {
         HttpService.post(endpoints.endBreak(id), {}, params, headers)
 
     // ----- ops board -----
-    public queue = (payload = {}, params = {}, headers = {}): AxiosPromise<any> =>
-        HttpService.post(endpoints.queue(), payload, params, headers)
+    public queue = (doctorId: any, params = {}, headers = {}): AxiosPromise<any> =>
+        HttpService.get(endpoints.queue(doctorId), params, headers)
 
     public dashboard = (payload = {}, params = {}, headers = {}): AxiosPromise<any> =>
         HttpService.post(endpoints.dashboard(), payload, params, headers)

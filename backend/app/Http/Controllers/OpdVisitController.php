@@ -7,6 +7,7 @@ use App\Enums\OpdVisitStatusEnum;
 use App\Exceptions\ValidatorException;
 use App\Http\Resources\OpdVisitResource;
 use App\Models\OpdVisitAuditLog;
+use App\Repositories\AppointmentRepository;
 use App\Repositories\OpdVisitRepository;
 use App\Repositories\CodeSequenceRepository;
 use App\Services\Opd\OpdVisitService;
@@ -36,6 +37,22 @@ class OpdVisitController extends Controller
         $this->repository = $repository;
         $this->validator  = $validator;
         $this->resource   = OpdVisitResource::class;
+    }
+
+    /**
+     * Override show — eager-load the full clinical graph (vitals, diagnoses,
+     * prescription, investigation orders, bill, audit logs) so the frontend
+     * view can render everything from a single call.
+     */
+    public function show($id)
+    {
+        try {
+            $result = $this->repository->withRelations((int) $id);
+            $response = new $this->resource($result, false);
+            return $this->successResourceResponse($response);
+        } catch (\Exception $e) {
+            $this->errorResponse($e->getMessage());
+        }
     }
 
     /**
@@ -180,6 +197,116 @@ class OpdVisitController extends Controller
                 'count'  => $result->count(),
             ]);
         } catch (\Exception $e) {
+            $this->errorResponse($e->getMessage());
+        }
+    }
+
+    /**
+     * GET /opd-visit/display-board — today's queue grouped by doctor, for the
+     * waiting-room display board.
+     */
+    public function displayBoard(Request $request)
+    {
+        try {
+            $departmentId = $request->query('department_id');
+            $board = $this->repository->displayBoard($departmentId ? (int) $departmentId : null);
+
+            return $this->successResponse($board);
+        } catch (\Exception $e) {
+            $this->errorResponse($e->getMessage());
+        }
+    }
+
+    /**
+     * POST /opd-visit/{id}/call — mark a token as called on the display board.
+     */
+    public function call(Request $request, $id)
+    {
+        try {
+            $actorId = Auth::id();
+            $result = $this->repository->callToken((int) $id, $actorId);
+
+            $response = new $this->resource($result->fresh(), false);
+            return $this->successResourceResponse($response);
+        } catch (\Exception $e) {
+            $this->errorResponse($e->getMessage());
+        }
+    }
+
+    /**
+     * POST /opd-visit/{id}/follow-up — schedule a follow-up appointment from
+     * this visit. Defaults the doctor/department to the visit's own.
+     */
+    public function scheduleFollowUp(Request $request, $id)
+    {
+        DB::beginTransaction();
+        try {
+            $request->validate([
+                'follow_up_date' => ['required', 'date_format:Y-m-d', 'after_or_equal:today'],
+                'follow_up_time' => ['nullable', 'date_format:H:i'],
+                'doctor_id'      => ['nullable', 'integer', 'exists:employees,id'],
+                'notes'          => ['nullable', 'string', 'max:500'],
+            ]);
+
+            $visit = $this->repository->findById((int) $id);
+            if (!$visit) {
+                $this->errorResponse('OPD visit not found.');
+            }
+
+            $doctorId = $request->input('doctor_id') ?: $visit->doctor_id;
+            $followUpDate = $request->input('follow_up_date');
+            $startTime = $request->input('follow_up_time') ?: '10:00';
+            $endTime = Carbon::createFromFormat('H:i', $startTime)->addMinutes(15)->format('H:i');
+
+            $appointmentRepo = new AppointmentRepository();
+
+            $appointmentNo = (new CodeSequenceRepository())->getLatestCodeByLabel('APPOINTMENT');
+            if ($appointmentNo === null) {
+                $this->errorResponse('Appointment number sequence not configured. Please seed the APPOINTMENT code sequence.');
+            }
+
+            $appointment = $appointmentRepo->create([
+                'appointment_no'       => $appointmentNo,
+                'patient_id'           => $visit->patient_id,
+                'doctor_id'            => $doctorId,
+                'department_id'        => $visit->department_id,
+                'source'               => 'follow_up',
+                'source_opd_visit_id'  => $visit->id,
+                'appointment_date'     => $followUpDate,
+                'start_time'           => $startTime,
+                'end_time'             => $endTime,
+                'status'               => 'confirmed',
+                'reason_for_visit'     => 'Follow-up visit',
+                'notes'                => $request->input('notes'),
+                'token_number'         => $appointmentRepo->getNextTokenNumber($doctorId, $followUpDate),
+                'booked_by'            => Auth::id(),
+                'created_by'           => Auth::id(),
+                'updated_by'           => Auth::id(),
+            ]);
+
+            (new CodeSequenceRepository())->updateNextSequenceByLabel('APPOINTMENT');
+
+            $this->repository->logAudit(
+                $visit,
+                OpdVisitActionEnum::FOLLOW_UP_SCHEDULED,
+                null,
+                null,
+                Auth::id(),
+                "Follow-up appointment {$appointment->appointment_no} scheduled for {$followUpDate}",
+                ['appointment_id' => $appointment->id],
+            );
+
+            DB::commit();
+            return $this->successResponse([
+                'appointment_id'  => $appointment->id,
+                'appointment_no'  => $appointment->appointment_no,
+                'appointment_date'=> $appointment->appointment_date,
+            ]);
+        } catch (ValidationException $e) {
+            DB::rollBack();
+            throw new ValidatorException($e);
+        } catch (Exception $e) {
+            DB::rollBack();
             $this->errorResponse($e->getMessage());
         }
     }

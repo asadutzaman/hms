@@ -16,6 +16,11 @@ class OpdVisitActionEnum extends BaseEnum
     const WAIVED         = 'waived';
     const CANCEL         = 'cancel';
     const CLOSE          = 'close';
+    const CALLED         = 'called';
+    const FOLLOW_UP_SCHEDULED = 'follow_up_scheduled';
+    const DISCOUNT_REQUESTED = 'discount_requested';
+    const DISCOUNT_APPROVED = 'discount_approved';
+    const DISCOUNT_REJECTED = 'discount_rejected';
 
     public static $valueMap = [
         self::CREATE             => 'Created',
@@ -30,6 +35,11 @@ class OpdVisitActionEnum extends BaseEnum
         self::WAIVED             => 'Waived',
         self::CANCEL             => 'Cancelled',
         self::CLOSE              => 'Closed',
+        self::CALLED             => 'Token Called',
+        self::FOLLOW_UP_SCHEDULED => 'Follow-up Scheduled',
+        self::DISCOUNT_REQUESTED => 'Discount Requested',
+        self::DISCOUNT_APPROVED  => 'Discount Approved',
+        self::DISCOUNT_REJECTED  => 'Discount Rejected',
     ];
 
     public static function getList()

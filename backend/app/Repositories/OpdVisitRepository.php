@@ -10,6 +10,7 @@ use App\Models\OpdVisitAuditLog;
 use App\Services\ODataService;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 use RuntimeException;
 
 class OpdVisitRepository extends BaseRepository
@@ -65,6 +66,51 @@ class OpdVisitRepository extends BaseRepository
         }
 
         return $q->get();
+    }
+
+    /**
+     * Today's queue grouped by doctor, for the waiting-room display board.
+     */
+    public function displayBoard(?int $departmentId = null): array
+    {
+        return $this->todayQueue($departmentId)
+            ->groupBy('doctor_id')
+            ->map(function ($visits) {
+                $first = $visits->first();
+                return [
+                    'doctor_id'   => $first->doctor_id,
+                    'doctor_name' => $first->doctor->name ?? null,
+                    'department'  => $first->department->name ?? null,
+                    'now_serving' => optional(
+                        $visits->firstWhere('status', OpdVisitStatusEnum::IN_CONSULTATION)
+                    )->token_number,
+                    'tokens' => $visits->map(fn ($v) => [
+                        'opd_visit_id'  => $v->id,
+                        'token_number'  => $v->token_number,
+                        'status'        => $v->status,
+                        'called_at'     => $v->called_at,
+                        'patient_name'  => $v->patient->full_name
+                            ?? trim(($v->patient->first_name ?? '') . ' ' . ($v->patient->last_name ?? '')),
+                    ])->values(),
+                ];
+            })
+            ->values()
+            ->all();
+    }
+
+    /**
+     * Mark a token as called (announced) on the display board. Does not
+     * change the visit's clinical status.
+     */
+    public function callToken(int $visitId, int $actorId): OpdVisit
+    {
+        $visit = $this->newQuery()->lockForUpdate()->findOrFail($visitId);
+        $visit->called_at = now();
+        $visit->save();
+
+        $this->logAudit($visit, OpdVisitActionEnum::CALLED, (string) $visit->status, (string) $visit->status, $actorId, 'Token called to display board', ['called_at' => $visit->called_at]);
+
+        return $visit->fresh();
     }
 
     public function doctorActiveVisit(int $doctorId): ?OpdVisit
@@ -123,6 +169,7 @@ class OpdVisitRepository extends BaseRepository
 
             if (!$row) {
                 DB::table('code_sequences')->insert([
+                    'uuid'          => (string) Str::uuid(),
                     'label'         => 'OPD_VISIT',
                     'prefix'        => 'OPD',
                     'separator'     => '-',

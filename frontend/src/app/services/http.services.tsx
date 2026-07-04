@@ -83,12 +83,13 @@ class _HttpService {
     this.headers.Authorization = '';
   };
 
-  public get(url: string, params = {}, headers = {}): AxiosPromise<any> {
+  public get(url: string, params = {}, headers = {}, responseType?: any): AxiosPromise<any> {
     return this.request({
       method: 'GET',
       url: url,
       params: params,
       headers: headers,
+      responseType: responseType,
     });
   }
 

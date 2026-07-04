@@ -83,6 +83,133 @@ class OpdBillController extends Controller
     }
 
     /**
+     * POST /opd-bill/{id}/payments — record a single collection made up of
+     * multiple payment modes at once (e.g. part cash + part card).
+     * Body: { payments: [{payment_method, amount, reference_no?, notes?}, ...] }
+     */
+    public function recordSplitPayment(Request $request, $id)
+    {
+        DB::beginTransaction();
+        try {
+            $request->validate([
+                'payments'                  => ['required', 'array', 'min:1'],
+                'payments.*.payment_method' => ['required', 'string'],
+                'payments.*.amount'         => ['required', 'numeric', 'min:0.01'],
+            ]);
+
+            $actorId = Auth::id();
+            $result = app(OpdBillService::class)->recordSplitPayment(
+                (int) $id,
+                $request->input('payments'),
+                $actorId,
+            );
+
+            DB::commit();
+            $response = new $this->resource($result->fresh(), false);
+            return $this->successResourceResponse($response);
+        } catch (ValidationException $e) {
+            DB::rollBack();
+            throw new ValidatorException($e);
+        } catch (Exception $e) {
+            DB::rollBack();
+            $this->errorResponse($e->getMessage());
+        }
+    }
+
+    /**
+     * GET /opd-bill/{id}/receipt-pdf
+     */
+    public function receiptPdf($id)
+    {
+        try {
+            return app(OpdBillService::class)->renderReceiptPdf((int) $id);
+        } catch (Exception $e) {
+            $this->errorResponse($e->getMessage());
+        }
+    }
+
+    /**
+     * POST /opd-bill/{id}/discount — apply a discount. Auto-approved when
+     * within the configured threshold, otherwise held pending approval.
+     * Body: { amount, type: 'flat'|'percent', reason? }
+     */
+    public function applyDiscount(Request $request, $id)
+    {
+        DB::beginTransaction();
+        try {
+            $request->validate([
+                'amount' => ['required', 'numeric', 'min:0.01'],
+                'type'   => ['required', 'string', 'in:flat,percent'],
+                'reason' => ['nullable', 'string', 'max:255'],
+            ]);
+
+            $actorId = Auth::id();
+            $result = app(OpdBillService::class)->applyDiscount(
+                (int) $id,
+                (float) $request->input('amount'),
+                $request->input('type'),
+                $request->input('reason'),
+                $actorId,
+            );
+
+            DB::commit();
+            $response = new $this->resource($result->fresh(), false);
+            return $this->successResourceResponse($response);
+        } catch (ValidationException $e) {
+            DB::rollBack();
+            throw new ValidatorException($e);
+        } catch (Exception $e) {
+            DB::rollBack();
+            $this->errorResponse($e->getMessage());
+        }
+    }
+
+    /**
+     * POST /opd-bill/{id}/discount/approve
+     */
+    public function approveDiscount($id)
+    {
+        DB::beginTransaction();
+        try {
+            $actorId = Auth::id();
+            $result = app(OpdBillService::class)->approveDiscount((int) $id, $actorId);
+
+            DB::commit();
+            $response = new $this->resource($result->fresh(), false);
+            return $this->successResourceResponse($response);
+        } catch (Exception $e) {
+            DB::rollBack();
+            $this->errorResponse($e->getMessage());
+        }
+    }
+
+    /**
+     * POST /opd-bill/{id}/discount/reject — Body: { reason }
+     */
+    public function rejectDiscount(Request $request, $id)
+    {
+        DB::beginTransaction();
+        try {
+            $request->validate([
+                'reason' => ['required', 'string', 'max:500'],
+            ]);
+
+            $actorId = Auth::id();
+            $result = app(OpdBillService::class)->rejectDiscount((int) $id, $actorId, $request->input('reason'));
+
+            DB::commit();
+            $response = new $this->resource($result->fresh(), false);
+            return $this->successResourceResponse($response);
+        } catch (ValidationException $e) {
+            DB::rollBack();
+            throw new ValidatorException($e);
+        } catch (Exception $e) {
+            DB::rollBack();
+            $this->errorResponse($e->getMessage());
+        }
+    }
+
+    /**
      * POST /opd-bill/{id}/waive — waive the bill.
      */
     public function waive(Request $request, $id)

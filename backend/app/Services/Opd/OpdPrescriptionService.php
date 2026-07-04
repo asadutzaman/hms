@@ -9,6 +9,7 @@ use App\Models\OpdVisit;
 use App\Repositories\OpdPrescriptionItemRepository;
 use App\Repositories\OpdPrescriptionRepository;
 use App\Validators\OpdPrescriptionValidator;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
@@ -81,16 +82,16 @@ class OpdPrescriptionService
         $this->validateOrThrow($data, 'PUT');
 
         return DB::transaction(function () use ($rxId, $data, $actorId) {
-            $rx = $this->rxRepo->find($rxId);
+            $rx = $this->rxRepo->findById($rxId);
             if (!$rx) {
                 throw new ApiException('Prescription not found.', 404);
             }
 
-            $this->rxRepo->update($rxId, array_merge($data, [
+            $this->rxRepo->update(array_merge($data, [
                 'updated_by' => $actorId,
-            ]));
+            ]), $rxId);
 
-            return $this->rxRepo->find($rxId);
+            return $this->rxRepo->findById($rxId);
         });
     }
 
@@ -104,16 +105,16 @@ class OpdPrescriptionService
         }
 
         return DB::transaction(function () use ($rxId, $items, $actorId) {
-            $rx = $this->rxRepo->find($rxId);
+            $rx = $this->rxRepo->findById($rxId);
             if (!$rx) {
                 throw new ApiException('Prescription not found.', 404);
             }
 
-            // Mark old items inactive (soft-delete via status_flag) and create new ones
+            // Mark old items inactive (soft-hide via status) and create new ones
             OpdPrescriptionItem::query()
                 ->where('opd_prescription_id', $rxId)
                 ->update([
-                    'status_flag' => 0,
+                    'status'      => 0,
                     'updated_by'  => $actorId,
                     'updated_at'  => now(),
                 ]);
@@ -138,18 +139,18 @@ class OpdPrescriptionService
      */
     public function markPrinted(int $rxId, int $actorId): OpdPrescription
     {
-        $rx = $this->rxRepo->find($rxId);
+        $rx = $this->rxRepo->findById($rxId);
         if (!$rx) {
             throw new ApiException('Prescription not found.', 404);
         }
 
-        $this->rxRepo->update($rxId, [
+        $this->rxRepo->update([
             'is_printed' => true,
             'printed_at' => now(),
             'updated_by' => $actorId,
-        ]);
+        ], $rxId);
 
-        return $this->rxRepo->find($rxId);
+        return $this->rxRepo->findById($rxId);
     }
 
     public function listForVisit(int $visitId)
@@ -163,12 +164,12 @@ class OpdPrescriptionService
 
     public function find(int $id): ?OpdPrescription
     {
-        return $this->rxRepo->find($id);
+        return $this->rxRepo->findById($id);
     }
 
     public function delete(int $id, int $actorId): bool
     {
-        $rx = $this->rxRepo->find($id);
+        $rx = $this->rxRepo->findById($id);
         if (!$rx) {
             throw new ApiException('Prescription not found.', 404);
         }
@@ -176,11 +177,49 @@ class OpdPrescriptionService
         OpdPrescriptionItem::query()
             ->where('opd_prescription_id', $id)
             ->update([
-                'status_flag' => 0,
+                'status'      => 0,
                 'updated_by'  => $actorId,
                 'updated_at'  => now(),
             ]);
         return $this->rxRepo->delete($id);
+    }
+
+    /**
+     * Render the prescription as a downloadable PDF, and mark it printed.
+     */
+    public function renderPdf(int $prescriptionId, int $actorId)
+    {
+        $prescription = $this->rxRepo->newQuery()
+            ->with(['items', 'visit.patient', 'visit.doctor', 'visit.department'])
+            ->find($prescriptionId);
+
+        if (!$prescription) {
+            throw new ApiException('Prescription not found.', 404);
+        }
+
+        $visit = $prescription->visit;
+        $patient = $visit->patient ?? null;
+        $doctor = $visit->doctor ?? null;
+
+        $patientName = $patient
+            ? trim(($patient->first_name ?? '') . ' ' . ($patient->last_name ?? ''))
+            : '-';
+        $doctorName = $doctor->name_en ?? $doctor->name ?? '-';
+        $departmentName = $visit->department->name ?? '-';
+
+        $pdf = Pdf::loadView('pdf.opd_prescription', [
+            'prescription'   => $prescription,
+            'items'          => $prescription->items,
+            'visit'          => $visit,
+            'patient'        => $patient,
+            'patientName'    => $patientName,
+            'doctorName'     => $doctorName,
+            'departmentName' => $departmentName,
+        ]);
+
+        $this->markPrinted($prescription->id, $actorId);
+
+        return $pdf->stream("prescription-{$visit->opd_no}.pdf");
     }
 
     protected function validateOrThrow(array $data, string $method): void

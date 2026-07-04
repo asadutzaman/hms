@@ -81,14 +81,13 @@ const OpdVisitListFilter: FC<any> = (props) => {
               }
             >
               <Option value=''>All</Option>
-              <Option value='scheduled'>Scheduled</Option>
-              <Option value='confirmed'>Confirmed</Option>
-              <Option value='checked_in'>Checked In</Option>
+              <Option value='waiting'>Waiting</Option>
+              <Option value='vitals_taken'>Vitals Taken</Option>
               <Option value='in_consultation'>In Consultation</Option>
               <Option value='completed'>Completed</Option>
+              <Option value='billed'>Billed</Option>
+              <Option value='closed'>Closed</Option>
               <Option value='cancelled'>Cancelled</Option>
-              <Option value='no_show'>No Show</Option>
-              <Option value='rescheduled'>Rescheduled</Option>
             </Select>
           </Form.Item>
         </Col>

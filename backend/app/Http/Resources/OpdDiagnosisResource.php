@@ -17,18 +17,22 @@ class OpdDiagnosisResource extends BaseResource
             $resource = $this->resource;
 
             $diagnosisTypeLabel = ucfirst((string) ($resource->diagnosis_type ?? ''));
-            $isPrimary = ($resource->diagnosis_type ?? null) === 'primary';
 
             $data = [
-                'id'             => $this->id,
-                'uuid'           => $this->uuid,
-                'visit_id'       => $this->visit_id,
-                'icd_code'       => $this->icd_code,
-                'description'    => $this->description,
-                'diagnosis_type' => $this->diagnosis_type,
-                'sequence'       => $this->sequence,
-                'remarks'        => $this->remarks,
-                'is_primary'     => $isPrimary,
+                'id'                => $this->id,
+                'uuid'              => $this->uuid,
+                'opd_visit_id'      => $this->opd_visit_id,
+                'patient_id'        => $this->patient_id,
+                'icd10_code'        => $this->icd10_code,
+                'icd10_description' => $this->icd10_description,
+                'diagnosis_name'    => $this->diagnosis_name,
+                'diagnosis_type'    => $this->diagnosis_type,
+                'sequence'          => $this->sequence,
+                'notes'             => $this->notes,
+                'is_primary'        => (bool) $this->is_primary,
+                'is_chronic'        => (bool) $this->is_chronic,
+                'is_confirmed'      => (bool) $this->is_confirmed,
+                'recorded_by'       => $this->recorded_by,
                 'created_by_name' => $baseData['created_by_name'] ?? null,
                 'updated_by_name' => $baseData['updated_by_name'] ?? null,
                 'created_at'     => $baseData['created_at'] ?? null,

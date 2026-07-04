@@ -38,6 +38,11 @@
           "http_method": "GET",
           "action_name": "today",
           "uri": "/opd-visit/today"
+        },
+        {
+          "http_method": "GET",
+          "action_name": "displayBoard",
+          "uri": "/opd-visit/display-board"
         }
       ]
     },
@@ -65,6 +70,11 @@
           "http_method": "POST",
           "action_name": "store",
           "uri": "/opd-visit"
+        },
+        {
+          "http_method": "POST",
+          "action_name": "scheduleFollowUp",
+          "uri": "/opd-visit/*/follow-up"
         }
       ]
     },
@@ -86,6 +96,11 @@
           "http_method": "POST",
           "action_name": "transition",
           "uri": "/opd-visit/*/transition"
+        },
+        {
+          "http_method": "POST",
+          "action_name": "call",
+          "uri": "/opd-visit/*/call"
         }
       ]
     },
@@ -325,6 +340,11 @@
           "http_method": "GET",
           "action_name": "show",
           "uri": "/opd-prescription/*"
+        },
+        {
+          "http_method": "GET",
+          "action_name": "pdf",
+          "uri": "/opd-prescription/*/pdf"
         }
       ]
     },
@@ -336,6 +356,11 @@
           "http_method": "POST",
           "action_name": "store",
           "uri": "/opd-prescription"
+        },
+        {
+          "http_method": "POST",
+          "action_name": "saveForVisit",
+          "uri": "/opd-prescription/visit/*"
         }
       ]
     },
@@ -683,6 +708,11 @@
           "http_method": "GET",
           "action_name": "print",
           "uri": "/opd-bill/*/print"
+        },
+        {
+          "http_method": "GET",
+          "action_name": "receiptPdf",
+          "uri": "/opd-bill/*/receipt-pdf"
         }
       ]
     },
@@ -723,8 +753,34 @@
         },
         {
           "http_method": "POST",
+          "action_name": "recordSplitPayment",
+          "uri": "/opd-bill/*/payments"
+        },
+        {
+          "http_method": "POST",
           "action_name": "waive",
           "uri": "/opd-bill/*/waive"
+        },
+        {
+          "http_method": "POST",
+          "action_name": "applyDiscount",
+          "uri": "/opd-bill/*/discount"
+        }
+      ]
+    },
+    {
+      "scope": "auth:opd-bill:approveDiscount",
+      "display_name": "Approve Discount",
+      "actions": [
+        {
+          "http_method": "POST",
+          "action_name": "approveDiscount",
+          "uri": "/opd-bill/*/discount/approve"
+        },
+        {
+          "http_method": "POST",
+          "action_name": "rejectDiscount",
+          "uri": "/opd-bill/*/discount/reject"
         }
       ]
     },

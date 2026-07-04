@@ -150,10 +150,10 @@ const OpdVisitListController: FC<any> = (props) => {
       filterString += " AND doctor_id=" + filters.doctor_id
     }
     if (filters.date_from) {
-      filterString += " AND OpdVisit_date>='" + filters.date_from + "'"
+      filterString += " AND visit_date>='" + filters.date_from + "'"
     }
     if (filters.date_to) {
-      filterString += " AND OpdVisit_date<='" + filters.date_to + "'"
+      filterString += " AND visit_date<='" + filters.date_to + "'"
     }
     return BaseCrudListService.processFilters(filterString)
   }

@@ -18,7 +18,7 @@ class AppointmentAuditLogRepository extends BaseRepository
     {
         return $this->model
             ->where('appointment_id', $appointmentId)
-            ->orderBy('performed_at', 'desc')
+            ->orderBy('occurred_at', 'desc')
             ->get();
     }
 }

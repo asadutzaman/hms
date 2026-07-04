@@ -13,6 +13,8 @@ const endpoints = {
     delete: (id: any) => `${RESOURCE_ENDPOINT}/${id}`,
     bulk: () => `${RESOURCE_ENDPOINT}/bulk`,
     dropdown: () => `${RESOURCE_ENDPOINT}/dropdown`,
+    saveForVisit: (visitId: any) => `${RESOURCE_ENDPOINT}/visit/${visitId}`,
+    pdf: (id: any) => `${RESOURCE_ENDPOINT}/${id}/pdf`,
 }
 
 export default class OpdPrescriptionApi {
@@ -39,4 +41,10 @@ export default class OpdPrescriptionApi {
 
     public dropdown = (params = {}, headers = {}): AxiosPromise<any> =>
         HttpService.get(endpoints.dropdown(), params, headers)
+
+    public saveForVisit = (visitId: any, payload = {}, params = {}, headers = {}): AxiosPromise<any> =>
+        HttpService.post(endpoints.saveForVisit(visitId), payload, params, headers)
+
+    public pdf = (id: any): AxiosPromise<any> =>
+        HttpService.get(endpoints.pdf(id), {}, {}, 'blob')
 }

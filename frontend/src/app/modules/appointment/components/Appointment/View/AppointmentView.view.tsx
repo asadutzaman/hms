@@ -1,6 +1,11 @@
-import React, {FC} from 'react'
-import {Badge, Descriptions, Tag, Divider} from 'antd'
+import React, {FC, useState} from 'react'
+import {Badge, Descriptions, Tag, Divider, Button, Space, Modal, Form, Input, Tooltip, notification} from 'antd'
+import {StopOutlined, CalendarOutlined} from '@ant-design/icons'
 import {DateTimeUtils} from 'src/app/utils'
+import {AppointmentApi} from 'src/app/api'
+import AuditLogPanel from 'src/app/components/AuditLog/AuditLogPanel'
+
+const {TextArea} = Input
 
 const statusColor = (status: string): string => {
   switch (status) {
@@ -25,9 +30,72 @@ const statusColor = (status: string): string => {
   }
 }
 
-const AppointmentView: FC<any> = ({itemData}) => {
+// Backend allows cancel/reschedule up to 2h before the appointment; mirror that
+// here so the buttons are disabled ahead of the API rejecting the request.
+const isWithinModifyWindow = (itemData: any): boolean => {
+  if (!itemData?.appointment_date) return true
+  const dateTime = new Date(`${itemData.appointment_date}T${itemData.start_time || '00:00'}`)
+  if (isNaN(dateTime.getTime())) return true
+  return dateTime.getTime() - Date.now() > 2 * 60 * 60 * 1000
+}
+
+const AppointmentView: FC<any> = ({itemData, handleCallbackFunc}) => {
+  const [cancelForm] = Form.useForm()
+  const [rescheduleForm] = Form.useForm()
+  const [cancelModalOpen, setCancelModalOpen] = useState(false)
+  const [rescheduleModalOpen, setRescheduleModalOpen] = useState(false)
+  const [submitting, setSubmitting] = useState(false)
+
   if (!itemData || !itemData.id) {
     return <div className='p-6'>No appointment selected.</div>
+  }
+
+  const modifiable = !['completed', 'cancelled'].includes(itemData.status)
+  const withinWindow = isWithinModifyWindow(itemData)
+
+  const notifyReload = () => {
+    handleCallbackFunc?.('singleAction', 'reloadView')
+    handleCallbackFunc?.('singleAction', 'reloadListing')
+  }
+
+  const handleCancel = async (values: any) => {
+    setSubmitting(true)
+    try {
+      await AppointmentApi.cancel(itemData.id, {cancellation_reason: values.cancellation_reason})
+      notification.success({message: 'Appointment cancelled'})
+      setCancelModalOpen(false)
+      cancelForm.resetFields()
+      notifyReload()
+    } catch (e: any) {
+      notification.error({
+        message: 'Failed to cancel appointment',
+        description: e?.response?.data?.message || e?.message || 'Unknown error',
+      })
+    } finally {
+      setSubmitting(false)
+    }
+  }
+
+  const handleReschedule = async (values: any) => {
+    setSubmitting(true)
+    try {
+      await AppointmentApi.reschedule(itemData.id, {
+        appointment_date: values.appointment_date,
+        appointment_time: values.appointment_time,
+        reason: values.reason,
+      })
+      notification.success({message: 'Appointment rescheduled'})
+      setRescheduleModalOpen(false)
+      rescheduleForm.resetFields()
+      notifyReload()
+    } catch (e: any) {
+      notification.error({
+        message: 'Failed to reschedule appointment',
+        description: e?.response?.data?.message || e?.message || 'Unknown error',
+      })
+    } finally {
+      setSubmitting(false)
+    }
   }
 
   return (
@@ -46,12 +114,44 @@ const AppointmentView: FC<any> = ({itemData}) => {
               : ''}
           </div>
         </div>
-        <div>
+        <div className='d-flex align-items-center gap-3'>
           <Badge color={statusColor(itemData.status)} className='text-capitalize fs-6'>
             {(itemData.status || 'unknown').replace('_', ' ')}
           </Badge>
+          {modifiable && (
+            <Space>
+              <Tooltip title={!withinWindow ? 'Cannot reschedule within 2 hours of the appointment' : ''}>
+                <Button
+                  size='small'
+                  icon={<CalendarOutlined />}
+                  disabled={!withinWindow}
+                  onClick={() => setRescheduleModalOpen(true)}
+                >
+                  Reschedule
+                </Button>
+              </Tooltip>
+              <Tooltip title={!withinWindow ? 'Cannot cancel within 2 hours of the appointment' : ''}>
+                <Button
+                  size='small'
+                  danger
+                  icon={<StopOutlined />}
+                  disabled={!withinWindow}
+                  onClick={() => setCancelModalOpen(true)}
+                >
+                  Cancel
+                </Button>
+              </Tooltip>
+            </Space>
+          )}
         </div>
       </div>
+
+      {itemData.reschedule_count > 0 && (
+        <Tag color='purple' className='mb-4'>
+          Rescheduled {itemData.reschedule_count} time(s)
+          {itemData.rescheduled_from_id ? ` (from appointment #${itemData.rescheduled_from_id})` : ''}
+        </Tag>
+      )}
 
       {/* ============= APPOINTMENT INFO ============= */}
       <Descriptions
@@ -214,23 +314,59 @@ const AppointmentView: FC<any> = ({itemData}) => {
       </Descriptions>
 
       {/* ============= AUDIT TRAIL ============= */}
-      {itemData.audit_logs && itemData.audit_logs.length > 0 && (
-        <>
-          <Divider plain>Audit Trail</Divider>
-          {itemData.audit_logs.map((log: any) => (
-            <div key={log.id} className='mb-2'>
-              <Tag color='default'>{log.action}</Tag>
-              <span className='text-muted fs-7 me-2'>
-                {log.created_at ? DateTimeUtils.formatDateTime(log.created_at) : ''}
-              </span>
-              <span>by {log.user_name || '-'}</span>
-              {log.notes && (
-                <div className='text-muted fs-7 ms-5'>{log.notes}</div>
-              )}
-            </div>
-          ))}
-        </>
-      )}
+      <Divider plain>Audit Trail</Divider>
+      <AuditLogPanel fetchFn={() => AppointmentApi.auditLog(itemData.id)} reloadKey={itemData.id} />
+
+      {/* ============= CANCEL MODAL ============= */}
+      <Modal
+        title='Cancel Appointment'
+        open={cancelModalOpen}
+        onCancel={() => setCancelModalOpen(false)}
+        onOk={() => cancelForm.submit()}
+        confirmLoading={submitting}
+        okText='Confirm Cancellation'
+        okButtonProps={{danger: true}}
+      >
+        <Form form={cancelForm} layout='vertical' onFinish={handleCancel}>
+          <Form.Item
+            name='cancellation_reason'
+            label='Cancellation Reason'
+            rules={[{max: 500, message: 'Maximum 500 characters'}]}
+          >
+            <TextArea rows={3} placeholder='Optional reason for cancellation' />
+          </Form.Item>
+        </Form>
+      </Modal>
+
+      {/* ============= RESCHEDULE MODAL ============= */}
+      <Modal
+        title='Reschedule Appointment'
+        open={rescheduleModalOpen}
+        onCancel={() => setRescheduleModalOpen(false)}
+        onOk={() => rescheduleForm.submit()}
+        confirmLoading={submitting}
+        okText='Confirm Reschedule'
+      >
+        <Form form={rescheduleForm} layout='vertical' onFinish={handleReschedule}>
+          <Form.Item
+            name='appointment_date'
+            label='New Date'
+            rules={[{required: true, message: 'Please select a date'}]}
+          >
+            <Input type='date' />
+          </Form.Item>
+          <Form.Item
+            name='appointment_time'
+            label='New Time'
+            rules={[{required: true, message: 'Please select a time'}]}
+          >
+            <Input type='time' />
+          </Form.Item>
+          <Form.Item name='reason' label='Reason' rules={[{max: 500, message: 'Maximum 500 characters'}]}>
+            <TextArea rows={3} placeholder='Optional reason for rescheduling' />
+          </Form.Item>
+        </Form>
+      </Modal>
     </div>
   )
 }

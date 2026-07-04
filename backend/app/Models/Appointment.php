@@ -42,6 +42,7 @@ class Appointment extends BaseModel
         'notes',
         'cancellation_reason',
         'rescheduled_from_id',
+        'source_opd_visit_id',
         'reschedule_count',
         'confirmed_at',
         'checked_in_at',
@@ -67,6 +68,7 @@ class Appointment extends BaseModel
         'chamber_id'               => 'integer',
         'appointment_slot_id'      => 'integer',
         'rescheduled_from_id'      => 'integer',
+        'source_opd_visit_id'      => 'integer',
         'reschedule_count'         => 'integer',
         'token_number'             => 'integer',
         'token_sequence'           => 'integer',
@@ -129,6 +131,11 @@ class Appointment extends BaseModel
     public function rescheduledFrom(): BelongsTo
     {
         return $this->belongsTo(Appointment::class, 'rescheduled_from_id');
+    }
+
+    public function sourceOpdVisit(): BelongsTo
+    {
+        return $this->belongsTo(OpdVisit::class, 'source_opd_visit_id');
     }
 
     public function bookedByUser(): BelongsTo
