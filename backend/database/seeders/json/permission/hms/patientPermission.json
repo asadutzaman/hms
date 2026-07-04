@@ -49,6 +49,11 @@
           "http_method": "GET",
           "action_name": "auditLog",
           "uri": "/patient/*/audit-log"
+        },
+        {
+          "http_method": "GET",
+          "action_name": "allergies",
+          "uri": "/patient/*/allergies"
         }
       ]
     },

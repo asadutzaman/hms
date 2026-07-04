@@ -30,6 +30,7 @@ class RequisitionResource extends BaseResource
                 'description'        => $this->description,
                 'reconcile_status'   => $this->reconcile_status,
                 'process_status'     => $this->process_status,
+                'linked_purchase_order_id' => $this->linked_purchase_order_id,
                 'status'             => $this->status,
                 'created_by'         => $this->created_by,
                 'created_by_name'    => $baseData['created_by_name'],

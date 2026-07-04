@@ -7,6 +7,7 @@ use App\Http\Resources\GoodsReceiveNoteResource;
 use App\Repositories\GoodsReceiveNoteItemRepository;
 use App\Repositories\GoodsReceiveNoteRepository;
 use App\Repositories\ItemStockRepository;
+use App\Services\Inventory\PurchaseOrderService;
 use App\Services\SessionService;
 use App\Traits\Controller\RestControllerTrait;
 use App\Validators\GoodsReceiveNoteValidator;
@@ -83,11 +84,21 @@ class GoodsReceiveNoteApprovalController extends Controller
                     'unit_price'       => $item->unit_price,
                     'quantity'         => $item->quantity,
                     'balance_quantity' => $item->quantity,
+                    'expire_date'      => $item->expire_date,
                     'recordable_id'    => $item->id,
                     'recordable_type'  => 'App\Models\GoodsReceiveNoteItem',
                     'action_from'      => 'GRN',
                     'remarks'          => "Goods-Receive-Note/{$grnInfo->grn_number}",
                 ]);
+            }
+
+            // GRN received against a PO: feed received quantities back to the
+            // PO lines and flip the PO to partially_received/completed.
+            if (!empty($grnInfo->purchase_order_id)) {
+                $receivedItems = $grnItemList->map(function ($item) {
+                    return ['item_id' => $item->item_id, 'quantity' => $item->quantity];
+                })->toArray();
+                (new PurchaseOrderService())->applyReceipt($grnInfo->purchase_order_id, $receivedItems);
             }
         } else {
             $response['error_status'] = true;

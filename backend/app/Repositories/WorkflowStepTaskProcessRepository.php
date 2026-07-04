@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Http\Controllers\Approval\GoodsReceiveNoteApprovalController;
+use App\Http\Controllers\Approval\PurchaseOrderApprovalController;
 use App\Http\Controllers\Approval\RequisitionApprovalController;
 use App\Http\Controllers\Approval\StockAdjustmentApprovalController;
 use App\Http\Controllers\Approval\StockTransferApprovalController;
@@ -77,6 +78,11 @@ class WorkflowStepTaskProcessRepository extends BaseRepository
                 // Call another controller method directly
                 $stockTransferApprovalController = app(StockTransferApprovalController::class);
                 $stockTransferApprovalController->workflowProcess($data, $workflowRecordId);
+            }
+            if ($workflowInfo->type == 'PurchaseOrder') {
+                // Call another controller method directly
+                $purchaseOrderApprovalController = app(PurchaseOrderApprovalController::class);
+                $purchaseOrderApprovalController->workflowProcess($data, $workflowRecordId);
             }
         } catch (\Exception $e) {
             Log::error('Workflow Update Fields', [

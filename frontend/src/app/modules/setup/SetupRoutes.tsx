@@ -9,6 +9,7 @@ import ItemCategoryListController from './components/ItemCategory/List/ItemCateg
 import BrandListController from './components/Brand/List/BrandList.controller'
 import BranchListController from './components/Branch/List/BranchList.controller'
 import ItemListController from './components/Item/List/ItemList.controller'
+import DrugListController from './components/Drug/List/DrugList.controller'
 import LogisticListController from './components/Logistic/List/LogisticList.controller'
 import AttributeListController from './components/Attribute/List/AttributeList.controller'
 import ShelveListController from './components/Shelve/List/ShelveList.controller'
@@ -28,6 +29,7 @@ const SetupRoutes = () => {
       <Route path={'/logistic'} element={<LogisticListController />} />
       <Route path={'/attribute'} element={<AttributeListController />} />
       <Route path={'/item'} element={<ItemListController />} />
+      <Route path={'/drug'} element={<DrugListController />} />
     </Routes>
   )
 }

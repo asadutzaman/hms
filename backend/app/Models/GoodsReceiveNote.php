@@ -19,6 +19,7 @@ class GoodsReceiveNote extends BaseModel
         'grn_number',
         'branch_id',
         'supplier_id',
+        'purchase_order_id',
         'logistic_id',
         'ref_po_number',
         'ref_po_date',
@@ -43,6 +44,7 @@ class GoodsReceiveNote extends BaseModel
         'branch_id'        => 'integer',
         'logistic_id'      => 'integer',
         'supplier_id'      => 'integer',
+        'purchase_order_id' => 'integer',
         'sort_order'       => 'integer',
         'status'           => 'integer',
 

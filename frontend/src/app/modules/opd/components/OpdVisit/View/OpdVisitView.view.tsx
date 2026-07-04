@@ -35,6 +35,7 @@ import {
 import {DateTimeUtils} from 'src/app/utils'
 import {OpdVisitApi, OpdVitalApi, OpdDiagnosisApi, OpdPrescriptionApi, OpdBillApi} from 'src/app/api'
 import AuditLogPanel from 'src/app/components/AuditLog/AuditLogPanel'
+import AllergyBanner from 'src/app/components/Allergy/AllergyBanner'
 import {usePermissionContext} from 'src/app/hooks/context/usePermissionContext'
 
 const {TextArea} = Input
@@ -445,6 +446,7 @@ const OpdVisitView: FC<any> = ({itemData, handleCallbackFunc}) => {
   // ── TAB: CLINICAL (SOAP) ─────────────────────────────────────────────────
   const clinicalTab = (
     <div>
+      <AllergyBanner patientId={itemData.patient_id} />
       <Descriptions title='S · Subjective' bordered column={1} size='small' className='mb-6'>
         <Descriptions.Item label='Chief Complaint'>{itemData.chief_complaint || '-'}</Descriptions.Item>
         <Descriptions.Item label='History'>

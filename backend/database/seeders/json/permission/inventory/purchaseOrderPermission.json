@@ -1,0 +1,105 @@
+{
+    "resource": {
+        "permission_type": "RESOURCE",
+        "name": "purchaseOrder",
+        "display_name": "Purchase Order",
+        "resource_uri": "purchaseOrder",
+        "controller_name": "PurchaseOrderController",
+        "server_url_prefix": "auth",
+        "component": "COMMON"
+    },
+    "scopes": [
+        {
+            "scope": "auth:purchaseOrder:menuAccess",
+            "display_name": "Menu Access",
+            "actions": [
+                {
+                    "http_method": "GET",
+                    "action_name": "index",
+                    "uri": "/purchase-order"
+                }
+            ]
+        },
+        {
+            "scope": "auth:purchaseOrder:list",
+            "display_name": "List",
+            "actions": [
+                {
+                    "http_method": "GET",
+                    "action_name": "index",
+                    "uri": "/purchase-order"
+                },
+                {
+                    "http_method": "GET",
+                    "action_name": "dropdown",
+                    "uri": "/purchase-order/dropdown"
+                }
+            ]
+        },
+        {
+            "scope": "auth:purchaseOrder:view",
+            "display_name": "View",
+            "actions": [
+                {
+                    "http_method": "GET",
+                    "action_name": "show",
+                    "uri": "/purchase-order/*"
+                },
+                {
+                    "http_method": "GET",
+                    "action_name": "itemsForGrn",
+                    "uri": "/purchase-order/*/items-for-grn"
+                }
+            ]
+        },
+        {
+            "scope": "auth:purchaseOrder:create",
+            "display_name": "Create",
+            "actions": [
+                {
+                    "http_method": "POST",
+                    "action_name": "store",
+                    "uri": "/purchase-order"
+                }
+            ]
+        },
+        {
+            "scope": "auth:purchaseOrder:edit",
+            "display_name": "Edit",
+            "actions": [
+                {
+                    "http_method": "PUT",
+                    "action_name": "update",
+                    "uri": "/purchase-order/*"
+                },
+                {
+                    "http_method": "PATCH",
+                    "action_name": "updateFields",
+                    "uri": "/purchase-order/*"
+                }
+            ]
+        },
+        {
+            "scope": "auth:purchaseOrder:delete",
+            "display_name": "Delete",
+            "actions": [
+                {
+                    "http_method": "DELETE",
+                    "action_name": "destroy",
+                    "uri": "/purchase-order/*"
+                }
+            ]
+        },
+        {
+            "scope": "auth:purchaseOrder:multiSelect",
+            "display_name": "Multiple Selection",
+            "actions": [
+                {
+                    "http_method": "POST",
+                    "action_name": "bulk",
+                    "uri": "/purchase-order/bulk"
+                }
+            ]
+        }
+    ]
+}

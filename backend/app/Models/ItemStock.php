@@ -22,6 +22,7 @@ class ItemStock extends BaseModel
         'unit_price',
         'quantity',
         'balance_quantity',
+        'expire_date',
         'recordable_id',
         'recordable_type',
         'action_from',
@@ -51,6 +52,7 @@ class ItemStock extends BaseModel
 
         //Date
         'date'          => 'date:Y-m-d',
+        'expire_date'   => 'date:Y-m-d',
         //Date Time
         'created_at'    => 'datetime:Y-m-d H:i:s',
         'updated_at'    => 'datetime:Y-m-d H:i:s',

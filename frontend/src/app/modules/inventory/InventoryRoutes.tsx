@@ -16,6 +16,11 @@ import ItemRequisitionStatusListController from '../reports/components/ItemRequi
 import RequesterWiseDisbursementListController from '../reports/components/RequesterWiseDisbursement/List/RequesterWiseDisbursementList.controller'
 import ItemWiseDisbursementListController from '../reports/components/ItemWiseDisbursement/List/ItemWiseDisbursementList.controller'
 import ThanaWiseDisbursementListController from '../reports/components/ThanaWiseDisbursement/List/ThanaWiseDisbursementList.controller'
+import DrugExpiryListController from '../reports/components/DrugExpiry/List/DrugExpiryList.controller'
+import PurchaseOrderListController from './components/PurchaseOrder/List/PurchaseOrderList.controller'
+import PurchaseOrderApprovalListController from './components/PurchaseOrderApproval/List/PurchaseOrderApprovalList.controller'
+import VendorComparisonController from './components/VendorComparison/VendorComparison.controller'
+import RateContractListController from './components/RateContract/List/RateContractList.controller'
 
 const InventoryRoutes = () => {
   return (
@@ -40,6 +45,12 @@ const InventoryRoutes = () => {
       <Route path={'/stock-transfer'} element={<StockTransferListController />} />
       <Route path={'/stock-transfer-approval'} element={<StockTransferApprovalListController />} />
 
+      <Route path={'/purchase-order'} element={<PurchaseOrderListController />} />
+      <Route path={'/purchase-order-approval'} element={<PurchaseOrderApprovalListController />} />
+
+      <Route path={'/vendor-comparison'} element={<VendorComparisonController />} />
+      <Route path={'/rate-contract'} element={<RateContractListController />} />
+
       {/* Report */}
       <Route
         path={'/report/requisition-analytics'}
@@ -63,6 +74,7 @@ const InventoryRoutes = () => {
         path={'/report/branch-wise-disbursement'}
         element={<ThanaWiseDisbursementListController />}
       />
+      <Route path={'/report/drug-expiry'} element={<DrugExpiryListController />} />
     </Routes>
   )
 }

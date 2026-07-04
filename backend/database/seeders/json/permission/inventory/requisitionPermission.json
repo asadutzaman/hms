@@ -86,6 +86,17 @@
       ]
     },
     {
+      "scope": "auth:requisition:convertToPurchaseOrder",
+      "display_name": "Convert Shortfall to Purchase Order",
+      "actions": [
+        {
+          "http_method": "POST",
+          "action_name": "convertToPurchaseOrder",
+          "uri": "/requisition/*/convert-to-po"
+        }
+      ]
+    },
+    {
       "scope": "auth:requisition:multiSelect",
       "display_name": "Multiple Selection",
       "actions": [

@@ -445,6 +445,135 @@
         ]
     },
     {
+        "workflow_name": "Purchase Order Approval",
+        "workflow_code": "PURCHASE_ORDER_APPROVAL",
+        "type": "PurchaseOrder",
+        "steps": [
+            {
+                "step_key": "Step-1",
+                "step_name": "Initiation",
+                "step_code": "INITIATION",
+                "step_type": "APPROVAL",
+                "sort_order": 1,
+                "preconditions": [
+                    {
+                        "field_name": "process_status",
+                        "operator": "EQUAL",
+                        "field_value": "DRAFT"
+                    },
+                    {
+                        "field_name": "process_status",
+                        "operator": "EQUAL",
+                        "field_value": "SUBMITTED"
+                    },
+                    {
+                        "field_name": "process_status",
+                        "operator": "EQUAL",
+                        "field_value": "BACKWARD_INITIATION"
+                    },
+                    {
+                        "field_name": "process_status",
+                        "operator": "EQUAL",
+                        "field_value": "APPROVED"
+                    },
+                    {
+                        "field_name": "process_status",
+                        "operator": "EQUAL",
+                        "field_value": "REJECT"
+                    }
+                ],
+                "actions": [],
+                "tasks": [],
+                "approvers": []
+            },
+            {
+                "step_key": "Step-2",
+                "step_name": "Approval",
+                "step_code": "APPROVAL",
+                "step_type": "APPROVAL",
+                "sort_order": 2,
+                "preconditions": [
+                    {
+                        "field_name": "process_status",
+                        "operator": "EQUAL",
+                        "field_value": "SUBMITTED"
+                    }
+                ],
+                "actions": [
+                    {
+                        "action_type": "APPROVAL",
+                        "action_name": "Approve",
+                        "action_code": "APPROVE",
+                        "is_comment_mandatory": false,
+                        "sort_order": 1,
+                        "rules": [
+                            {
+                                "rule_type": "STATUS",
+                                "operator": "EQUAL",
+                                "value": "SUBMITTED"
+                            }
+                        ]
+                    },
+                    {
+                        "action_type": "APPROVAL",
+                        "action_name": "Reject",
+                        "action_code": "REJECT",
+                        "is_comment_mandatory": true,
+                        "sort_order": 2,
+                        "rules": [
+                            {
+                                "rule_type": "STATUS",
+                                "operator": "EQUAL",
+                                "value": "SUBMITTED"
+                            }
+                        ]
+                    },
+                    {
+                        "action_type": "APPROVAL",
+                        "action_name": "Send Back",
+                        "action_code": "SEND_BACK",
+                        "is_comment_mandatory": true,
+                        "sort_order": 3,
+                        "rules": [
+                            {
+                                "rule_type": "STATUS",
+                                "operator": "EQUAL",
+                                "value": "SUBMITTED"
+                            }
+                        ]
+                    }
+                ],
+                "tasks": [
+                    {
+                        "action_name": "Approve",
+                        "action_code": "APPROVE",
+                        "task_key": "UPDATE_FIELD",
+                        "task_type": "Update Field",
+                        "field_name": "process_status",
+                        "field_value": "APPROVED"
+                    },
+                    {
+                        "action_name": "Reject",
+                        "action_code": "REJECT",
+                        "task_key": "UPDATE_FIELD",
+                        "task_type": "Update Field",
+                        "field_name": "process_status",
+                        "field_value": "REJECTED"
+                    },
+                    {
+                        "action_name": "Send Back",
+                        "action_code": "SEND_BACK",
+                        "task_key": "UPDATE_FIELD",
+                        "task_type": "Update Field",
+                        "field_name": "process_status",
+                        "field_value": "BACKWARD_INITIATION"
+                    }
+                ],
+                "approvers": []
+            }
+        ]
+    },
+    {
         "workflow_name": "Stock Adjustment Approval",
         "workflow_code": "STOCK_ADJUSTMENT_APPROVAL",
         "type": "StockAdjustment",

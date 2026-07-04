@@ -137,6 +137,55 @@ class RequisitionApprovalController extends Controller
         }
     }
 
+    /**
+     * Compare each requisition line's requested (or revised) quantity
+     * against warehouse stock on hand. Returns a structured shortfall list
+     * (empty when everything can be fulfilled) so callers can either abort
+     * disbursement with an actionable message, or drive a "create PO for
+     * shortfall" UI.
+     */
+    public function computeShortfall($requisitionId)
+    {
+        $requisitionItemList = $this->requisitionItemRepository->findWhere('requisition_id', $requisitionId);
+        $warehouseInfo = (new BranchRepository())->getWarehouseInfo();
+
+        $shortfall = [];
+        if (empty($requisitionItemList) || empty($warehouseInfo)) {
+            return $shortfall;
+        }
+
+        foreach ($requisitionItemList as $requisitionItem) {
+            $requestedQty = $requisitionItem->revised_quantity == null ? $requisitionItem->request_quantity : $requisitionItem->revised_quantity;
+            $availableQty = $this->itemStockRepository->getItemWiseAvailableStockQty($warehouseInfo->id, $requisitionItem->item_id);
+            if ($availableQty < $requestedQty) {
+                $itemInfo = (new ItemRepository())->findById($requisitionItem->item_id);
+                $shortfall[] = [
+                    'item_id'          => $requisitionItem->item_id,
+                    'item_code'        => $itemInfo->code ?? null,
+                    'item_name'        => $itemInfo->name_en ?? null,
+                    'requested_qty'    => (float) $requestedQty,
+                    'available_qty'    => (float) $availableQty,
+                    'shortfall_qty'    => (float) $requestedQty - (float) $availableQty,
+                ];
+            }
+        }
+
+        return $shortfall;
+    }
+
+    /**
+     * GET /approval-requisition/{id}/shortfall
+     */
+    public function shortfall($id)
+    {
+        try {
+            $shortfall = $this->computeShortfall($id);
+            return $this->successResponse(['shortfall' => $shortfall]);
+        } catch (Exception $e) {
+            $this->errorResponse($e->getMessage());
+        }
+    }
+
     private function disburseItem($requisitionId)
     {
         /**
@@ -149,6 +198,15 @@ class RequisitionApprovalController extends Controller
             'error_status' => false,
             'message'      => "",
         ];
+
+        $shortfall = $this->computeShortfall($requisitionId);
+        if (!empty($shortfall)) {
+            $itemCodes = array_column($shortfall, 'item_code');
+            $response['error_status'] = true;
+            $response['message'] = 'Insufficient warehouse stock for: ' . implode(', ', $itemCodes) . '. Create a Purchase Order for the shortfall and try again after receiving stock.';
+            return $response;
+        }
+
         $requisitionInfo = $this->repository->findById($requisitionId);
         $requisitionItemList = $this->requisitionItemRepository->findWhere('requisition_id', $requisitionId);
         $warehouseInfo = (new BranchRepository())->getWarehouseInfo();
@@ -157,12 +215,6 @@ class RequisitionApprovalController extends Controller
             foreach ($requisitionItemList as $key => $requisitionItem) {
                 // STEP-1: WAREHOUSE ITEM STOCK CHECKING
                 $requestedDisburseQty = $requisitionItem->revised_quantity == null ? $requisitionItem->request_quantity : $requisitionItem->revised_quantity;
-                $availableStockQty = $this->itemStockRepository->getItemWiseAvailableStockQty($warehouseInfo->id, $requisitionItem->item_id);
-                if ($availableStockQty < $requestedDisburseQty) {
-                    $itemInfo = (new ItemRepository())->findById($requisitionItem->item_id);
-                    $response['error_status'] = true;
-                    $response['message'] = "Insufficient quantity for {$itemInfo->code}";
-                }
 
                 $itemWiseStockList = $this->itemStockRepository->getItemWiseStockList('FIFO', $warehouseInfo->id, $requisitionItem->item_id, $requestedDisburseQty);
                 if (!empty($itemWiseStockList)) {

@@ -7,6 +7,7 @@ import {StatusEnum} from 'src/app/utils/enums'
 import ViewTabList from 'src/app/components/Tab/ViewTabList'
 import RequisitionApprovalViewTab from '../Tabs/RequisitionApprovalView.tab'
 import RequisitionApprovalItemViewTab from '../Tabs/RequisitionApprovalItemView.tab'
+import RequisitionShortfallTab from '../Tabs/RequisitionShortfall.tab'
 import {Col, Divider, Row, Timeline} from 'antd'
 import StepBarProgress from 'src/app/components/Workflow/StepBarProgress'
 import WorkflowActionController from 'src/app/components/Workflow/Actions/WorkflowAction.controller'
@@ -42,6 +43,12 @@ const RequisitionApprovalView: FC<any> = (props) => {
       label: t('Requisition Approval Items'),
       permission: '',
       component: <RequisitionApprovalItemViewTab itemData={itemData} {...restProps} />,
+    },
+    {
+      tabIndex: 3,
+      label: t('Shortfall & PO'),
+      permission: '',
+      component: <RequisitionShortfallTab itemData={itemData} />,
     },
   ]
   return (

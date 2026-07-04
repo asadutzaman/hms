@@ -23,6 +23,7 @@ class GoodsReceiveNoteResource extends BaseResource
                 'id'               => $this->id,
                 'grn_number'       => $this->grn_number,
                 'branch_id'        => $this->branch_id,
+                'purchase_order_id' => $this->purchase_order_id,
                 'logistic_id'      => $this->logistic_id,
                 'ref_po_number'    => $this->ref_po_number,
                 'ref_po_date'      => $this->ref_po_date,

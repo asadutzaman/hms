@@ -30,6 +30,7 @@ import _LogisticApi from './Setup/Logistic.api'
 import _AttributeApi from './Setup/Attribute.api'
 import _AttributeValueApi from './Setup/AttributeValue.api'
 import _ItemApi from './Setup/Item.api'
+import _DrugApi from './Setup/Drug.api'
 import _ItemCategoryApi from './Setup/ItemCategory.api'
 import _GovtHolidayApi from './Setup/GovtHoliday.api'
 // INVENTORY
@@ -38,6 +39,10 @@ import _RequisitionApi from './Inventory/Requisition.api'
 import _RequisitionApprovalApi from './Inventory/RequisitionApproval.api'
 import _GoodsReceiveNoteApi from './Inventory/GoodsReceiveNote.api'
 import _GoodsReceiveNoteApprovalApi from './Inventory/GoodsReceiveNoteApproval.api'
+import _PurchaseOrderApi from './Inventory/PurchaseOrder.api'
+import _PurchaseOrderApprovalApi from './Inventory/PurchaseOrderApproval.api'
+import _VendorQuoteApi from './Inventory/VendorQuote.api'
+import _RateContractApi from './Inventory/RateContract.api'
 import _StockAdjustmentApi from './Inventory/StockAdjustment.api'
 import _StockAdjustmentApprovalApi from './Inventory/StockAdjustmentApproval.api'
 import _WorkflowTransitionApi from './Inventory/WorkflowTransition.api'
@@ -50,6 +55,7 @@ import _ReportInvApi from './Inventory/ReportInv.api'
 import _EmployeeApi from './Company/Employee.api'
 // PATIENT
 import _PatientApi from './Patient/Patient.api'
+import _PatientAllergyApi from './Patient/PatientAllergy.api'
 // APPOINTMENT
 import _AppointmentApi from './Appointment/Appointment.api'
 import _DoctorScheduleApi from './DoctorSchedule/DoctorSchedule.api'
@@ -101,6 +107,7 @@ export const LogisticApi = new _LogisticApi()
 export const AttributeApi = new _AttributeApi()
 export const AttributeValueApi = new _AttributeValueApi()
 export const ItemApi = new _ItemApi()
+export const DrugApi = new _DrugApi()
 export const WorkflowTransitionApi = new _WorkflowTransitionApi()
 // INVENTORY
 export const FileApi = new _FileApi()
@@ -108,6 +115,10 @@ export const RequisitionApi = new _RequisitionApi()
 export const RequisitionApprovalApi = new _RequisitionApprovalApi()
 export const GoodsReceiveNoteApi = new _GoodsReceiveNoteApi()
 export const GoodsReceiveNoteApprovalApi = new _GoodsReceiveNoteApprovalApi()
+export const PurchaseOrderApi = new _PurchaseOrderApi()
+export const PurchaseOrderApprovalApi = new _PurchaseOrderApprovalApi()
+export const VendorQuoteApi = new _VendorQuoteApi()
+export const RateContractApi = new _RateContractApi()
 export const StockAdjustmentApi = new _StockAdjustmentApi()
 export const StockAdjustmentApprovalApi = new _StockAdjustmentApprovalApi()
 export const ItemConsumptionApi = new _ItemConsumptionApi()
@@ -117,6 +128,7 @@ export const StockTransferApprovalApi = new _StockTransferApprovalApi()
 export const ReportInvApi = new _ReportInvApi()
 // PATIENT
 export const PatientApi = new _PatientApi()
+export const PatientAllergyApi = new _PatientAllergyApi()
 // COMPANY
 export const EmployeeApi = new _EmployeeApi()
 // APPOINTMENT

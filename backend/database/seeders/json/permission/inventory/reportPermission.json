@@ -85,6 +85,17 @@
                     "uri": "/inv/report/branch-wise-disbursement"
                 }
             ]
+        },
+        {
+            "scope": "auth:drug-expiry-report:menuAccess",
+            "display_name": "Drug Expiry Report",
+            "actions": [
+                {
+                    "http_method": "GET",
+                    "action_name": "index",
+                    "uri": "/inv/report/drug-expiry"
+                }
+            ]
         }
     ]
 }

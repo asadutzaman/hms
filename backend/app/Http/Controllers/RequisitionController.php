@@ -13,8 +13,11 @@ use Illuminate\Support\Facades\DB;
 use App\Exceptions\ValidatorException;
 use App\Repositories\CodeSequenceRepository;
 use App\Repositories\ItemRepository;
+use App\Repositories\PurchaseOrderItemRepository;
+use App\Repositories\PurchaseOrderRepository;
 use App\Repositories\RequisitionItemRepository;
 use App\Services\SessionService;
+use Illuminate\Validation\ValidationException as IlluminateValidationException;
 use Log;
 
 class RequisitionController extends Controller
@@ -449,6 +452,75 @@ class RequisitionController extends Controller
             DB::commit();
             return $this->deleteResponse();
         } catch (\Exception $e) {
+            DB::rollBack();
+            $this->errorResponse($e->getMessage());
+        }
+    }
+
+    /**
+     * POST /requisition/{id}/convert-to-po — create a draft Purchase Order
+     * (pre-filled with the shortfall lines the purchaser confirms) and link
+     * it back to this requisition.
+     */
+    public function convertToPurchaseOrder(Request $request, $id)
+    {
+        DB::beginTransaction();
+        try {
+            $request->validate([
+                'supplier_id'          => ['required', 'exists:suppliers,id'],
+                'items'                => ['required', 'array', 'min:1'],
+                'items.*.item_id'      => ['required', 'exists:items,id'],
+                'items.*.quantity'     => ['required', 'numeric', 'min:0.01'],
+                'items.*.unit_price'   => ['nullable', 'numeric'],
+            ]);
+
+            $requisition = $this->repository->findById($id);
+            if (!$requisition) {
+                $this->notFoundResponse();
+            }
+
+            $latestCodeSequence = (new CodeSequenceRepository())->getLatestCodeByLabel('PURCHASE_ORDER');
+            if ($latestCodeSequence == null) {
+                $this->errorResponse("Number Sequence not found!");
+            }
+
+            $purchaseOrderRepository = new PurchaseOrderRepository();
+            $purchaseOrderItemRepository = new PurchaseOrderItemRepository();
+
+            $purchaseOrder = $purchaseOrderRepository->create([
+                'po_number'       => $latestCodeSequence,
+                'supplier_id'     => $request->supplier_id,
+                'branch_id'       => $requisition->branch_id,
+                'order_date'      => now()->toDateString(),
+                'notes'           => "Auto-created for shortfall on Requisition {$requisition->requisition_number}",
+                'requisition_id'  => $requisition->id,
+                'process_status'  => 'DRAFT',
+                'po_status'       => 'draft',
+            ]);
+
+            foreach ($request->items as $item) {
+                $purchaseOrderItemRepository->create([
+                    'purchase_order_id' => $purchaseOrder->id,
+                    'item_id'           => $item['item_id'],
+                    'unit_price'        => $item['unit_price'] ?? 0,
+                    'quantity'          => $item['quantity'],
+                    'line_total'        => ($item['unit_price'] ?? 0) * $item['quantity'],
+                ]);
+            }
+
+            (new CodeSequenceRepository())->updateNextSequenceByLabel('PURCHASE_ORDER');
+
+            $this->repository->update(['linked_purchase_order_id' => $purchaseOrder->id], $id);
+
+            DB::commit();
+            return $this->successResponse([
+                'purchase_order_id' => $purchaseOrder->id,
+                'po_number'         => $purchaseOrder->po_number,
+            ]);
+        } catch (IlluminateValidationException $e) {
+            DB::rollBack();
+            throw new ValidatorException($e);
+        } catch (Exception $e) {
             DB::rollBack();
             $this->errorResponse($e->getMessage());
         }

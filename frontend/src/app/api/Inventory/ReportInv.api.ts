@@ -27,6 +27,12 @@ const endpoints = {
   getThanaWiseDisbursementReport: () => `${RESOURCE_ENDPOINT}/branch-wise-disbursement`,
   getThanaWiseDisbursementReportExport: () =>
     `${RESOURCE_ENDPOINT}/branch-wise-disbursement-export`,
+  // DRUG EXPIRY
+  getDrugExpiryReport: () => `${RESOURCE_ENDPOINT}/drug-expiry`,
+  getDrugExpiryReportExport: () => `${RESOURCE_ENDPOINT}/drug-expiry-export`,
+  // DAILY COLLECTION
+  getDailyCollectionReport: () => `${RESOURCE_ENDPOINT}/daily-collection`,
+  getDailyCollectionReportExport: () => `${RESOURCE_ENDPOINT}/daily-collection-export`,
 }
 
 export default class ReportScmApi {
@@ -94,6 +100,24 @@ export default class ReportScmApi {
   }
   public getThanaWiseDisbursementReportExport = (params = {}, headers = {}): AxiosPromise<any> => {
     const url = endpoints.getThanaWiseDisbursementReportExport()
+    return HttpService.exportFile(url, params, headers)
+  }
+  // DRUG EXPIRY
+  public getDrugExpiryReport = (params = {}, headers = {}): AxiosPromise<any> => {
+    const url = endpoints.getDrugExpiryReport()
+    return HttpService.get(url, params, headers)
+  }
+  public getDrugExpiryReportExport = (params = {}, headers = {}): AxiosPromise<any> => {
+    const url = endpoints.getDrugExpiryReportExport()
+    return HttpService.exportFile(url, params, headers)
+  }
+  // DAILY COLLECTION
+  public getDailyCollectionReport = (params = {}, headers = {}): AxiosPromise<any> => {
+    const url = endpoints.getDailyCollectionReport()
+    return HttpService.get(url, params, headers)
+  }
+  public getDailyCollectionReportExport = (params = {}, headers = {}): AxiosPromise<any> => {
+    const url = endpoints.getDailyCollectionReportExport()
     return HttpService.exportFile(url, params, headers)
   }
 }

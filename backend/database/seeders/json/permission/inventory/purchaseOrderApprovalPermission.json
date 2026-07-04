@@ -1,0 +1,57 @@
+{
+    "resource": {
+        "permission_type": "RESOURCE",
+        "name": "purchaseOrderApproval",
+        "display_name": "Approval - Purchase Order",
+        "resource_uri": "purchaseOrderApproval",
+        "controller_name": "PurchaseOrderApprovalController",
+        "server_url_prefix": "auth",
+        "component": "COMMON"
+    },
+    "scopes": [
+        {
+            "scope": "auth:purchaseOrderApproval:menuAccess",
+            "display_name": "Menu Access",
+            "actions": [
+                {
+                    "http_method": "GET",
+                    "action_name": "index",
+                    "uri": "/approval-purchase-order"
+                }
+            ]
+        },
+        {
+            "scope": "auth:purchaseOrderApproval:list",
+            "display_name": "List",
+            "actions": [
+                {
+                    "http_method": "GET",
+                    "action_name": "index",
+                    "uri": "/approval-purchase-order"
+                }
+            ]
+        },
+        {
+            "scope": "auth:purchaseOrderApproval:view",
+            "display_name": "View",
+            "actions": [
+                {
+                    "http_method": "GET",
+                    "action_name": "show",
+                    "uri": "/approval-purchase-order/*"
+                }
+            ]
+        },
+        {
+            "scope": "auth:purchaseOrderApproval:StepAction",
+            "display_name": "Step Action",
+            "actions": [
+                {
+                    "http_method": "POST",
+                    "action_name": "store",
+                    "uri": "/approval-purchase-order"
+                }
+            ]
+        }
+    ]
+}

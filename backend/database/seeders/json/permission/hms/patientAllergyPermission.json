@@ -1,0 +1,100 @@
+{
+    "resource": {
+        "permission_type": "RESOURCE",
+        "name": "patientAllergy",
+        "display_name": "Patient Allergy",
+        "resource_uri": "patient-allergy",
+        "controller_name": "PatientAllergyController",
+        "server_url_prefix": "auth",
+        "component": "COMMON"
+    },
+    "scopes": [
+        {
+            "scope": "auth:patientAllergy:menuAccess",
+            "display_name": "Menu Access",
+            "actions": [
+                {
+                    "http_method": "GET",
+                    "action_name": "index",
+                    "uri": "/patient-allergy"
+                }
+            ]
+        },
+        {
+            "scope": "auth:patientAllergy:list",
+            "display_name": "List",
+            "actions": [
+                {
+                    "http_method": "GET",
+                    "action_name": "index",
+                    "uri": "/patient-allergy"
+                },
+                {
+                    "http_method": "GET",
+                    "action_name": "dropdown",
+                    "uri": "/patient-allergy/dropdown"
+                }
+            ]
+        },
+        {
+            "scope": "auth:patientAllergy:view",
+            "display_name": "View",
+            "actions": [
+                {
+                    "http_method": "GET",
+                    "action_name": "show",
+                    "uri": "/patient-allergy/*"
+                }
+            ]
+        },
+        {
+            "scope": "auth:patientAllergy:create",
+            "display_name": "Create",
+            "actions": [
+                {
+                    "http_method": "POST",
+                    "action_name": "store",
+                    "uri": "/patient-allergy"
+                }
+            ]
+        },
+        {
+            "scope": "auth:patientAllergy:edit",
+            "display_name": "Edit",
+            "actions": [
+                {
+                    "http_method": "PUT",
+                    "action_name": "update",
+                    "uri": "/patient-allergy/*"
+                },
+                {
+                    "http_method": "PATCH",
+                    "action_name": "updateFields",
+                    "uri": "/patient-allergy/*"
+                }
+            ]
+        },
+        {
+            "scope": "auth:patientAllergy:delete",
+            "display_name": "Delete",
+            "actions": [
+                {
+                    "http_method": "DELETE",
+                    "action_name": "destroy",
+                    "uri": "/patient-allergy/*"
+                }
+            ]
+        },
+        {
+            "scope": "auth:patientAllergy:multiSelect",
+            "display_name": "Multiple Selection",
+            "actions": [
+                {
+                    "http_method": "POST",
+                    "action_name": "bulk",
+                    "uri": "/patient-allergy/bulk"
+                }
+            ]
+        }
+    ]
+}

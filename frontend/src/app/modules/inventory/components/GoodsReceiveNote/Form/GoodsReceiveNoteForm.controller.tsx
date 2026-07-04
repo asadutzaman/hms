@@ -1,6 +1,6 @@
 import React, {FC, useEffect, useState} from 'react'
 import dayjs from 'dayjs'
-import {GoodsReceiveNoteApi} from 'src/app/api' // This will need to be created
+import {GoodsReceiveNoteApi, PurchaseOrderApi} from 'src/app/api' // This will need to be created
 import DrawerForm from 'src/app/components/Drawer/DrawerForm'
 import GoodsReceiveNoteAddOrEditForm from './GoodsReceiveNoteForm.form'
 import {useCrudFormService} from 'src/app/hooks/crud/useCrudFormService'
@@ -17,6 +17,7 @@ const initialState = {
     remarks: null,
     logistic_id: null,
     supplier_id: null,
+    purchase_order_id: null,
     process_status: 'DRAFT',
   },
   isNewRecord: true,
@@ -87,6 +88,7 @@ const GoodsReceiveNoteFormController: FC<any> = (props) => {
         ref_challan_date: res.data.ref_challan_date ? dayjs(res.data.ref_challan_date) : null,
         logistic_id: res.data.logistic_id,
         supplier_id: res.data.supplier_id,
+        purchase_order_id: res.data.purchase_order_id,
         remarks: res.data.remarks,
         process_status: res.data.process_status,
         status: res.data.status,
@@ -121,6 +123,33 @@ const GoodsReceiveNoteFormController: FC<any> = (props) => {
   const handleLogisticChange = (value) => {
     formRef.setFieldsValue({logistic_id: value, item_id: null})
     setGrnItemList([])
+  }
+
+  const handlePoSelect = (value: any) => {
+    formRef.setFieldsValue({purchase_order_id: value})
+    if (!value) {
+      return
+    }
+    setIsLoadingGrnItem(true)
+    PurchaseOrderApi.itemsForGrn(value)
+      .then((res: any) => {
+        const data = res?.data?.data ?? res?.data ?? {}
+        formRef.setFieldsValue({supplier_id: data.supplier_id})
+        handleChange({supplier_id: data.supplier_id})
+        const outstandingItems = (data.items || [])
+          .filter((item: any) => item.outstanding_quantity > 0)
+          .map((item: any) => ({
+            item_id: item.item_id,
+            name: item.name,
+            unit_price: item.unit_price,
+            quantity: item.outstanding_quantity,
+            total_price: item.unit_price * item.outstanding_quantity,
+            remarks: '',
+          }))
+        setGrnItemList(outstandingItems)
+      })
+      .catch(() => Message.error('Failed to load purchase order items'))
+      .finally(() => setIsLoadingGrnItem(false))
   }
 
   const handleItemSelect = (value, option) => {
@@ -198,6 +227,7 @@ const GoodsReceiveNoteFormController: FC<any> = (props) => {
         isLoadingGrnItem={isLoadingGrnItem}
         setIsLoadingGrnItem={setIsLoadingGrnItem}
         handleLogisticChange={handleLogisticChange}
+        handlePoSelect={handlePoSelect}
         handleItemSelect={handleItemSelect}
         handleChange={handleChange}
         handleSubmit={handleSubmit}

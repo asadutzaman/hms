@@ -93,6 +93,7 @@ class GoodsReceiveNoteController extends Controller
                 'grn_number'       => $latestCodeSequence,
                 'branch_id'        => $userData['branch_id'],
                 'supplier_id'      => $formData['supplier_id'],
+                'purchase_order_id' => $formData['purchase_order_id'] ?? null,
                 'logistic_id'      => $userData['logistic_id'],
                 'ref_po_number'    => $formData['ref_po_number'],
                 'ref_po_date'      => $formData['ref_po_date'],

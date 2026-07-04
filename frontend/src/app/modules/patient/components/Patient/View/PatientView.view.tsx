@@ -4,6 +4,7 @@ import {DateTimeUtils} from 'src/app/utils'
 import EditAction from 'src/app/components/Actions/EditAction'
 import DeleteAction from 'src/app/components/Actions/DeleteAction'
 import AuditLogPanel from 'src/app/components/AuditLog/AuditLogPanel'
+import AllergyPanel from 'src/app/components/Allergy/AllergyPanel'
 import {PatientApi} from 'src/app/api'
 import {PatientAction} from '../Actions/Patient.actions'
 
@@ -217,6 +218,9 @@ const PatientView: FC<any> = ({itemData, handleCallbackFunc}) => {
     </Descriptions>
   )
 
+  // ── TAB: ALLERGIES ────────────────────────────────────────────────────────
+  const allergiesTab = <AllergyPanel patientId={itemData.id} />
+
   // ── TAB: AUDIT LOG ────────────────────────────────────────────────────────
   const auditLogTab = (
     <AuditLogPanel
@@ -230,6 +234,7 @@ const PatientView: FC<any> = ({itemData, handleCallbackFunc}) => {
     {key: 'contact', label: 'Contact', children: contactTab},
     {key: 'address', label: 'Address', children: addressTab},
     {key: 'medical', label: 'Medical History', children: medicalTab},
+    {key: 'allergies', label: 'Allergies', children: allergiesTab},
     {key: 'insurance', label: 'Insurance', children: insuranceTab},
     {key: 'flags', label: 'Flags & Notes', children: flagsTab},
     {key: 'audit', label: 'Audit Log', children: auditLogTab},

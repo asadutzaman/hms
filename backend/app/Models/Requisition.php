@@ -23,7 +23,8 @@ class Requisition extends BaseModel
         'description',
         'reconcile_status',
         'revised_status',
-        'process_status'
+        'process_status',
+        'linked_purchase_order_id',
     ];
 
     protected $hidden = [
@@ -39,6 +40,7 @@ class Requisition extends BaseModel
         'branch_id'          => 'integer',
         'logistic_id'        => 'integer',
         'reconcile_status'   => 'integer',
+        'linked_purchase_order_id' => 'integer',
         // Enum
         //Date
         'date'               => 'date:Y-m-d',

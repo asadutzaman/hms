@@ -48,6 +48,17 @@
             ]
         },
         {
+            "scope": "auth:requisitionApproval:shortfall",
+            "display_name": "View Shortfall",
+            "actions": [
+                {
+                    "http_method": "GET",
+                    "action_name": "shortfall",
+                    "uri": "/approval-requisition/*/shortfall"
+                }
+            ]
+        },
+        {
             "scope": "auth:requisitionApproval:StepAction",
             "display_name": "Step Action",
             "actions": [

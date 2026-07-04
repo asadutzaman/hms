@@ -44,7 +44,9 @@ class ItemStockRepository extends BaseRepository
             ->where('balance_quantity', '>', 0)
             ->when((isset($stockOutLogic)), function ($query) use ($stockOutLogic) {
                 if ($stockOutLogic == 'FIFO') {
-                    return $query->orderBy('id', 'asc');
+                    // FEFO-aware: batches with an expiry date go out earliest-expiry-first;
+                    // batches with no expiry (non-drug items) keep plain FIFO-by-id order.
+                    return $query->orderByRaw('expire_date ASC NULLS LAST')->orderBy('id', 'asc');
                 } elseif ($stockOutLogic == 'LIFO') {
                     return $query->orderBy('id', 'desc');
                 }

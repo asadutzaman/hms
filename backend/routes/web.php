@@ -782,6 +782,21 @@ Route::prefix('api')->group(function () {
         Route::delete('/{id}', [App\Http\Controllers\ItemController::class, 'destroy']);
     });
 
+    // DRUG (Pharmacy Master)
+    Route::group(['prefix' => 'drug', 'middleware' => ['restrictIp', 'authVerify']], function () {
+        Route::post('/bulk', [App\Http\Controllers\DrugController::class, 'bulk']);
+        Route::get('/dropdown', [App\Http\Controllers\DrugController::class, 'dropdown']);
+        Route::get('/generics', [App\Http\Controllers\DrugController::class, 'generics']);
+        Route::get('/', [App\Http\Controllers\DrugController::class, 'index']);
+        Route::get('/{id}', [App\Http\Controllers\DrugController::class, 'show']);
+        Route::get('/{id}/substitutes', [App\Http\Controllers\DrugController::class, 'substitutes']);
+        Route::get('/{id}/stock', [App\Http\Controllers\DrugController::class, 'stock']);
+        Route::post('/', [App\Http\Controllers\DrugController::class, 'store']);
+        Route::put('/{id}', [App\Http\Controllers\DrugController::class, 'update']);
+        Route::patch('/{id}', [App\Http\Controllers\DrugController::class, 'updateFields']);
+        Route::delete('/{id}', [App\Http\Controllers\DrugController::class, 'destroy']);
+    });
+
     Route::group(['prefix' => 'workflow', 'middleware' => ['restrictIp', 'authVerify']], function () {
         // Git By Where
         Route::get('/getByWhere', [App\Http\Controllers\WorkflowController::class, 'getByWhere']);
@@ -913,6 +928,9 @@ Route::prefix('api')->group(function () {
         Route::put('/{id}', [App\Http\Controllers\RequisitionController::class, 'update']);
         Route::put('/acknowledge/{id}', [App\Http\Controllers\RequisitionController::class, 'acknowledge']);
 
+        // Convert shortfall to a Purchase Order
+        Route::post('/{id}/convert-to-po', [App\Http\Controllers\RequisitionController::class, 'convertToPurchaseOrder']);
+
         // Update Partial (Without Validation)
         Route::patch('/{id}', [App\Http\Controllers\RequisitionController::class, 'updateFields']);
 
@@ -924,6 +942,9 @@ Route::prefix('api')->group(function () {
     Route::group(['prefix' => 'approval-requisition', 'middleware' => ['restrictIp', 'authVerify']], function () {
         // Get All
         Route::get('/', [App\Http\Controllers\Approval\RequisitionApprovalController::class, 'index']);
+
+        // Shortfall check (against warehouse stock)
+        Route::get('/{id}/shortfall', [App\Http\Controllers\Approval\RequisitionApprovalController::class, 'shortfall']);
 
         // Get One
         Route::get('/{id}', [App\Http\Controllers\Approval\RequisitionApprovalController::class, 'show']);
@@ -973,6 +994,57 @@ Route::prefix('api')->group(function () {
 
         // Get One
         Route::get('/{id}', [App\Http\Controllers\Approval\GoodsReceiveNoteApprovalController::class, 'show']);
+    });
+
+    // PURCHASE ORDER
+    Route::group(['prefix' => 'purchase-order', 'middleware' => ['restrictIp', 'authVerify']], function () {
+        Route::post('/bulk', [App\Http\Controllers\PurchaseOrderController::class, 'bulk']);
+        Route::get('/dropdown', [App\Http\Controllers\PurchaseOrderController::class, 'dropdown']);
+        Route::get('/', [App\Http\Controllers\PurchaseOrderController::class, 'index']);
+        Route::get('/{id}', [App\Http\Controllers\PurchaseOrderController::class, 'show']);
+        Route::get('/{id}/items-for-grn', [App\Http\Controllers\PurchaseOrderController::class, 'itemsForGrn']);
+        Route::post('/', [App\Http\Controllers\PurchaseOrderController::class, 'store']);
+        Route::put('/{id}', [App\Http\Controllers\PurchaseOrderController::class, 'update']);
+        Route::patch('/{id}', [App\Http\Controllers\PurchaseOrderController::class, 'updateFields']);
+        Route::delete('/{id}', [App\Http\Controllers\PurchaseOrderController::class, 'destroy']);
+    });
+
+    // PURCHASE ORDER APPROVAL
+    Route::group(['prefix' => 'approval-purchase-order', 'middleware' => ['restrictIp', 'authVerify']], function () {
+        // Get All
+        Route::get('/', [App\Http\Controllers\Approval\PurchaseOrderApprovalController::class, 'index']);
+
+        // Get One
+        Route::get('/{id}', [App\Http\Controllers\Approval\PurchaseOrderApprovalController::class, 'show']);
+    });
+
+    // VENDOR QUOTE
+    Route::group(['prefix' => 'vendor-quote', 'middleware' => ['restrictIp', 'authVerify']], function () {
+        Route::post('/bulk', [App\Http\Controllers\VendorQuoteController::class, 'bulk']);
+        Route::get('/dropdown', [App\Http\Controllers\VendorQuoteController::class, 'dropdown']);
+        Route::get('/compare', [App\Http\Controllers\VendorQuoteController::class, 'compare']);
+        Route::get('/', [App\Http\Controllers\VendorQuoteController::class, 'index']);
+        Route::get('/{id}', [App\Http\Controllers\VendorQuoteController::class, 'show']);
+        Route::post('/', [App\Http\Controllers\VendorQuoteController::class, 'store']);
+        Route::post('/{id}/select-winner', [App\Http\Controllers\VendorQuoteController::class, 'selectWinner']);
+        Route::put('/{id}', [App\Http\Controllers\VendorQuoteController::class, 'update']);
+        Route::patch('/{id}', [App\Http\Controllers\VendorQuoteController::class, 'updateFields']);
+        Route::delete('/{id}', [App\Http\Controllers\VendorQuoteController::class, 'destroy']);
+    });
+
+    // RATE CONTRACT
+    Route::group(['prefix' => 'rate-contract', 'middleware' => ['restrictIp', 'authVerify']], function () {
+        Route::post('/bulk', [App\Http\Controllers\RateContractController::class, 'bulk']);
+        Route::get('/dropdown', [App\Http\Controllers\RateContractController::class, 'dropdown']);
+        Route::get('/', [App\Http\Controllers\RateContractController::class, 'index']);
+        Route::get('/{id}', [App\Http\Controllers\RateContractController::class, 'show']);
+        Route::post('/', [App\Http\Controllers\RateContractController::class, 'store']);
+        Route::post('/{id}/submit', [App\Http\Controllers\RateContractController::class, 'submit']);
+        Route::post('/{id}/approve', [App\Http\Controllers\RateContractController::class, 'approve']);
+        Route::post('/{id}/reject', [App\Http\Controllers\RateContractController::class, 'reject']);
+        Route::put('/{id}', [App\Http\Controllers\RateContractController::class, 'update']);
+        Route::patch('/{id}', [App\Http\Controllers\RateContractController::class, 'updateFields']);
+        Route::delete('/{id}', [App\Http\Controllers\RateContractController::class, 'destroy']);
     });
 
     // STOCK TRANSFER APPROVAL
@@ -1120,6 +1192,10 @@ Route::prefix('api')->group(function () {
         Route::get('/item-wise-disbursement-export', [App\Http\Controllers\Report\ItemWiseDisbursementReportController::class, 'getItemWiseDisbursementExport']);
         Route::get('/branch-wise-disbursement', [App\Http\Controllers\Report\ThanaWiseDisbursementReportController::class, 'getThanaWiseDisbursementList']);
         Route::get('/branch-wise-disbursement-export', [App\Http\Controllers\Report\ThanaWiseDisbursementReportController::class, 'getThanaWiseDisbursementExport']);
+        Route::get('/drug-expiry', [App\Http\Controllers\Report\DrugExpiryReportController::class, 'getExpiryList']);
+        Route::get('/drug-expiry-export', [App\Http\Controllers\Report\DrugExpiryReportController::class, 'getExpiryListExport']);
+        Route::get('/daily-collection', [App\Http\Controllers\Report\DailyCollectionReportController::class, 'getDailyCollectionList']);
+        Route::get('/daily-collection-export', [App\Http\Controllers\Report\DailyCollectionReportController::class, 'getDailyCollectionExport']);
     });
 
     // EXPORT
@@ -1151,6 +1227,9 @@ Route::prefix('api')->group(function () {
         // Audit trail
         Route::get('/{id}/audit-log', [App\Http\Controllers\PatientController::class, 'auditLog']);
 
+        // Allergies
+        Route::get('/{id}/allergies', [App\Http\Controllers\PatientController::class, 'allergies']);
+
         // Create
         Route::post('/', [App\Http\Controllers\PatientController::class, 'store']);
 
@@ -1162,6 +1241,18 @@ Route::prefix('api')->group(function () {
 
         // Delete
         Route::delete('/{id}', [App\Http\Controllers\PatientController::class, 'destroy']);
+    });
+
+    // PATIENT ALLERGY
+    Route::group(['prefix' => 'patient-allergy', 'middleware' => ['restrictIp', 'authVerify']], function () {
+        Route::post('/bulk', [App\Http\Controllers\PatientAllergyController::class, 'bulk']);
+        Route::get('/dropdown', [App\Http\Controllers\PatientAllergyController::class, 'dropdown']);
+        Route::get('/', [App\Http\Controllers\PatientAllergyController::class, 'index']);
+        Route::get('/{id}', [App\Http\Controllers\PatientAllergyController::class, 'show']);
+        Route::post('/', [App\Http\Controllers\PatientAllergyController::class, 'store']);
+        Route::put('/{id}', [App\Http\Controllers\PatientAllergyController::class, 'update']);
+        Route::patch('/{id}', [App\Http\Controllers\PatientAllergyController::class, 'updateFields']);
+        Route::delete('/{id}', [App\Http\Controllers\PatientAllergyController::class, 'destroy']);
     });
 
     // APPOINTMENT

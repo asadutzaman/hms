@@ -1,0 +1,116 @@
+{
+    "resource": {
+        "permission_type": "RESOURCE",
+        "name": "rateContract",
+        "display_name": "Rate Contract",
+        "resource_uri": "rateContract",
+        "controller_name": "RateContractController",
+        "server_url_prefix": "auth",
+        "component": "COMMON"
+    },
+    "scopes": [
+        {
+            "scope": "auth:rateContract:menuAccess",
+            "display_name": "Menu Access",
+            "actions": [
+                {
+                    "http_method": "GET",
+                    "action_name": "index",
+                    "uri": "/rate-contract"
+                }
+            ]
+        },
+        {
+            "scope": "auth:rateContract:list",
+            "display_name": "List",
+            "actions": [
+                {
+                    "http_method": "GET",
+                    "action_name": "index",
+                    "uri": "/rate-contract"
+                }
+            ]
+        },
+        {
+            "scope": "auth:rateContract:view",
+            "display_name": "View",
+            "actions": [
+                {
+                    "http_method": "GET",
+                    "action_name": "show",
+                    "uri": "/rate-contract/*"
+                }
+            ]
+        },
+        {
+            "scope": "auth:rateContract:create",
+            "display_name": "Create",
+            "actions": [
+                {
+                    "http_method": "POST",
+                    "action_name": "store",
+                    "uri": "/rate-contract"
+                }
+            ]
+        },
+        {
+            "scope": "auth:rateContract:edit",
+            "display_name": "Edit",
+            "actions": [
+                {
+                    "http_method": "PUT",
+                    "action_name": "update",
+                    "uri": "/rate-contract/*"
+                },
+                {
+                    "http_method": "PATCH",
+                    "action_name": "updateFields",
+                    "uri": "/rate-contract/*"
+                },
+                {
+                    "http_method": "POST",
+                    "action_name": "submit",
+                    "uri": "/rate-contract/*/submit"
+                }
+            ]
+        },
+        {
+            "scope": "auth:rateContract:approve",
+            "display_name": "Approve / Reject",
+            "actions": [
+                {
+                    "http_method": "POST",
+                    "action_name": "approve",
+                    "uri": "/rate-contract/*/approve"
+                },
+                {
+                    "http_method": "POST",
+                    "action_name": "reject",
+                    "uri": "/rate-contract/*/reject"
+                }
+            ]
+        },
+        {
+            "scope": "auth:rateContract:delete",
+            "display_name": "Delete",
+            "actions": [
+                {
+                    "http_method": "DELETE",
+                    "action_name": "destroy",
+                    "uri": "/rate-contract/*"
+                }
+            ]
+        },
+        {
+            "scope": "auth:rateContract:multiSelect",
+            "display_name": "Multiple Selection",
+            "actions": [
+                {
+                    "http_method": "POST",
+                    "action_name": "bulk",
+                    "uri": "/rate-contract/bulk"
+                }
+            ]
+        }
+    ]
+}

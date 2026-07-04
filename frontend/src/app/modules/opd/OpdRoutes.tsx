@@ -11,6 +11,7 @@ import DisplayBoardController from './components/DisplayBoard/DisplayBoard.contr
 import DoctorScheduleListController from './components/DoctorSchedule/List/DoctorScheduleList.controller'
 import DoctorScheduleFormController from './components/DoctorSchedule/Form/DoctorScheduleForm.controller'
 import DoctorScheduleViewController from './components/DoctorSchedule/View/DoctorScheduleView.controller'
+import DailyCollectionListController from '../reports/components/DailyCollection/List/DailyCollectionList.controller'
 
 const OpdVisitRoutes = () => {
   return (
@@ -34,6 +35,9 @@ const OpdVisitRoutes = () => {
       <Route path='schedules/create' element={<DoctorScheduleFormController />} />
       <Route path='schedules/edit/:id' element={<DoctorScheduleFormController />} />
       <Route path='schedules/view/:id' element={<DoctorScheduleViewController />} />
+
+      {/* Reports */}
+      <Route path='report/daily-collection' element={<DailyCollectionListController />} />
 
       {/* Fallback */}
       <Route path='*' element={<Navigate to='list' replace />} />

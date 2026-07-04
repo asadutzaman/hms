@@ -16,6 +16,7 @@ const endpoints = {
   export: (fileType: string) => `${RESOURCE_ENDPOINT}/export/${fileType}`,
   // Item Wise Disbursement Details
   getItemDisbursementDetails: () => `${RESOURCE_ENDPOINT}/item-disbursement-details`,
+  convertToPurchaseOrder: (id: any) => `${RESOURCE_ENDPOINT}/${id}/convert-to-po`,
 }
 
 export default class RequisitionApi {
@@ -73,5 +74,10 @@ export default class RequisitionApi {
   public getItemDisbursementDetails = (params = {}, headers = {}): AxiosPromise<any> => {
     const url = endpoints.getItemDisbursementDetails()
     return HttpService.get(url, params, headers)
+  }
+
+  public convertToPurchaseOrder = (id: any, payload = {}, params = {}, headers = {}): AxiosPromise<any> => {
+    const url = endpoints.convertToPurchaseOrder(id)
+    return HttpService.post(url, payload, params, headers)
   }
 }

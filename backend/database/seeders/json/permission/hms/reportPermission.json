@@ -1,0 +1,24 @@
+{
+    "resource": {
+        "permission_type": "RESOURCE",
+        "name": "HmsReport",
+        "display_name": "HMS Report",
+        "resource_uri": "HmsReport",
+        "controller_name": "HmsReportController",
+        "server_url_prefix": "auth",
+        "component": "COMMON"
+    },
+    "scopes": [
+        {
+            "scope": "auth:daily-collection-report:menuAccess",
+            "display_name": "Daily Collection Report",
+            "actions": [
+                {
+                    "http_method": "GET",
+                    "action_name": "index",
+                    "uri": "/hms/report/daily-collection"
+                }
+            ]
+        }
+    ]
+}

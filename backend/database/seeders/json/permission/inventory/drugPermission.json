@@ -1,0 +1,115 @@
+{
+    "resource": {
+        "permission_type": "RESOURCE",
+        "name": "drug",
+        "display_name": "Pharmacy - Drug Master",
+        "resource_uri": "drug",
+        "controller_name": "DrugController",
+        "server_url_prefix": "auth",
+        "component": "COMMON"
+    },
+    "scopes": [
+        {
+            "scope": "auth:drug:menuAccess",
+            "display_name": "Menu Access",
+            "actions": [
+                {
+                    "http_method": "GET",
+                    "action_name": "index",
+                    "uri": "/drug"
+                }
+            ]
+        },
+        {
+            "scope": "auth:drug:list",
+            "display_name": "List",
+            "actions": [
+                {
+                    "http_method": "GET",
+                    "action_name": "index",
+                    "uri": "/drug"
+                },
+                {
+                    "http_method": "GET",
+                    "action_name": "dropdown",
+                    "uri": "/drug/dropdown"
+                },
+                {
+                    "http_method": "GET",
+                    "action_name": "generics",
+                    "uri": "/drug/generics"
+                }
+            ]
+        },
+        {
+            "scope": "auth:drug:view",
+            "display_name": "View",
+            "actions": [
+                {
+                    "http_method": "GET",
+                    "action_name": "show",
+                    "uri": "/drug/*"
+                },
+                {
+                    "http_method": "GET",
+                    "action_name": "substitutes",
+                    "uri": "/drug/*/substitutes"
+                },
+                {
+                    "http_method": "GET",
+                    "action_name": "stock",
+                    "uri": "/drug/*/stock"
+                }
+            ]
+        },
+        {
+            "scope": "auth:drug:create",
+            "display_name": "Create",
+            "actions": [
+                {
+                    "http_method": "POST",
+                    "action_name": "store",
+                    "uri": "/drug"
+                }
+            ]
+        },
+        {
+            "scope": "auth:drug:edit",
+            "display_name": "Edit",
+            "actions": [
+                {
+                    "http_method": "PUT",
+                    "action_name": "update",
+                    "uri": "/drug/*"
+                },
+                {
+                    "http_method": "PATCH",
+                    "action_name": "updateFields",
+                    "uri": "/drug/*"
+                }
+            ]
+        },
+        {
+            "scope": "auth:drug:delete",
+            "display_name": "Delete",
+            "actions": [
+                {
+                    "http_method": "DELETE",
+                    "action_name": "destroy",
+                    "uri": "/drug/*"
+                }
+            ]
+        },
+        {
+            "scope": "auth:drug:multiSelect",
+            "display_name": "Multiple Selection",
+            "actions": [
+                {
+                    "http_method": "POST",
+                    "action_name": "bulk",
+                    "uri": "/drug/bulk"
+                }
+            ]
+        }
+    ]
+}

@@ -7,6 +7,7 @@ import { useLang } from 'src/app/hooks/useLang';
 import { AuthContext } from 'src/app/context/auth/auth.context';
 import { LogisticSelect } from 'src/app/components/Dropdown';
 import SupplierSelect from 'src/app/components/Dropdown/SupplierSelect';
+import PurchaseOrderSelect from 'src/app/components/Dropdown/PurchaseOrderSelect';
 
 const formItemLayout = {
   labelCol: {
@@ -32,6 +33,7 @@ const GoodsReceiveNoteAddOrEditForm: FC<any> = (props) => {
     handleItemSelect,
     isLoadingGrnItem,
     handleLogisticChange,
+    handlePoSelect,
   } = props;
   const [isLoadingItemAddingItem, setIsLoadingItemAddingItem] =
     useState<boolean>(false);
@@ -79,12 +81,32 @@ const GoodsReceiveNoteAddOrEditForm: FC<any> = (props) => {
           <Row gutter={24}>
             <Col span={12}>
               <Form.Item
-                label={t('Reference Purchase Order')}
+                label={t('Against Purchase Order')}
+                name="purchase_order_id"
+              >
+                <PurchaseOrderSelect
+                  purchaseOrderId={formRef.getFieldValue('purchase_order_id')}
+                  placeholder={t('Select Purchase Order (optional)')}
+                  onSelect={(value) => handlePoSelect(value)}
+                  onChange={(value) => {
+                    if (!value) {
+                      handlePoSelect(null)
+                    }
+                  }}
+                />
+              </Form.Item>
+            </Col>
+            <Col span={12}>
+              <Form.Item
+                label={t('Reference Purchase Order (Free Text)')}
                 name="ref_po_number"
               >
                 <Input />
               </Form.Item>
             </Col>
+          </Row>
+
+          <Row gutter={24}>
             <Col span={12}>
               <Form.Item
                 label={t('Reference Purchase Date')}

@@ -15,6 +15,7 @@ const endpoints = {
     dropdown: () => `${RESOURCE_ENDPOINT}/dropdown`,
     merge: () => `${RESOURCE_ENDPOINT}/merge`,
     auditLog: (id: any) => `${RESOURCE_ENDPOINT}/${id}/audit-log`,
+    allergies: (id: any) => `${RESOURCE_ENDPOINT}/${id}/allergies`,
 }
 
 export default class PatientApi {
@@ -70,6 +71,11 @@ export default class PatientApi {
 
     public auditLog = (id: any, params = {}, headers = {}): AxiosPromise<any> => {
         const url = endpoints.auditLog(id);
+        return HttpService.get(url, params, headers);
+    }
+
+    public allergies = (id: any, params = {}, headers = {}): AxiosPromise<any> => {
+        const url = endpoints.allergies(id);
         return HttpService.get(url, params, headers);
     }
 }

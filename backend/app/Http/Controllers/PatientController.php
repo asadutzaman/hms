@@ -7,8 +7,10 @@ use App\Exceptions\ValidatorException;
 use App\Http\Resources\PatientResource;
 use App\Models\PatientAuditLog;
 use App\Repositories\CodeSequenceRepository;
+use App\Repositories\PatientAllergyRepository;
 use App\Repositories\PatientAuditLogRepository;
 use App\Repositories\PatientRepository;
+use App\Http\Resources\PatientAllergyResource;
 use App\Traits\Controller\RestControllerTrait;
 use App\Validators\PatientValidator;
 use Exception;
@@ -184,6 +186,20 @@ class PatientController extends Controller
                     'remarks'                 => $log->remarks,
                 ];
             });
+            return $this->successResponse($result);
+        } catch (\Exception $e) {
+            $this->errorResponse($e->getMessage());
+        }
+    }
+
+    /**
+     * GET /patient/{id}/allergies
+     */
+    public function allergies(Request $request, $id)
+    {
+        try {
+            $allergies = (new PatientAllergyRepository())->forPatient((int) $id);
+            $result = PatientAllergyResource::collection($allergies);
             return $this->successResponse($result);
         } catch (\Exception $e) {
             $this->errorResponse($e->getMessage());

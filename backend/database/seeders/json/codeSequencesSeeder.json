@@ -62,5 +62,13 @@
         "next_sequence": "1",
         "sort_order": 1,
         "status": 1
+    },
+    {
+        "label": "PURCHASE_ORDER",
+        "prefix": "PO",
+        "separator": "-",
+        "next_sequence": "1",
+        "sort_order": 1,
+        "status": 1
     }
 ]
