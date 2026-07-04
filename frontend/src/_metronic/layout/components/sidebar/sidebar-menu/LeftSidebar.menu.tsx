@@ -90,6 +90,17 @@ export const LeftSidebarMenu = [
               openInNewTab: false,
             },
           },
+          {
+            type: 'item',
+            title: 'Employees',
+            permission: 'auth:employee:menuAccess',
+            link: {
+              to: '/admin/setting/company/employee',
+              exactMatch: true,
+              externalUrl: false,
+              openInNewTab: false,
+            },
+          },
         ],
       },
       // PROFILE

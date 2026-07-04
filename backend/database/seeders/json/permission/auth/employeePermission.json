@@ -1,0 +1,105 @@
+{
+    "resource": {
+        "permission_type": "RESOURCE",
+        "name": "employee",
+        "display_name": "Company - Employee",
+        "resource_uri": "employee",
+        "controller_name": "EmployeeController",
+        "server_url_prefix": "auth",
+        "component": "COMMON"
+    },
+    "scopes": [
+        {
+            "scope": "auth:employee:menuAccess",
+            "display_name": "Menu Access",
+            "actions": [
+                {
+                    "http_method": "GET",
+                    "action_name": "index",
+                    "uri": "/employee"
+                }
+            ]
+        },
+        {
+            "scope": "auth:employee:list",
+            "display_name": "List",
+            "actions": [
+                {
+                    "http_method": "GET",
+                    "action_name": "index",
+                    "uri": "/employee"
+                }
+            ]
+        },
+        {
+            "scope": "auth:employee:view",
+            "display_name": "View",
+            "actions": [
+                {
+                    "http_method": "GET",
+                    "action_name": "show",
+                    "uri": "/employee/*"
+                },
+                {
+                    "http_method": "GET",
+                    "action_name": "getByWhere",
+                    "uri": "/employee/getByWhere"
+                },
+                {
+                    "http_method": "GET",
+                    "action_name": "getByUserId",
+                    "uri": "/employee/getByUserId/*"
+                }
+            ]
+        },
+        {
+            "scope": "auth:employee:create",
+            "display_name": "Create",
+            "actions": [
+                {
+                    "http_method": "POST",
+                    "action_name": "store",
+                    "uri": "/employee"
+                }
+            ]
+        },
+        {
+            "scope": "auth:employee:edit",
+            "display_name": "Edit",
+            "actions": [
+                {
+                    "http_method": "PUT",
+                    "action_name": "update",
+                    "uri": "/employee/*"
+                },
+                {
+                    "http_method": "PATCH",
+                    "action_name": "updateFields",
+                    "uri": "/employee/*"
+                }
+            ]
+        },
+        {
+            "scope": "auth:employee:delete",
+            "display_name": "Delete",
+            "actions": [
+                {
+                    "http_method": "DELETE",
+                    "action_name": "destroy",
+                    "uri": "/employee/*"
+                }
+            ]
+        },
+        {
+            "scope": "auth:employee:multiSelect",
+            "display_name": "Multiple Selection",
+            "actions": [
+                {
+                    "http_method": "POST",
+                    "action_name": "bulk",
+                    "uri": "/employee/bulk"
+                }
+            ]
+        }
+    ]
+}
