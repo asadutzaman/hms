@@ -63,6 +63,10 @@ class OpdPrescriptionService
             ]);
 
             foreach (array_values($data['items']) as $i => $row) {
+                if (!empty($row['drug_id'])) {
+                    $row = OpdPrescriptionRepository::snapshotFromDrug($row);
+                }
+
                 $this->itemRepo->create(array_merge([
                     'opd_prescription_id' => $rx->id,
                     'sequence'            => $i + 1,
@@ -120,6 +124,10 @@ class OpdPrescriptionService
                 ]);
 
             foreach (array_values($items) as $i => $row) {
+                if (!empty($row['drug_id'])) {
+                    $row = OpdPrescriptionRepository::snapshotFromDrug($row);
+                }
+
                 $this->itemRepo->create(array_merge([
                     'opd_prescription_id' => $rxId,
                     'sequence'            => $i + 1,

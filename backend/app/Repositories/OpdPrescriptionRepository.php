@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Enums\OpdVisitActionEnum;
+use App\Models\Drug;
 use App\Models\OpdPrescription;
 use App\Models\OpdPrescriptionItem;
 use App\Models\OpdVisit;
@@ -79,10 +80,15 @@ class OpdPrescriptionRepository extends BaseRepository
             }
 
             foreach ($items as $i => $it) {
+                if (!empty($it['drug_id'])) {
+                    $it = self::snapshotFromDrug($it);
+                }
+
                 OpdPrescriptionItem::query()->create([
                     'organogram_id'       => $visit->organogram_id,
                     'opd_prescription_id' => $rx->id,
                     'opd_visit_id'        => $visitId,
+                    'drug_id'             => $it['drug_id']       ?? null,
                     'drug_name'           => $it['drug_name']     ?? 'Unknown',
                     'generic_name'        => $it['generic_name']  ?? null,
                     'strength'            => $it['strength']      ?? null,
@@ -114,6 +120,28 @@ class OpdPrescriptionRepository extends BaseRepository
 
             return $rx->fresh('items');
         });
+    }
+
+    /**
+     * When a prescription line references a catalog drug, the catalog is the
+     * source of truth for name/generic/strength/dosage_form — overwrite
+     * whatever free text was submitted so dispensing/interaction checks can
+     * trust drug_id without also trusting client-supplied text.
+     */
+    public static function snapshotFromDrug(array $item): array
+    {
+        $drug = Drug::query()->with('item')->find($item['drug_id']);
+        if (!$drug) {
+            unset($item['drug_id']);
+            return $item;
+        }
+
+        $item['drug_name']    = $drug->item->name_en ?? $drug->brand_name ?? $drug->generic_name;
+        $item['generic_name'] = $drug->generic_name;
+        $item['strength']     = $drug->strength;
+        $item['dosage_form']  = $drug->dosage_form;
+
+        return $item;
     }
 
     public function markPrinted(int $prescriptionId): OpdPrescription

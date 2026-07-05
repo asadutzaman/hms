@@ -10,6 +10,8 @@ import BrandListController from './components/Brand/List/BrandList.controller'
 import BranchListController from './components/Branch/List/BranchList.controller'
 import ItemListController from './components/Item/List/ItemList.controller'
 import DrugListController from './components/Drug/List/DrugList.controller'
+import DrugInteractionListController from './components/DrugInteraction/DrugInteractionList.controller'
+import Icd10CodeListController from './components/Icd10Code/Icd10CodeList.controller'
 import LogisticListController from './components/Logistic/List/LogisticList.controller'
 import AttributeListController from './components/Attribute/List/AttributeList.controller'
 import ShelveListController from './components/Shelve/List/ShelveList.controller'
@@ -30,6 +32,8 @@ const SetupRoutes = () => {
       <Route path={'/attribute'} element={<AttributeListController />} />
       <Route path={'/item'} element={<ItemListController />} />
       <Route path={'/drug'} element={<DrugListController />} />
+      <Route path={'/drug-interaction'} element={<DrugInteractionListController />} />
+      <Route path={'/icd10-code'} element={<Icd10CodeListController />} />
     </Routes>
   )
 }

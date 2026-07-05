@@ -1,0 +1,35 @@
+{
+    "resource": {
+        "permission_type": "RESOURCE",
+        "name": "controlledDrugRegisterReport",
+        "display_name": "Controlled Drug Register Report",
+        "resource_uri": "report/controlled-drug-register",
+        "controller_name": "ControlledDrugRegisterReportController",
+        "server_url_prefix": "auth",
+        "component": "COMMON"
+    },
+    "scopes": [
+        {
+            "scope": "auth:controlledDrugRegisterReport:menuAccess",
+            "display_name": "Menu Access",
+            "actions": [
+                {
+                    "http_method": "GET",
+                    "action_name": "getRegisterList",
+                    "uri": "/report/controlled-drug-register"
+                }
+            ]
+        },
+        {
+            "scope": "auth:controlledDrugRegisterReport:list",
+            "display_name": "List",
+            "actions": [
+                {
+                    "http_method": "GET",
+                    "action_name": "getRegisterList",
+                    "uri": "/report/controlled-drug-register"
+                }
+            ]
+        }
+    ]
+}

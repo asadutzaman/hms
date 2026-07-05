@@ -10,6 +10,7 @@ import {useForm} from 'src/app/hooks/useForm'
 import {ReportInvApi} from 'src/app/api'
 import {Message} from 'src/app/utils'
 import download from 'downloadjs'
+import ReorderAlertsWidget from 'src/app/components/ReorderAlerts/ReorderAlertsWidget'
 
 const formItemLayout = {
   labelCol: {
@@ -409,6 +410,9 @@ const ItemLowStockListController: FC = () => {
 
   return (
     <div className='card'>
+      <div className='px-6 pt-6'>
+        <ReorderAlertsWidget />
+      </div>
       <Form
         {...formItemLayout}
         form={formRef}

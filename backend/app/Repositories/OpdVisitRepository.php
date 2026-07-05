@@ -148,6 +148,9 @@ class OpdVisitRepository extends BaseRepository
                 'bill.items',
                 'bill.payments',
                 'auditLogs.actor',
+                'referrals.referredToDepartment',
+                'referrals.referredToDoctor',
+                'procedures.performer',
             ])
             ->findOrFail($id);
     }

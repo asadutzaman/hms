@@ -1,0 +1,67 @@
+{
+    "resource": {
+        "permission_type": "RESOURCE",
+        "name": "prescriptionDispense",
+        "display_name": "Prescription Dispense",
+        "resource_uri": "prescription-dispense",
+        "controller_name": "PrescriptionDispenseController",
+        "server_url_prefix": "auth",
+        "component": "COMMON"
+    },
+    "scopes": [
+        {
+            "scope": "auth:prescriptionDispense:menuAccess",
+            "display_name": "Menu Access",
+            "actions": [
+                {
+                    "http_method": "GET",
+                    "action_name": "index",
+                    "uri": "/prescription-dispense"
+                }
+            ]
+        },
+        {
+            "scope": "auth:prescriptionDispense:list",
+            "display_name": "List",
+            "actions": [
+                {
+                    "http_method": "GET",
+                    "action_name": "index",
+                    "uri": "/prescription-dispense"
+                },
+                {
+                    "http_method": "GET",
+                    "action_name": "forPrescription",
+                    "uri": "/prescription-dispense/for-prescription/*"
+                }
+            ]
+        },
+        {
+            "scope": "auth:prescriptionDispense:view",
+            "display_name": "View",
+            "actions": [
+                {
+                    "http_method": "GET",
+                    "action_name": "show",
+                    "uri": "/prescription-dispense/*"
+                }
+            ]
+        },
+        {
+            "scope": "auth:prescriptionDispense:create",
+            "display_name": "Dispense",
+            "actions": [
+                {
+                    "http_method": "POST",
+                    "action_name": "dispense",
+                    "uri": "/prescription-dispense/*"
+                },
+                {
+                    "http_method": "POST",
+                    "action_name": "shortfall",
+                    "uri": "/prescription-dispense/shortfall"
+                }
+            ]
+        }
+    ]
+}

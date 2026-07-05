@@ -1,0 +1,105 @@
+{
+    "resource": {
+        "permission_type": "RESOURCE",
+        "name": "drugInteraction",
+        "display_name": "Drug Interaction",
+        "resource_uri": "drug-interaction",
+        "controller_name": "DrugInteractionController",
+        "server_url_prefix": "auth",
+        "component": "COMMON"
+    },
+    "scopes": [
+        {
+            "scope": "auth:drugInteraction:menuAccess",
+            "display_name": "Menu Access",
+            "actions": [
+                {
+                    "http_method": "GET",
+                    "action_name": "index",
+                    "uri": "/drug-interaction"
+                }
+            ]
+        },
+        {
+            "scope": "auth:drugInteraction:list",
+            "display_name": "List",
+            "actions": [
+                {
+                    "http_method": "GET",
+                    "action_name": "index",
+                    "uri": "/drug-interaction"
+                },
+                {
+                    "http_method": "GET",
+                    "action_name": "dropdown",
+                    "uri": "/drug-interaction/dropdown"
+                },
+                {
+                    "http_method": "POST",
+                    "action_name": "check",
+                    "uri": "/drug-interaction/check"
+                }
+            ]
+        },
+        {
+            "scope": "auth:drugInteraction:view",
+            "display_name": "View",
+            "actions": [
+                {
+                    "http_method": "GET",
+                    "action_name": "show",
+                    "uri": "/drug-interaction/*"
+                }
+            ]
+        },
+        {
+            "scope": "auth:drugInteraction:create",
+            "display_name": "Create",
+            "actions": [
+                {
+                    "http_method": "POST",
+                    "action_name": "store",
+                    "uri": "/drug-interaction"
+                }
+            ]
+        },
+        {
+            "scope": "auth:drugInteraction:edit",
+            "display_name": "Edit",
+            "actions": [
+                {
+                    "http_method": "PUT",
+                    "action_name": "update",
+                    "uri": "/drug-interaction/*"
+                },
+                {
+                    "http_method": "PATCH",
+                    "action_name": "updateFields",
+                    "uri": "/drug-interaction/*"
+                }
+            ]
+        },
+        {
+            "scope": "auth:drugInteraction:delete",
+            "display_name": "Delete",
+            "actions": [
+                {
+                    "http_method": "DELETE",
+                    "action_name": "destroy",
+                    "uri": "/drug-interaction/*"
+                }
+            ]
+        },
+        {
+            "scope": "auth:drugInteraction:multiSelect",
+            "display_name": "Multiple Selection",
+            "actions": [
+                {
+                    "http_method": "POST",
+                    "action_name": "bulk",
+                    "uri": "/drug-interaction/bulk"
+                }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,105 @@
+{
+    "resource": {
+        "permission_type": "RESOURCE",
+        "name": "referral",
+        "display_name": "Referral",
+        "resource_uri": "referral",
+        "controller_name": "ReferralController",
+        "server_url_prefix": "auth",
+        "component": "COMMON"
+    },
+    "scopes": [
+        {
+            "scope": "auth:referral:menuAccess",
+            "display_name": "Menu Access",
+            "actions": [
+                {
+                    "http_method": "GET",
+                    "action_name": "index",
+                    "uri": "/referral"
+                }
+            ]
+        },
+        {
+            "scope": "auth:referral:list",
+            "display_name": "List",
+            "actions": [
+                {
+                    "http_method": "GET",
+                    "action_name": "index",
+                    "uri": "/referral"
+                },
+                {
+                    "http_method": "GET",
+                    "action_name": "dropdown",
+                    "uri": "/referral/dropdown"
+                }
+            ]
+        },
+        {
+            "scope": "auth:referral:view",
+            "display_name": "View",
+            "actions": [
+                {
+                    "http_method": "GET",
+                    "action_name": "show",
+                    "uri": "/referral/*"
+                }
+            ]
+        },
+        {
+            "scope": "auth:referral:create",
+            "display_name": "Create",
+            "actions": [
+                {
+                    "http_method": "POST",
+                    "action_name": "store",
+                    "uri": "/referral"
+                }
+            ]
+        },
+        {
+            "scope": "auth:referral:edit",
+            "display_name": "Edit",
+            "actions": [
+                {
+                    "http_method": "PUT",
+                    "action_name": "update",
+                    "uri": "/referral/*"
+                },
+                {
+                    "http_method": "PATCH",
+                    "action_name": "updateStatus",
+                    "uri": "/referral/*/status"
+                },
+                {
+                    "http_method": "PATCH",
+                    "action_name": "updateFields",
+                    "uri": "/referral/*"
+                }
+            ]
+        },
+        {
+            "scope": "auth:referral:delete",
+            "display_name": "Delete",
+            "actions": [
+                {
+                    "http_method": "DELETE",
+                    "action_name": "destroy",
+                    "uri": "/referral/*"
+                }
+            ]
+        },
+        {
+            "scope": "auth:referral:multiSelect",
+            "display_name": "Multiple Selection",
+            "actions": [
+                {
+                    "http_method": "POST",
+                    "action_name": "bulk",
+                    "uri": "/referral/bulk"
+                }
+            ]
+        }
+    ]
+}

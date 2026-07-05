@@ -33,6 +33,10 @@ const endpoints = {
   // DAILY COLLECTION
   getDailyCollectionReport: () => `${RESOURCE_ENDPOINT}/daily-collection`,
   getDailyCollectionReportExport: () => `${RESOURCE_ENDPOINT}/daily-collection-export`,
+  // CONTROLLED DRUG REGISTER
+  getControlledDrugRegisterReport: () => `${RESOURCE_ENDPOINT}/controlled-drug-register`,
+  // REORDER ALERTS
+  getItemLowStockAlerts: () => `${RESOURCE_ENDPOINT}/item-low-stock-alerts`,
 }
 
 export default class ReportScmApi {
@@ -119,5 +123,15 @@ export default class ReportScmApi {
   public getDailyCollectionReportExport = (params = {}, headers = {}): AxiosPromise<any> => {
     const url = endpoints.getDailyCollectionReportExport()
     return HttpService.exportFile(url, params, headers)
+  }
+  // CONTROLLED DRUG REGISTER
+  public getControlledDrugRegisterReport = (params = {}, headers = {}): AxiosPromise<any> => {
+    const url = endpoints.getControlledDrugRegisterReport()
+    return HttpService.get(url, params, headers)
+  }
+  // REORDER ALERTS
+  public getItemLowStockAlerts = (params = {}, headers = {}): AxiosPromise<any> => {
+    const url = endpoints.getItemLowStockAlerts()
+    return HttpService.get(url, params, headers)
   }
 }

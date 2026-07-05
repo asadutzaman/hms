@@ -23,6 +23,7 @@ class OpdDiagnosisResource extends BaseResource
                 'uuid'              => $this->uuid,
                 'opd_visit_id'      => $this->opd_visit_id,
                 'patient_id'        => $this->patient_id,
+                'icd10_id'          => $this->icd10_id,
                 'icd10_code'        => $this->icd10_code,
                 'icd10_description' => $this->icd10_description,
                 'diagnosis_name'    => $this->diagnosis_name,

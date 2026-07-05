@@ -1,0 +1,105 @@
+{
+    "resource": {
+        "permission_type": "RESOURCE",
+        "name": "icd10Code",
+        "display_name": "ICD-10 Code",
+        "resource_uri": "icd10-code",
+        "controller_name": "Icd10CodeController",
+        "server_url_prefix": "auth",
+        "component": "COMMON"
+    },
+    "scopes": [
+        {
+            "scope": "auth:icd10Code:menuAccess",
+            "display_name": "Menu Access",
+            "actions": [
+                {
+                    "http_method": "GET",
+                    "action_name": "index",
+                    "uri": "/icd10-code"
+                }
+            ]
+        },
+        {
+            "scope": "auth:icd10Code:list",
+            "display_name": "List",
+            "actions": [
+                {
+                    "http_method": "GET",
+                    "action_name": "index",
+                    "uri": "/icd10-code"
+                },
+                {
+                    "http_method": "GET",
+                    "action_name": "dropdown",
+                    "uri": "/icd10-code/dropdown"
+                },
+                {
+                    "http_method": "GET",
+                    "action_name": "search",
+                    "uri": "/icd10-code/search"
+                }
+            ]
+        },
+        {
+            "scope": "auth:icd10Code:view",
+            "display_name": "View",
+            "actions": [
+                {
+                    "http_method": "GET",
+                    "action_name": "show",
+                    "uri": "/icd10-code/*"
+                }
+            ]
+        },
+        {
+            "scope": "auth:icd10Code:create",
+            "display_name": "Create",
+            "actions": [
+                {
+                    "http_method": "POST",
+                    "action_name": "store",
+                    "uri": "/icd10-code"
+                }
+            ]
+        },
+        {
+            "scope": "auth:icd10Code:edit",
+            "display_name": "Edit",
+            "actions": [
+                {
+                    "http_method": "PUT",
+                    "action_name": "update",
+                    "uri": "/icd10-code/*"
+                },
+                {
+                    "http_method": "PATCH",
+                    "action_name": "updateFields",
+                    "uri": "/icd10-code/*"
+                }
+            ]
+        },
+        {
+            "scope": "auth:icd10Code:delete",
+            "display_name": "Delete",
+            "actions": [
+                {
+                    "http_method": "DELETE",
+                    "action_name": "destroy",
+                    "uri": "/icd10-code/*"
+                }
+            ]
+        },
+        {
+            "scope": "auth:icd10Code:multiSelect",
+            "display_name": "Multiple Selection",
+            "actions": [
+                {
+                    "http_method": "POST",
+                    "action_name": "bulk",
+                    "uri": "/icd10-code/bulk"
+                }
+            ]
+        }
+    ]
+}

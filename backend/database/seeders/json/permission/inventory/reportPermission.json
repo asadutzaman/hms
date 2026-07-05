@@ -39,6 +39,11 @@
                     "http_method": "GET",
                     "action_name": "index",
                     "uri": "/inv/report/item-low-stock"
+                },
+                {
+                    "http_method": "GET",
+                    "action_name": "alerts",
+                    "uri": "/report/item-low-stock-alerts"
                 }
             ]
         },

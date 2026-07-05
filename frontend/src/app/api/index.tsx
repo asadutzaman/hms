@@ -66,6 +66,14 @@ import _OpdVitalApi from './OpdVital/OpdVital.api'
 import _OpdDiagnosisApi from './OpdDiagnosis/OpdDiagnosis.api'
 import _OpdPrescriptionApi from './OpdPrescription/OpdPrescription.api'
 import _OpdPrescriptionItemApi from './OpdPrescriptionItem/OpdPrescriptionItem.api'
+import _PrescriptionDispenseApi from './PrescriptionDispense/PrescriptionDispense.api'
+import _DrugInteractionApi from './DrugInteraction/DrugInteraction.api'
+import _DoctorPortalApi from './DoctorPortal/DoctorPortal.api'
+import _PrescriptionTemplateApi from './PrescriptionTemplate/PrescriptionTemplate.api'
+import _ReferralApi from './Referral/Referral.api'
+import _OpdProcedureApi from './OpdProcedure/OpdProcedure.api'
+import _Icd10CodeApi from './Icd10Code/Icd10Code.api'
+import _DiagnosisTemplateApi from './DiagnosisTemplate/DiagnosisTemplate.api'
 import _OpdInvestigationOrderApi from './OpdInvestigationOrder/OpdInvestigationOrder.api'
 import _OpdInvestigationOrderItemApi from './OpdInvestigationOrderItem/OpdInvestigationOrderItem.api'
 import _OpdBillApi from './OpdBill/OpdBill.api'
@@ -108,6 +116,7 @@ export const AttributeApi = new _AttributeApi()
 export const AttributeValueApi = new _AttributeValueApi()
 export const ItemApi = new _ItemApi()
 export const DrugApi = new _DrugApi()
+export const DrugInteractionApi = new _DrugInteractionApi()
 export const WorkflowTransitionApi = new _WorkflowTransitionApi()
 // INVENTORY
 export const FileApi = new _FileApi()
@@ -141,6 +150,13 @@ export const OpdVitalApi = new _OpdVitalApi()
 export const OpdDiagnosisApi = new _OpdDiagnosisApi()
 export const OpdPrescriptionApi = new _OpdPrescriptionApi()
 export const OpdPrescriptionItemApi = new _OpdPrescriptionItemApi()
+export const PrescriptionDispenseApi = new _PrescriptionDispenseApi()
+export const DoctorPortalApi = new _DoctorPortalApi()
+export const PrescriptionTemplateApi = new _PrescriptionTemplateApi()
+export const ReferralApi = new _ReferralApi()
+export const OpdProcedureApi = new _OpdProcedureApi()
+export const Icd10CodeApi = new _Icd10CodeApi()
+export const DiagnosisTemplateApi = new _DiagnosisTemplateApi()
 export const OpdInvestigationOrderApi = new _OpdInvestigationOrderApi()
 export const OpdInvestigationOrderItemApi = new _OpdInvestigationOrderItemApi()
 export const OpdBillApi = new _OpdBillApi()

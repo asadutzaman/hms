@@ -797,6 +797,19 @@ Route::prefix('api')->group(function () {
         Route::delete('/{id}', [App\Http\Controllers\DrugController::class, 'destroy']);
     });
 
+    // DRUG INTERACTION
+    Route::group(['prefix' => 'drug-interaction', 'middleware' => ['restrictIp', 'authVerify']], function () {
+        Route::post('/bulk', [App\Http\Controllers\DrugInteractionController::class, 'bulk']);
+        Route::get('/dropdown', [App\Http\Controllers\DrugInteractionController::class, 'dropdown']);
+        Route::post('/check', [App\Http\Controllers\DrugInteractionController::class, 'check']);
+        Route::get('/', [App\Http\Controllers\DrugInteractionController::class, 'index']);
+        Route::get('/{id}', [App\Http\Controllers\DrugInteractionController::class, 'show']);
+        Route::post('/', [App\Http\Controllers\DrugInteractionController::class, 'store']);
+        Route::put('/{id}', [App\Http\Controllers\DrugInteractionController::class, 'update']);
+        Route::patch('/{id}', [App\Http\Controllers\DrugInteractionController::class, 'updateFields']);
+        Route::delete('/{id}', [App\Http\Controllers\DrugInteractionController::class, 'destroy']);
+    });
+
     Route::group(['prefix' => 'workflow', 'middleware' => ['restrictIp', 'authVerify']], function () {
         // Git By Where
         Route::get('/getByWhere', [App\Http\Controllers\WorkflowController::class, 'getByWhere']);
@@ -1196,6 +1209,8 @@ Route::prefix('api')->group(function () {
         Route::get('/drug-expiry-export', [App\Http\Controllers\Report\DrugExpiryReportController::class, 'getExpiryListExport']);
         Route::get('/daily-collection', [App\Http\Controllers\Report\DailyCollectionReportController::class, 'getDailyCollectionList']);
         Route::get('/daily-collection-export', [App\Http\Controllers\Report\DailyCollectionReportController::class, 'getDailyCollectionExport']);
+        Route::get('/controlled-drug-register', [App\Http\Controllers\Report\ControlledDrugRegisterReportController::class, 'getRegisterList']);
+        Route::get('/item-low-stock-alerts', [App\Http\Controllers\Report\ItemLowStockReportController::class, 'alerts']);
     });
 
     // EXPORT
@@ -1388,6 +1403,86 @@ Route::prefix('api')->group(function () {
         Route::put('/{id}', [App\Http\Controllers\OpdPrescriptionItemController::class, 'update']);
         Route::patch('/{id}', [App\Http\Controllers\OpdPrescriptionItemController::class, 'updateFields']);
         Route::delete('/{id}', [App\Http\Controllers\OpdPrescriptionItemController::class, 'destroy']);
+    });
+
+    // DOCTOR PORTAL
+    Route::group(['prefix' => 'doctor-portal', 'middleware' => ['restrictIp', 'authVerify']], function () {
+        Route::get('/dashboard', [App\Http\Controllers\DoctorPortalController::class, 'dashboard']);
+        Route::get('/appointments', [App\Http\Controllers\DoctorPortalController::class, 'appointments']);
+        Route::get('/patient-history/{patientId}', [App\Http\Controllers\DoctorPortalController::class, 'patientHistory']);
+    });
+
+    // PRESCRIPTION TEMPLATE
+    Route::group(['prefix' => 'prescription-template', 'middleware' => ['restrictIp', 'authVerify']], function () {
+        Route::post('/bulk', [App\Http\Controllers\PrescriptionTemplateController::class, 'bulk']);
+        Route::get('/dropdown', [App\Http\Controllers\PrescriptionTemplateController::class, 'dropdown']);
+        Route::get('/', [App\Http\Controllers\PrescriptionTemplateController::class, 'index']);
+        Route::get('/{id}/apply', [App\Http\Controllers\PrescriptionTemplateController::class, 'apply']);
+        Route::get('/{id}', [App\Http\Controllers\PrescriptionTemplateController::class, 'show']);
+        Route::post('/', [App\Http\Controllers\PrescriptionTemplateController::class, 'store']);
+        Route::put('/{id}', [App\Http\Controllers\PrescriptionTemplateController::class, 'update']);
+        Route::patch('/{id}', [App\Http\Controllers\PrescriptionTemplateController::class, 'updateFields']);
+        Route::delete('/{id}', [App\Http\Controllers\PrescriptionTemplateController::class, 'destroy']);
+    });
+
+    // PRESCRIPTION DISPENSE
+    Route::group(['prefix' => 'prescription-dispense', 'middleware' => ['restrictIp', 'authVerify']], function () {
+        Route::get('/', [App\Http\Controllers\PrescriptionDispenseController::class, 'index']);
+        Route::get('/for-prescription/{prescriptionId}', [App\Http\Controllers\PrescriptionDispenseController::class, 'forPrescription']);
+        Route::post('/shortfall', [App\Http\Controllers\PrescriptionDispenseController::class, 'shortfall']);
+        Route::post('/{prescriptionId}', [App\Http\Controllers\PrescriptionDispenseController::class, 'dispense']);
+        Route::get('/{id}', [App\Http\Controllers\PrescriptionDispenseController::class, 'show']);
+    });
+
+    // REFERRAL
+    Route::group(['prefix' => 'referral', 'middleware' => ['restrictIp', 'authVerify']], function () {
+        Route::post('/bulk', [App\Http\Controllers\ReferralController::class, 'bulk']);
+        Route::get('/dropdown', [App\Http\Controllers\ReferralController::class, 'dropdown']);
+        Route::get('/', [App\Http\Controllers\ReferralController::class, 'index']);
+        Route::get('/{id}', [App\Http\Controllers\ReferralController::class, 'show']);
+        Route::post('/', [App\Http\Controllers\ReferralController::class, 'store']);
+        Route::put('/{id}', [App\Http\Controllers\ReferralController::class, 'update']);
+        Route::patch('/{id}/status', [App\Http\Controllers\ReferralController::class, 'updateStatus']);
+        Route::patch('/{id}', [App\Http\Controllers\ReferralController::class, 'updateFields']);
+        Route::delete('/{id}', [App\Http\Controllers\ReferralController::class, 'destroy']);
+    });
+
+    // DIAGNOSIS TEMPLATE
+    Route::group(['prefix' => 'diagnosis-template', 'middleware' => ['restrictIp', 'authVerify']], function () {
+        Route::post('/bulk', [App\Http\Controllers\DiagnosisTemplateController::class, 'bulk']);
+        Route::get('/dropdown', [App\Http\Controllers\DiagnosisTemplateController::class, 'dropdown']);
+        Route::get('/', [App\Http\Controllers\DiagnosisTemplateController::class, 'index']);
+        Route::get('/{id}/apply', [App\Http\Controllers\DiagnosisTemplateController::class, 'apply']);
+        Route::get('/{id}', [App\Http\Controllers\DiagnosisTemplateController::class, 'show']);
+        Route::post('/', [App\Http\Controllers\DiagnosisTemplateController::class, 'store']);
+        Route::put('/{id}', [App\Http\Controllers\DiagnosisTemplateController::class, 'update']);
+        Route::patch('/{id}', [App\Http\Controllers\DiagnosisTemplateController::class, 'updateFields']);
+        Route::delete('/{id}', [App\Http\Controllers\DiagnosisTemplateController::class, 'destroy']);
+    });
+
+    // ICD-10 CODE
+    Route::group(['prefix' => 'icd10-code', 'middleware' => ['restrictIp', 'authVerify']], function () {
+        Route::post('/bulk', [App\Http\Controllers\Icd10CodeController::class, 'bulk']);
+        Route::get('/dropdown', [App\Http\Controllers\Icd10CodeController::class, 'dropdown']);
+        Route::get('/search', [App\Http\Controllers\Icd10CodeController::class, 'search']);
+        Route::get('/', [App\Http\Controllers\Icd10CodeController::class, 'index']);
+        Route::get('/{id}', [App\Http\Controllers\Icd10CodeController::class, 'show']);
+        Route::post('/', [App\Http\Controllers\Icd10CodeController::class, 'store']);
+        Route::put('/{id}', [App\Http\Controllers\Icd10CodeController::class, 'update']);
+        Route::patch('/{id}', [App\Http\Controllers\Icd10CodeController::class, 'updateFields']);
+        Route::delete('/{id}', [App\Http\Controllers\Icd10CodeController::class, 'destroy']);
+    });
+
+    // OPD PROCEDURE
+    Route::group(['prefix' => 'opd-procedure', 'middleware' => ['restrictIp', 'authVerify']], function () {
+        Route::post('/bulk', [App\Http\Controllers\OpdProcedureController::class, 'bulk']);
+        Route::get('/dropdown', [App\Http\Controllers\OpdProcedureController::class, 'dropdown']);
+        Route::get('/', [App\Http\Controllers\OpdProcedureController::class, 'index']);
+        Route::get('/{id}', [App\Http\Controllers\OpdProcedureController::class, 'show']);
+        Route::post('/', [App\Http\Controllers\OpdProcedureController::class, 'store']);
+        Route::put('/{id}', [App\Http\Controllers\OpdProcedureController::class, 'update']);
+        Route::patch('/{id}', [App\Http\Controllers\OpdProcedureController::class, 'updateFields']);
+        Route::delete('/{id}', [App\Http\Controllers\OpdProcedureController::class, 'destroy']);
     });
 
     // OPD INVESTIGATION ORDER

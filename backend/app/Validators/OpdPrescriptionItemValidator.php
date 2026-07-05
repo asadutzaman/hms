@@ -16,6 +16,7 @@ class OpdPrescriptionItemValidator extends BaseValidator
         $common = [
             'opd_prescription_id' => ['nullable', 'integer', 'exists:opd_prescriptions,id'],
             'opd_visit_id'        => ['nullable', 'integer', 'exists:opd_visits,id'],
+            'drug_id'             => ['nullable', 'integer', 'exists:drugs,id'],
             'drug_name'           => ['required', 'string', 'max:200'],
             'generic_name'        => ['nullable', 'string', 'max:200'],
             'strength'            => ['nullable', 'string', 'max:50'],

@@ -19,6 +19,7 @@ class OpdDiagnosisValidator extends BaseValidator
             'opd_visit_id'         => ['nullable', 'integer', 'exists:opd_visits,id'],
             'patient_id'           => ['nullable', 'integer', 'exists:patients,id'],
             'diagnosis_type'       => ['nullable', Rule::in(['primary', 'secondary', 'differential', 'final'])],
+            'icd10_id'             => ['nullable', 'integer', 'exists:icd10_codes,id'],
             'icd10_code'           => ['nullable', 'string', 'max:20', 'regex:/^[A-Z][0-9]{2}(\.[0-9A-Z]{1,4})?$/'],
             'icd10_description'    => ['nullable', 'string', 'max:500'],
             'diagnosis_name'       => ['required', 'string', 'max:255'],

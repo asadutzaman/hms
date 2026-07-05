@@ -3,6 +3,7 @@
 namespace App\Repositories\Report;
 
 use App\Services\ODataService;
+use App\Services\SessionService;
 use App\Repositories\BaseRepository;
 use App\Models\ItemLowStockReport;
 use App\Repositories\ItemRepository;
@@ -145,6 +146,42 @@ class ItemLowStockReportRepository extends BaseRepository
             'results' => $results['results'],
         ];
         return $responseData;
+    }
+
+    /**
+     * Lightweight, unpaginated reorder-alert list for the session's branch —
+     * items whose stock has dropped below reorder_qty, most-depleted first.
+     */
+    public function getReorderAlerts()
+    {
+        $branchId = (new SessionService())->init()->getUserBranchId();
+        if (empty($branchId)) {
+            return [];
+        }
+
+        return (new ItemStockRepository())
+            ->newQuery()
+            ->where('branch_id', $branchId)
+            ->select('item_id')
+            ->selectRaw('SUM(balance_quantity) as balance_qty')
+            ->groupBy('item_id')
+            ->with(['itemInfo:id,name_en,code,reorder_qty'])
+            ->get()
+            ->filter(function ($row) {
+                return $row->itemInfo && (float) $row->balance_qty < (float) $row->itemInfo->reorder_qty;
+            })
+            ->map(function ($row) {
+                return [
+                    'item_id'     => $row->item_id,
+                    'item_name'   => $row->itemInfo->name_en,
+                    'item_code'   => $row->itemInfo->code,
+                    'balance_qty' => (float) $row->balance_qty,
+                    'reorder_qty' => (float) $row->itemInfo->reorder_qty,
+                ];
+            })
+            ->sortBy('balance_qty')
+            ->values()
+            ->toArray();
     }
 
     public function getItemLowStockExport()

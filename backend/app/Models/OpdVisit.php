@@ -129,6 +129,16 @@ class OpdVisit extends BaseModel
         return $this->hasMany(OpdVisitAuditLog::class, 'opd_visit_id')->orderByDesc('created_at');
     }
 
+    public function referrals(): HasMany
+    {
+        return $this->hasMany(Referral::class, 'opd_visit_id')->orderByDesc('id');
+    }
+
+    public function procedures(): HasMany
+    {
+        return $this->hasMany(OpdProcedure::class, 'opd_visit_id')->orderByDesc('performed_at');
+    }
+
     public function closedByUser(): BelongsTo
     {
         return $this->belongsTo(User::class, 'closed_by');

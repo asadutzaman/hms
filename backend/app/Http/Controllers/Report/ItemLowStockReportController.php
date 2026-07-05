@@ -54,4 +54,18 @@ class ItemLowStockReportController extends Controller
         ini_set('memory_limit', '-1');
         return Excel::download(new ItemLowStockReportExport, 'itemLowStockReport.xlsx', \Maatwebsite\Excel\Excel::XLSX);
     }
+
+    /**
+     * GET /report/item-low-stock-alerts — lightweight, unpaginated list for a
+     * dashboard badge/widget, scoped to the session's branch.
+     */
+    public function alerts()
+    {
+        try {
+            $alerts = ($this->repository->init())->getReorderAlerts();
+            return $this->successResponse(['alerts' => $alerts]);
+        } catch (Exception $e) {
+            $this->errorResponse($e->getMessage());
+        }
+    }
 }

@@ -18,6 +18,7 @@ const AdminRoutes = () => {
   const PatientRoutes = lazy(() => import('../modules/patient/PatientRoutes'));
   const AppointmentRoutes = lazy(() => import('../modules/appointment/AppointmentRoutes'));
   const OpdRoutes = lazy(() => import('../modules/opd/OpdRoutes'));
+  const DoctorRoutes = lazy(() => import('../modules/doctor/DoctorRoutes'));
 
   return (
     <Routes>
@@ -77,6 +78,14 @@ const AdminRoutes = () => {
           element={
             <SuspensedView>
               <OpdRoutes />
+            </SuspensedView>
+          }
+        />
+        <Route
+          path={'/doctor/*'}
+          element={
+            <SuspensedView>
+              <DoctorRoutes />
             </SuspensedView>
           }
         />

@@ -17,6 +17,7 @@ import RequesterWiseDisbursementListController from '../reports/components/Reque
 import ItemWiseDisbursementListController from '../reports/components/ItemWiseDisbursement/List/ItemWiseDisbursementList.controller'
 import ThanaWiseDisbursementListController from '../reports/components/ThanaWiseDisbursement/List/ThanaWiseDisbursementList.controller'
 import DrugExpiryListController from '../reports/components/DrugExpiry/List/DrugExpiryList.controller'
+import ControlledDrugRegisterListController from '../reports/components/ControlledDrugRegister/List/ControlledDrugRegisterList.controller'
 import PurchaseOrderListController from './components/PurchaseOrder/List/PurchaseOrderList.controller'
 import PurchaseOrderApprovalListController from './components/PurchaseOrderApproval/List/PurchaseOrderApprovalList.controller'
 import VendorComparisonController from './components/VendorComparison/VendorComparison.controller'
@@ -75,6 +76,10 @@ const InventoryRoutes = () => {
         element={<ThanaWiseDisbursementListController />}
       />
       <Route path={'/report/drug-expiry'} element={<DrugExpiryListController />} />
+      <Route
+        path={'/report/controlled-drug-register'}
+        element={<ControlledDrugRegisterListController />}
+      />
     </Routes>
   )
 }

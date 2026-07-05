@@ -1,4 +1,4 @@
-import React, {FC, useState} from 'react'
+import React, {FC, useEffect, useState} from 'react'
 import {
   Badge,
   Descriptions,
@@ -19,6 +19,7 @@ import {
   Popconfirm,
   Row,
   Col,
+  Alert,
 } from 'antd'
 import {
   PlusOutlined,
@@ -33,9 +34,22 @@ import {
   CloseOutlined,
 } from '@ant-design/icons'
 import {DateTimeUtils} from 'src/app/utils'
-import {OpdVisitApi, OpdVitalApi, OpdDiagnosisApi, OpdPrescriptionApi, OpdBillApi} from 'src/app/api'
+import {
+  OpdVisitApi,
+  OpdVitalApi,
+  OpdDiagnosisApi,
+  OpdPrescriptionApi,
+  OpdBillApi,
+  DrugInteractionApi,
+  DiagnosisTemplateApi,
+  PrescriptionTemplateApi,
+} from 'src/app/api'
 import AuditLogPanel from 'src/app/components/AuditLog/AuditLogPanel'
 import AllergyBanner from 'src/app/components/Allergy/AllergyBanner'
+import PrescriptionDispensePanel from 'src/app/modules/pharmacy/components/PrescriptionDispense/PrescriptionDispensePanel'
+import DrugSelect from 'src/app/components/Dropdown/DrugSelect'
+import Icd10Select from 'src/app/components/Dropdown/Icd10Select'
+import ReferralProcedurePanel from '../Tabs/ReferralProcedurePanel'
 import {usePermissionContext} from 'src/app/hooks/context/usePermissionContext'
 
 const {TextArea} = Input
@@ -67,6 +81,10 @@ const OpdVisitView: FC<any> = ({itemData, handleCallbackFunc}) => {
   const [vitalModalOpen, setVitalModalOpen] = useState(false)
   const [diagnosisModalOpen, setDiagnosisModalOpen] = useState(false)
   const [prescriptionModalOpen, setPrescriptionModalOpen] = useState(false)
+  const [interactionWarnings, setInteractionWarnings] = useState<any[]>([])
+  const [diagnosisTemplates, setDiagnosisTemplates] = useState<any[]>([])
+  const [prescriptionTemplates, setPrescriptionTemplates] = useState<any[]>([])
+  const [applyingTemplate, setApplyingTemplate] = useState(false)
   const [followUpModalOpen, setFollowUpModalOpen] = useState(false)
   const [paymentModalOpen, setPaymentModalOpen] = useState(false)
   const [discountModalOpen, setDiscountModalOpen] = useState(false)
@@ -80,6 +98,15 @@ const OpdVisitView: FC<any> = ({itemData, handleCallbackFunc}) => {
   const [followUpForm] = Form.useForm()
   const [paymentForm] = Form.useForm()
   const [discountForm] = Form.useForm()
+
+  useEffect(() => {
+    DiagnosisTemplateApi.list({$select: 'id,name'})
+      .then((res: any) => setDiagnosisTemplates(res?.data?.results || []))
+      .catch(() => setDiagnosisTemplates([]))
+    PrescriptionTemplateApi.list({$select: 'id,name'})
+      .then((res: any) => setPrescriptionTemplates(res?.data?.results || []))
+      .catch(() => setPrescriptionTemplates([]))
+  }, [])
 
   if (!itemData || !itemData.id) {
     return <div className='p-6'>No OPD visit selected.</div>
@@ -160,6 +187,7 @@ const OpdVisitView: FC<any> = ({itemData, handleCallbackFunc}) => {
         opd_visit_id: itemData.id,
         patient_id: itemData.patient_id,
         diagnosis_name: values.diagnosis_name,
+        icd10_id: values.icd10_id,
         icd10_code: values.icd10_code,
         icd10_description: values.icd10_description,
         diagnosis_type: values.diagnosis_type,
@@ -194,13 +222,37 @@ const OpdVisitView: FC<any> = ({itemData, handleCallbackFunc}) => {
     }
   }
 
+  const applyDiagnosisTemplate = async (templateId: any) => {
+    setApplyingTemplate(true)
+    try {
+      const res: any = await DiagnosisTemplateApi.apply(templateId)
+      const items = res?.data?.data?.items ?? res?.data?.items ?? []
+      for (let i = 0; i < items.length; i++) {
+        await OpdDiagnosisApi.create({
+          ...items[i],
+          opd_visit_id: itemData.id,
+          patient_id: itemData.patient_id,
+          sequence: diagnoses.length + i + 1,
+        })
+      }
+      notification.success({message: 'Diagnosis template applied'})
+      notifyReload()
+    } catch (e: any) {
+      notification.error({message: 'Failed to apply diagnosis template'})
+    } finally {
+      setApplyingTemplate(false)
+    }
+  }
+
   const openPrescriptionModal = () => {
+    setInteractionWarnings([])
     prescriptionForm.setFieldsValue({
       advice: prescription?.advice,
       follow_up_date: prescription?.follow_up_date,
       items:
         prescriptionItems.length > 0
           ? prescriptionItems.map((it) => ({
+              drug_id: it.drug_id,
               drug_name: it.drug_name,
               strength: it.strength,
               dose_value: it.dose_value,
@@ -213,7 +265,29 @@ const OpdVisitView: FC<any> = ({itemData, handleCallbackFunc}) => {
             }))
           : [{frequency: 'OD', duration_unit: 'days', route: 'oral'}],
     })
+    if (prescriptionItems.length > 0) {
+      const drugIds = prescriptionItems.map((it) => it.drug_id).filter(Boolean)
+      if (drugIds.length) checkInteractions(drugIds)
+    }
     setPrescriptionModalOpen(true)
+  }
+
+  const checkInteractions = (drugIds: any[]) => {
+    if (!drugIds.length) {
+      setInteractionWarnings([])
+      return
+    }
+    DrugInteractionApi.check({drug_ids: drugIds, patient_id: itemData.patient_id})
+      .then((res: any) => {
+        setInteractionWarnings(res?.data?.interactions || [])
+      })
+      .catch(() => setInteractionWarnings([]))
+  }
+
+  const handleDrugSelected = () => {
+    const items = prescriptionForm.getFieldValue('items') || []
+    const drugIds = items.map((it: any) => it?.drug_id).filter(Boolean)
+    checkInteractions(drugIds)
   }
 
   const handleSavePrescription = async (values: any) => {
@@ -486,9 +560,25 @@ const OpdVisitView: FC<any> = ({itemData, handleCallbackFunc}) => {
       <div className='d-flex justify-content-between align-items-center mb-2'>
         <h5 className='mb-0'>A · Assessment — Diagnoses</h5>
         {!isLocked && (
-          <Button size='small' icon={<PlusOutlined />} onClick={openDiagnosisModal}>
-            Add Diagnosis
-          </Button>
+          <Space>
+            {diagnosisTemplates.length > 0 && (
+              <Select
+                size='small'
+                style={{width: 180}}
+                placeholder='Apply Template'
+                loading={applyingTemplate}
+                value={undefined}
+                onChange={(value) => applyDiagnosisTemplate(value)}
+              >
+                {diagnosisTemplates.map((tpl) => (
+                  <Option key={tpl.id} value={tpl.id}>{tpl.name}</Option>
+                ))}
+              </Select>
+            )}
+            <Button size='small' icon={<PlusOutlined />} onClick={openDiagnosisModal}>
+              Add Diagnosis
+            </Button>
+          </Space>
         )}
       </div>
       {diagnoses.length > 0 ? (
@@ -536,6 +626,13 @@ const OpdVisitView: FC<any> = ({itemData, handleCallbackFunc}) => {
             >
               {prescriptionItems.length > 0 ? 'Edit Prescription' : 'Write Prescription'}
             </Button>
+          )}
+          {prescription?.id && (
+            <PrescriptionDispensePanel
+              prescriptionId={prescription.id}
+              items={prescriptionItems}
+              onDispensed={notifyReload}
+            />
           )}
         </Space>
       </div>
@@ -761,6 +858,21 @@ const OpdVisitView: FC<any> = ({itemData, handleCallbackFunc}) => {
   const tabItems = [
     {key: 'overview', label: 'Overview', children: overviewTab},
     {key: 'clinical', label: 'Clinical (SOAP)', children: clinicalTab},
+    {
+      key: 'referral-procedure',
+      label: 'Referrals & Procedures',
+      children: (
+        <ReferralProcedurePanel
+          opdVisitId={itemData.id}
+          patientId={itemData.patient_id}
+          doctorId={itemData.doctor_id}
+          referrals={itemData.referrals || []}
+          procedures={itemData.procedures || []}
+          isLocked={isLocked}
+          onChanged={notifyReload}
+        />
+      ),
+    },
     {key: 'billing', label: 'Billing', children: billingTab},
     {
       key: 'audit',
@@ -852,6 +964,17 @@ const OpdVisitView: FC<any> = ({itemData, handleCallbackFunc}) => {
           >
             <Input placeholder='e.g. Acute upper respiratory infection' />
           </Form.Item>
+          <Form.Item name='icd10_id' label='ICD-10 Lookup'>
+            <Icd10Select
+              icd10Id={undefined}
+              onSelect={(_: any, icd: any) => {
+                diagnosisForm.setFields([
+                  {name: 'icd10_code', value: icd?.code},
+                  {name: 'icd10_description', value: icd?.description},
+                ])
+              }}
+            />
+          </Form.Item>
           <Space wrap>
             <Form.Item name='icd10_code' label='ICD-10 Code'>
               <Input placeholder='e.g. J06.9' style={{width: 160}} />
@@ -866,7 +989,7 @@ const OpdVisitView: FC<any> = ({itemData, handleCallbackFunc}) => {
             </Form.Item>
           </Space>
           <Form.Item name='icd10_description' label='ICD-10 Description'>
-            <Input placeholder='Optional' />
+            <Input placeholder='Optional (auto-filled from lookup, or type freely)' />
           </Form.Item>
           <Space>
             <Form.Item name='is_primary' label='Primary' valuePropName='checked'>
@@ -891,21 +1014,86 @@ const OpdVisitView: FC<any> = ({itemData, handleCallbackFunc}) => {
         confirmLoading={submitting}
         width={800}
       >
+        {interactionWarnings.length > 0 && (
+          <Alert
+            type='warning'
+            showIcon
+            className='mb-4'
+            message='Possible Drug Interaction'
+            description={
+              <div className='d-flex flex-column gap-1'>
+                {interactionWarnings.map((w: any, idx: number) => (
+                  <div key={idx}>
+                    <Tag color={w.severity === 'contraindicated' || w.severity === 'severe' ? 'red' : 'gold'}>
+                      {w.severity}
+                    </Tag>
+                    {w.drug_a?.item?.name_en || w.drug_a?.brand_name} + {w.drug_b?.item?.name_en || w.drug_b?.brand_name}
+                    {w.description ? ` — ${w.description}` : ''}
+                  </div>
+                ))}
+              </div>
+            }
+          />
+        )}
         <Form form={prescriptionForm} layout='vertical' onFinish={handleSavePrescription}>
           <Form.List name='items'>
             {(fields, {add, remove}) => (
               <>
+                {prescriptionTemplates.length > 0 && (
+                  <Select
+                    className='mb-3'
+                    style={{width: 220}}
+                    placeholder='Apply Template'
+                    onChange={async (templateId) => {
+                      setApplyingTemplate(true)
+                      try {
+                        const res: any = await PrescriptionTemplateApi.apply(templateId)
+                        const items = res?.data?.data?.items ?? res?.data?.items ?? []
+                        items.forEach((it: any) => add(it))
+                        if (items.length) {
+                          const drugIds = items.map((it: any) => it.drug_id).filter(Boolean)
+                          if (drugIds.length) checkInteractions(drugIds)
+                        }
+                      } catch (e) {
+                        notification.error({message: 'Failed to apply prescription template'})
+                      } finally {
+                        setApplyingTemplate(false)
+                      }
+                    }}
+                  >
+                    {prescriptionTemplates.map((tpl) => (
+                      <Option key={tpl.id} value={tpl.id}>{tpl.name}</Option>
+                    ))}
+                  </Select>
+                )}
                 {fields.map((field) => (
                   <div key={field.key} className='border rounded p-3 mb-3'>
                     <Row gutter={8}>
                       <Col span={7}>
+                        <Form.Item name={[field.name, 'drug_id']} label='Drug (catalog)' valuePropName='drugId'>
+                          <DrugSelect
+                            drugId={undefined}
+                            onSelect={(value: any, drug: any) => {
+                              prescriptionForm.setFields([
+                                {
+                                  name: ['items', field.name, 'drug_name'],
+                                  value: drug?.generic_name,
+                                },
+                                {name: ['items', field.name, 'generic_name'], value: drug?.generic_name},
+                                {name: ['items', field.name, 'strength'], value: drug?.strength},
+                                {name: ['items', field.name, 'dosage_form'], value: drug?.dosage_form},
+                              ])
+                              handleDrugSelected()
+                            }}
+                            onChange={() => handleDrugSelected()}
+                          />
+                        </Form.Item>
                         <Form.Item
                           {...field}
                           name={[field.name, 'drug_name']}
-                          label='Drug'
                           rules={[{required: true, message: 'Required'}]}
                         >
-                          <Input placeholder='Drug name' />
+                          <Input placeholder='Drug name (or pick above)' />
                         </Form.Item>
                       </Col>
                       <Col span={4}>

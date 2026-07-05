@@ -1,0 +1,100 @@
+{
+    "resource": {
+        "permission_type": "RESOURCE",
+        "name": "opdProcedure",
+        "display_name": "OPD Procedure",
+        "resource_uri": "opd-procedure",
+        "controller_name": "OpdProcedureController",
+        "server_url_prefix": "auth",
+        "component": "COMMON"
+    },
+    "scopes": [
+        {
+            "scope": "auth:opdProcedure:menuAccess",
+            "display_name": "Menu Access",
+            "actions": [
+                {
+                    "http_method": "GET",
+                    "action_name": "index",
+                    "uri": "/opd-procedure"
+                }
+            ]
+        },
+        {
+            "scope": "auth:opdProcedure:list",
+            "display_name": "List",
+            "actions": [
+                {
+                    "http_method": "GET",
+                    "action_name": "index",
+                    "uri": "/opd-procedure"
+                },
+                {
+                    "http_method": "GET",
+                    "action_name": "dropdown",
+                    "uri": "/opd-procedure/dropdown"
+                }
+            ]
+        },
+        {
+            "scope": "auth:opdProcedure:view",
+            "display_name": "View",
+            "actions": [
+                {
+                    "http_method": "GET",
+                    "action_name": "show",
+                    "uri": "/opd-procedure/*"
+                }
+            ]
+        },
+        {
+            "scope": "auth:opdProcedure:create",
+            "display_name": "Create",
+            "actions": [
+                {
+                    "http_method": "POST",
+                    "action_name": "store",
+                    "uri": "/opd-procedure"
+                }
+            ]
+        },
+        {
+            "scope": "auth:opdProcedure:edit",
+            "display_name": "Edit",
+            "actions": [
+                {
+                    "http_method": "PUT",
+                    "action_name": "update",
+                    "uri": "/opd-procedure/*"
+                },
+                {
+                    "http_method": "PATCH",
+                    "action_name": "updateFields",
+                    "uri": "/opd-procedure/*"
+                }
+            ]
+        },
+        {
+            "scope": "auth:opdProcedure:delete",
+            "display_name": "Delete",
+            "actions": [
+                {
+                    "http_method": "DELETE",
+                    "action_name": "destroy",
+                    "uri": "/opd-procedure/*"
+                }
+            ]
+        },
+        {
+            "scope": "auth:opdProcedure:multiSelect",
+            "display_name": "Multiple Selection",
+            "actions": [
+                {
+                    "http_method": "POST",
+                    "action_name": "bulk",
+                    "uri": "/opd-procedure/bulk"
+                }
+            ]
+        }
+    ]
+}

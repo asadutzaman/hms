@@ -1,0 +1,51 @@
+{
+    "resource": {
+        "permission_type": "RESOURCE",
+        "name": "doctorPortal",
+        "display_name": "Doctor Portal",
+        "resource_uri": "doctor-portal",
+        "controller_name": "DoctorPortalController",
+        "server_url_prefix": "auth",
+        "component": "COMMON"
+    },
+    "scopes": [
+        {
+            "scope": "auth:doctorPortal:menuAccess",
+            "display_name": "Menu Access",
+            "actions": [
+                {
+                    "http_method": "GET",
+                    "action_name": "dashboard",
+                    "uri": "/doctor-portal/dashboard"
+                }
+            ]
+        },
+        {
+            "scope": "auth:doctorPortal:list",
+            "display_name": "List",
+            "actions": [
+                {
+                    "http_method": "GET",
+                    "action_name": "dashboard",
+                    "uri": "/doctor-portal/dashboard"
+                },
+                {
+                    "http_method": "GET",
+                    "action_name": "appointments",
+                    "uri": "/doctor-portal/appointments"
+                }
+            ]
+        },
+        {
+            "scope": "auth:doctorPortal:view",
+            "display_name": "View",
+            "actions": [
+                {
+                    "http_method": "GET",
+                    "action_name": "patientHistory",
+                    "uri": "/doctor-portal/patient-history/*"
+                }
+            ]
+        }
+    ]
+}

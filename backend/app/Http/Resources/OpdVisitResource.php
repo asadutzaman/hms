@@ -109,6 +109,12 @@ class OpdVisitResource extends BaseResource
             if ($resource->relationLoaded('auditLogs')) {
                 $includes['audit_logs'] = OpdVisitAuditLogResource::collection($resource->auditLogs)->toArray($request);
             }
+            if ($resource->relationLoaded('referrals')) {
+                $includes['referrals'] = ReferralResource::collection($resource->referrals)->toArray($request);
+            }
+            if ($resource->relationLoaded('procedures')) {
+                $includes['procedures'] = OpdProcedureResource::collection($resource->procedures)->toArray($request);
+            }
 
             return array_merge($data, $includes);
         } catch (\Throwable $e) {

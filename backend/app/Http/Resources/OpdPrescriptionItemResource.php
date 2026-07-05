@@ -33,6 +33,7 @@ class OpdPrescriptionItemResource extends BaseResource
                 'uuid'                => $this->uuid,
                 'opd_prescription_id' => $this->opd_prescription_id,
                 'opd_visit_id'        => $this->opd_visit_id,
+                'drug_id'             => $this->drug_id,
                 'drug_name'           => $this->drug_name,
                 'generic_name'        => $this->generic_name,
                 'strength'            => $this->strength,
@@ -48,15 +49,25 @@ class OpdPrescriptionItemResource extends BaseResource
                 'unit_price'          => $this->unit_price,
                 'amount'              => $this->amount,
                 'sequence'            => $this->sequence,
+                'dispensed_quantity'  => $this->dispensed_quantity,
                 'created_by_name' => $baseData['created_by_name'] ?? null,
                 'updated_by_name' => $baseData['updated_by_name'] ?? null,
                 'created_at'     => $baseData['created_at'] ?? null,
                 'updated_at'     => $baseData['updated_at'] ?? null,
             ];
 
+            $isControlled = false;
+            $controlledSchedule = null;
+            if ($resource->drug_id && $resource->drug) {
+                $isControlled = (bool) $resource->drug->is_controlled;
+                $controlledSchedule = $resource->drug->controlled_schedule;
+            }
+
             return array_merge($data, [
-                'dose_display'     => $doseDisplay,
-                'duration_display' => $durationDisplay,
+                'dose_display'        => $doseDisplay,
+                'duration_display'    => $durationDisplay,
+                'is_controlled'       => $isControlled,
+                'controlled_schedule' => $controlledSchedule,
             ]);
         } catch (\Throwable $e) {
             return parent::toArray($request);

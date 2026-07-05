@@ -12,6 +12,7 @@ import DoctorScheduleListController from './components/DoctorSchedule/List/Docto
 import DoctorScheduleFormController from './components/DoctorSchedule/Form/DoctorScheduleForm.controller'
 import DoctorScheduleViewController from './components/DoctorSchedule/View/DoctorScheduleView.controller'
 import DailyCollectionListController from '../reports/components/DailyCollection/List/DailyCollectionList.controller'
+import DiagnosisTemplateListController from './components/DiagnosisTemplate/DiagnosisTemplateList.controller'
 
 const OpdVisitRoutes = () => {
   return (
@@ -35,6 +36,9 @@ const OpdVisitRoutes = () => {
       <Route path='schedules/create' element={<DoctorScheduleFormController />} />
       <Route path='schedules/edit/:id' element={<DoctorScheduleFormController />} />
       <Route path='schedules/view/:id' element={<DoctorScheduleViewController />} />
+
+      {/* Diagnosis Templates */}
+      <Route path='diagnosis-templates' element={<DiagnosisTemplateListController />} />
 
       {/* Reports */}
       <Route path='report/daily-collection' element={<DailyCollectionListController />} />

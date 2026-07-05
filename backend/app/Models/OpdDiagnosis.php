@@ -21,6 +21,7 @@ class OpdDiagnosis extends BaseModel
         'opd_visit_id',
         'patient_id',
         'diagnosis_type',
+        'icd10_id',
         'icd10_code',
         'icd10_description',
         'diagnosis_name',
@@ -41,6 +42,7 @@ class OpdDiagnosis extends BaseModel
         'organogram_id'   => 'integer',
         'opd_visit_id'    => 'integer',
         'patient_id'      => 'integer',
+        'icd10_id'        => 'integer',
         'sequence'        => 'integer',
         'recorded_by'     => 'integer',
         'is_primary'      => 'boolean',
@@ -73,5 +75,10 @@ class OpdDiagnosis extends BaseModel
     public function recorder(): BelongsTo
     {
         return $this->belongsTo(User::class, 'recorded_by');
+    }
+
+    public function icd10(): BelongsTo
+    {
+        return $this->belongsTo(Icd10Code::class, 'icd10_id');
     }
 }
