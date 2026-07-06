@@ -1,0 +1,65 @@
+{
+    "resource": {
+        "permission_type": "RESOURCE",
+        "name": "ipd-vital",
+        "display_name": "IPD - Vitals",
+        "resource_uri": "ipd-vital",
+        "controller_name": "IpdVitalController",
+        "server_url_prefix": "auth",
+        "component": "COMMON"
+    },
+    "scopes": [
+        {
+            "scope": "auth:ipd-vital:menuAccess",
+            "display_name": "Menu Access",
+            "actions": [
+                { "http_method": "GET", "action_name": "index", "uri": "/ipd-vital" }
+            ]
+        },
+        {
+            "scope": "auth:ipd-vital:list",
+            "display_name": "List",
+            "actions": [
+                { "http_method": "GET", "action_name": "index", "uri": "/ipd-vital" },
+                { "http_method": "GET", "action_name": "dropdown", "uri": "/ipd-vital/dropdown" },
+                { "http_method": "GET", "action_name": "byAdmission", "uri": "/ipd-vital/by-admission/*" }
+            ]
+        },
+        {
+            "scope": "auth:ipd-vital:view",
+            "display_name": "View",
+            "actions": [
+                { "http_method": "GET", "action_name": "show", "uri": "/ipd-vital/*" }
+            ]
+        },
+        {
+            "scope": "auth:ipd-vital:create",
+            "display_name": "Create",
+            "actions": [
+                { "http_method": "POST", "action_name": "store", "uri": "/ipd-vital" }
+            ]
+        },
+        {
+            "scope": "auth:ipd-vital:edit",
+            "display_name": "Edit",
+            "actions": [
+                { "http_method": "PUT", "action_name": "update", "uri": "/ipd-vital/*" },
+                { "http_method": "PATCH", "action_name": "updateFields", "uri": "/ipd-vital/*" }
+            ]
+        },
+        {
+            "scope": "auth:ipd-vital:delete",
+            "display_name": "Delete",
+            "actions": [
+                { "http_method": "DELETE", "action_name": "destroy", "uri": "/ipd-vital/*" }
+            ]
+        },
+        {
+            "scope": "auth:ipd-vital:multiSelect",
+            "display_name": "Multiple Selection",
+            "actions": [
+                { "http_method": "POST", "action_name": "bulk", "uri": "/ipd-vital/bulk" }
+            ]
+        }
+    ]
+}

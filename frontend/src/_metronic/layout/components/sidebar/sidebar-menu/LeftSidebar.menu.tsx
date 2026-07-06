@@ -532,6 +532,42 @@ export const LeftSidebarMenu = [
 
   {
     type: 'group',
+    title: 'Emergency',
+    hidden: false,
+    children: [
+      {
+        type: 'item',
+        title: 'ER Board',
+        permission: 'auth:er-visit:list',
+        link: {
+          to: '/admin/emergency/board',
+          exactMatch: true,
+          externalUrl: false,
+          openInNewTab: false,
+        },
+        icon: 'flash-circle',
+        subParent: false,
+        subChildren: [],
+      },
+      {
+        type: 'item',
+        title: 'ER Visits',
+        permission: 'auth:er-visit:menuAccess',
+        link: {
+          to: '/admin/emergency/visit',
+          exactMatch: true,
+          externalUrl: false,
+          openInNewTab: false,
+        },
+        icon: 'ambulance',
+        subParent: false,
+        subChildren: [],
+      },
+    ],
+  },
+
+  {
+    type: 'group',
     title: 'Doctor Portal',
     hidden: false,
     children: [

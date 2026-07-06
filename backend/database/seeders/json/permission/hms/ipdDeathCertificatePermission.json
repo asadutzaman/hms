@@ -1,0 +1,56 @@
+{
+    "resource": {
+        "permission_type": "RESOURCE",
+        "name": "ipd-death-certificate",
+        "display_name": "IPD - Death Certificate",
+        "resource_uri": "ipd-death-certificate",
+        "controller_name": "IpdDeathCertificateController",
+        "server_url_prefix": "auth",
+        "component": "COMMON"
+    },
+    "scopes": [
+        {
+            "scope": "auth:ipd-death-certificate:menuAccess",
+            "display_name": "Menu Access",
+            "actions": [
+                { "http_method": "GET", "action_name": "index", "uri": "/ipd-death-certificate" }
+            ]
+        },
+        {
+            "scope": "auth:ipd-death-certificate:list",
+            "display_name": "List",
+            "actions": [
+                { "http_method": "GET", "action_name": "index", "uri": "/ipd-death-certificate" },
+                { "http_method": "GET", "action_name": "byAdmission", "uri": "/ipd-death-certificate/by-admission/*" }
+            ]
+        },
+        {
+            "scope": "auth:ipd-death-certificate:view",
+            "display_name": "View",
+            "actions": [
+                { "http_method": "GET", "action_name": "show", "uri": "/ipd-death-certificate/*" }
+            ]
+        },
+        {
+            "scope": "auth:ipd-death-certificate:create",
+            "display_name": "Create",
+            "actions": [
+                { "http_method": "POST", "action_name": "store", "uri": "/ipd-death-certificate" }
+            ]
+        },
+        {
+            "scope": "auth:ipd-death-certificate:edit",
+            "display_name": "Edit",
+            "actions": [
+                { "http_method": "PUT", "action_name": "update", "uri": "/ipd-death-certificate/*" }
+            ]
+        },
+        {
+            "scope": "auth:ipd-death-certificate:certify",
+            "display_name": "Certify",
+            "actions": [
+                { "http_method": "POST", "action_name": "certify", "uri": "/ipd-death-certificate/*/certify" }
+            ]
+        }
+    ]
+}

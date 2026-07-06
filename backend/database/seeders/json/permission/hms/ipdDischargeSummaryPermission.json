@@ -1,0 +1,56 @@
+{
+    "resource": {
+        "permission_type": "RESOURCE",
+        "name": "ipd-discharge-summary",
+        "display_name": "IPD - Discharge Summary",
+        "resource_uri": "ipd-discharge-summary",
+        "controller_name": "IpdDischargeSummaryController",
+        "server_url_prefix": "auth",
+        "component": "COMMON"
+    },
+    "scopes": [
+        {
+            "scope": "auth:ipd-discharge-summary:menuAccess",
+            "display_name": "Menu Access",
+            "actions": [
+                { "http_method": "GET", "action_name": "index", "uri": "/ipd-discharge-summary" }
+            ]
+        },
+        {
+            "scope": "auth:ipd-discharge-summary:list",
+            "display_name": "List",
+            "actions": [
+                { "http_method": "GET", "action_name": "index", "uri": "/ipd-discharge-summary" },
+                { "http_method": "GET", "action_name": "byAdmission", "uri": "/ipd-discharge-summary/by-admission/*" }
+            ]
+        },
+        {
+            "scope": "auth:ipd-discharge-summary:view",
+            "display_name": "View",
+            "actions": [
+                { "http_method": "GET", "action_name": "show", "uri": "/ipd-discharge-summary/*" }
+            ]
+        },
+        {
+            "scope": "auth:ipd-discharge-summary:create",
+            "display_name": "Create",
+            "actions": [
+                { "http_method": "POST", "action_name": "generate", "uri": "/ipd-discharge-summary/generate/*" }
+            ]
+        },
+        {
+            "scope": "auth:ipd-discharge-summary:edit",
+            "display_name": "Edit",
+            "actions": [
+                { "http_method": "PUT", "action_name": "update", "uri": "/ipd-discharge-summary/*" }
+            ]
+        },
+        {
+            "scope": "auth:ipd-discharge-summary:sign",
+            "display_name": "Sign Off",
+            "actions": [
+                { "http_method": "POST", "action_name": "sign", "uri": "/ipd-discharge-summary/*/sign" }
+            ]
+        }
+    ]
+}

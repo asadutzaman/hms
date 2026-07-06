@@ -1,0 +1,66 @@
+{
+    "resource": {
+        "permission_type": "RESOURCE",
+        "name": "ipd-fluid-balance",
+        "display_name": "IPD - Fluid Balance",
+        "resource_uri": "ipd-fluid-balance",
+        "controller_name": "IpdFluidBalanceController",
+        "server_url_prefix": "auth",
+        "component": "COMMON"
+    },
+    "scopes": [
+        {
+            "scope": "auth:ipd-fluid-balance:menuAccess",
+            "display_name": "Menu Access",
+            "actions": [
+                { "http_method": "GET", "action_name": "index", "uri": "/ipd-fluid-balance" }
+            ]
+        },
+        {
+            "scope": "auth:ipd-fluid-balance:list",
+            "display_name": "List",
+            "actions": [
+                { "http_method": "GET", "action_name": "index", "uri": "/ipd-fluid-balance" },
+                { "http_method": "GET", "action_name": "dropdown", "uri": "/ipd-fluid-balance/dropdown" },
+                { "http_method": "GET", "action_name": "byAdmission", "uri": "/ipd-fluid-balance/by-admission/*" },
+                { "http_method": "GET", "action_name": "summary", "uri": "/ipd-fluid-balance/summary/*" }
+            ]
+        },
+        {
+            "scope": "auth:ipd-fluid-balance:view",
+            "display_name": "View",
+            "actions": [
+                { "http_method": "GET", "action_name": "show", "uri": "/ipd-fluid-balance/*" }
+            ]
+        },
+        {
+            "scope": "auth:ipd-fluid-balance:create",
+            "display_name": "Create",
+            "actions": [
+                { "http_method": "POST", "action_name": "store", "uri": "/ipd-fluid-balance" }
+            ]
+        },
+        {
+            "scope": "auth:ipd-fluid-balance:edit",
+            "display_name": "Edit",
+            "actions": [
+                { "http_method": "PUT", "action_name": "update", "uri": "/ipd-fluid-balance/*" },
+                { "http_method": "PATCH", "action_name": "updateFields", "uri": "/ipd-fluid-balance/*" }
+            ]
+        },
+        {
+            "scope": "auth:ipd-fluid-balance:delete",
+            "display_name": "Delete",
+            "actions": [
+                { "http_method": "DELETE", "action_name": "destroy", "uri": "/ipd-fluid-balance/*" }
+            ]
+        },
+        {
+            "scope": "auth:ipd-fluid-balance:multiSelect",
+            "display_name": "Multiple Selection",
+            "actions": [
+                { "http_method": "POST", "action_name": "bulk", "uri": "/ipd-fluid-balance/bulk" }
+            ]
+        }
+    ]
+}

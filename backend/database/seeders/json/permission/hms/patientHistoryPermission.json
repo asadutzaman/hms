@@ -1,0 +1,20 @@
+{
+    "resource": {
+        "permission_type": "RESOURCE",
+        "name": "patient-history",
+        "display_name": "EMR - Patient Medical History",
+        "resource_uri": "patient-history",
+        "controller_name": "PatientHistoryController",
+        "server_url_prefix": "auth",
+        "component": "COMMON"
+    },
+    "scopes": [
+        {
+            "scope": "auth:patient-history:view",
+            "display_name": "View",
+            "actions": [
+                { "http_method": "GET", "action_name": "timeline", "uri": "/patient-history/*" }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,68 @@
+{
+    "resource": {
+        "permission_type": "RESOURCE",
+        "name": "er-visit",
+        "display_name": "Emergency - Visit",
+        "resource_uri": "er-visit",
+        "controller_name": "ErVisitController",
+        "server_url_prefix": "auth",
+        "component": "COMMON"
+    },
+    "scopes": [
+        {
+            "scope": "auth:er-visit:menuAccess",
+            "display_name": "Menu Access",
+            "actions": [
+                { "http_method": "GET", "action_name": "index", "uri": "/er-visit" }
+            ]
+        },
+        {
+            "scope": "auth:er-visit:list",
+            "display_name": "List",
+            "actions": [
+                { "http_method": "GET", "action_name": "index", "uri": "/er-visit" },
+                { "http_method": "GET", "action_name": "dropdown", "uri": "/er-visit/dropdown" },
+                { "http_method": "GET", "action_name": "board", "uri": "/er-visit/board" }
+            ]
+        },
+        {
+            "scope": "auth:er-visit:view",
+            "display_name": "View",
+            "actions": [
+                { "http_method": "GET", "action_name": "show", "uri": "/er-visit/*" }
+            ]
+        },
+        {
+            "scope": "auth:er-visit:create",
+            "display_name": "Create",
+            "actions": [
+                { "http_method": "POST", "action_name": "store", "uri": "/er-visit" }
+            ]
+        },
+        {
+            "scope": "auth:er-visit:edit",
+            "display_name": "Edit",
+            "actions": [
+                { "http_method": "PUT", "action_name": "update", "uri": "/er-visit/*" },
+                { "http_method": "PATCH", "action_name": "updateFields", "uri": "/er-visit/*" },
+                { "http_method": "POST", "action_name": "startTreatment", "uri": "/er-visit/*/start-treatment" },
+                { "http_method": "POST", "action_name": "dispose", "uri": "/er-visit/*/dispose" },
+                { "http_method": "POST", "action_name": "linkAdmission", "uri": "/er-visit/*/link-admission" }
+            ]
+        },
+        {
+            "scope": "auth:er-visit:delete",
+            "display_name": "Delete",
+            "actions": [
+                { "http_method": "DELETE", "action_name": "destroy", "uri": "/er-visit/*" }
+            ]
+        },
+        {
+            "scope": "auth:er-visit:multiSelect",
+            "display_name": "Multiple Selection",
+            "actions": [
+                { "http_method": "POST", "action_name": "bulk", "uri": "/er-visit/bulk" }
+            ]
+        }
+    ]
+}

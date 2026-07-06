@@ -1,0 +1,67 @@
+{
+    "resource": {
+        "permission_type": "RESOURCE",
+        "name": "ipd-medication-order",
+        "display_name": "IPD - Medication Order (MAR)",
+        "resource_uri": "ipd-medication-order",
+        "controller_name": "IpdMedicationOrderController",
+        "server_url_prefix": "auth",
+        "component": "COMMON"
+    },
+    "scopes": [
+        {
+            "scope": "auth:ipd-medication-order:menuAccess",
+            "display_name": "Menu Access",
+            "actions": [
+                { "http_method": "GET", "action_name": "index", "uri": "/ipd-medication-order" }
+            ]
+        },
+        {
+            "scope": "auth:ipd-medication-order:list",
+            "display_name": "List",
+            "actions": [
+                { "http_method": "GET", "action_name": "index", "uri": "/ipd-medication-order" },
+                { "http_method": "GET", "action_name": "dropdown", "uri": "/ipd-medication-order/dropdown" },
+                { "http_method": "GET", "action_name": "byAdmission", "uri": "/ipd-medication-order/by-admission/*" }
+            ]
+        },
+        {
+            "scope": "auth:ipd-medication-order:view",
+            "display_name": "View",
+            "actions": [
+                { "http_method": "GET", "action_name": "show", "uri": "/ipd-medication-order/*" }
+            ]
+        },
+        {
+            "scope": "auth:ipd-medication-order:create",
+            "display_name": "Create",
+            "actions": [
+                { "http_method": "POST", "action_name": "store", "uri": "/ipd-medication-order" }
+            ]
+        },
+        {
+            "scope": "auth:ipd-medication-order:edit",
+            "display_name": "Edit",
+            "actions": [
+                { "http_method": "PUT", "action_name": "update", "uri": "/ipd-medication-order/*" },
+                { "http_method": "PATCH", "action_name": "updateFields", "uri": "/ipd-medication-order/*" },
+                { "http_method": "POST", "action_name": "discontinue", "uri": "/ipd-medication-order/*/discontinue" },
+                { "http_method": "POST", "action_name": "administerPrn", "uri": "/ipd-medication-order/*/administer-prn" }
+            ]
+        },
+        {
+            "scope": "auth:ipd-medication-order:delete",
+            "display_name": "Delete",
+            "actions": [
+                { "http_method": "DELETE", "action_name": "destroy", "uri": "/ipd-medication-order/*" }
+            ]
+        },
+        {
+            "scope": "auth:ipd-medication-order:multiSelect",
+            "display_name": "Multiple Selection",
+            "actions": [
+                { "http_method": "POST", "action_name": "bulk", "uri": "/ipd-medication-order/bulk" }
+            ]
+        }
+    ]
+}

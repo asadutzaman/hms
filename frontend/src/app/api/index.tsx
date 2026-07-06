@@ -88,6 +88,18 @@ import _IpdBillApi from './Ipd/IpdBill.api'
 import _IpdBillItemApi from './Ipd/IpdBillItem.api'
 import _IpdBillPaymentApi from './Ipd/IpdBillPayment.api'
 import _IpdAdvancePaymentApi from './Ipd/IpdAdvancePayment.api'
+import _IpdVitalApi from './Ipd/IpdVital.api'
+import _IpdNursingAssessmentApi from './Ipd/IpdNursingAssessment.api'
+import _IpdFluidBalanceApi from './Ipd/IpdFluidBalance.api'
+import _IpdMedicationOrderApi from './Ipd/IpdMedicationOrder.api'
+import _IpdMedicationAdministrationApi from './Ipd/IpdMedicationAdministration.api'
+import _IpdDischargeSummaryApi from './Ipd/IpdDischargeSummary.api'
+import _IpdDeathCertificateApi from './Ipd/IpdDeathCertificate.api'
+// EMERGENCY
+import _ErVisitApi from './Emergency/ErVisit.api'
+import _ErTriageApi from './Emergency/ErTriage.api'
+// PATIENT HISTORY
+import _PatientHistoryApi from './PatientHistory/PatientHistory.api'
 
 export const FackApi = new _FackApi()
 export const OauthApi = new _OauthApi()
@@ -179,3 +191,15 @@ export const IpdBillApi = new _IpdBillApi()
 export const IpdBillItemApi = new _IpdBillItemApi()
 export const IpdBillPaymentApi = new _IpdBillPaymentApi()
 export const IpdAdvancePaymentApi = new _IpdAdvancePaymentApi()
+export const IpdVitalApi = new _IpdVitalApi()
+export const IpdNursingAssessmentApi = new _IpdNursingAssessmentApi()
+export const IpdFluidBalanceApi = new _IpdFluidBalanceApi()
+export const IpdMedicationOrderApi = new _IpdMedicationOrderApi()
+export const IpdMedicationAdministrationApi = new _IpdMedicationAdministrationApi()
+export const IpdDischargeSummaryApi = new _IpdDischargeSummaryApi()
+export const IpdDeathCertificateApi = new _IpdDeathCertificateApi()
+// EMERGENCY
+export const ErVisitApi = new _ErVisitApi()
+export const ErTriageApi = new _ErTriageApi()
+// PATIENT HISTORY
+export const PatientHistoryApi = new _PatientHistoryApi()

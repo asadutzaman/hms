@@ -1,0 +1,42 @@
+{
+    "resource": {
+        "permission_type": "RESOURCE",
+        "name": "er-triage",
+        "display_name": "Emergency - Triage",
+        "resource_uri": "er-triage",
+        "controller_name": "ErTriageController",
+        "server_url_prefix": "auth",
+        "component": "COMMON"
+    },
+    "scopes": [
+        {
+            "scope": "auth:er-triage:menuAccess",
+            "display_name": "Menu Access",
+            "actions": [
+                { "http_method": "GET", "action_name": "index", "uri": "/er-triage" }
+            ]
+        },
+        {
+            "scope": "auth:er-triage:list",
+            "display_name": "List",
+            "actions": [
+                { "http_method": "GET", "action_name": "index", "uri": "/er-triage" },
+                { "http_method": "GET", "action_name": "byVisit", "uri": "/er-triage/by-visit/*" }
+            ]
+        },
+        {
+            "scope": "auth:er-triage:view",
+            "display_name": "View",
+            "actions": [
+                { "http_method": "GET", "action_name": "show", "uri": "/er-triage/*" }
+            ]
+        },
+        {
+            "scope": "auth:er-triage:create",
+            "display_name": "Create",
+            "actions": [
+                { "http_method": "POST", "action_name": "store", "uri": "/er-triage" }
+            ]
+        }
+    ]
+}

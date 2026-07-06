@@ -1,0 +1,42 @@
+{
+    "resource": {
+        "permission_type": "RESOURCE",
+        "name": "ipd-medication-administration",
+        "display_name": "IPD - Medication Administration",
+        "resource_uri": "ipd-medication-administration",
+        "controller_name": "IpdMedicationAdministrationController",
+        "server_url_prefix": "auth",
+        "component": "COMMON"
+    },
+    "scopes": [
+        {
+            "scope": "auth:ipd-medication-administration:menuAccess",
+            "display_name": "Menu Access",
+            "actions": [
+                { "http_method": "GET", "action_name": "index", "uri": "/ipd-medication-administration" }
+            ]
+        },
+        {
+            "scope": "auth:ipd-medication-administration:list",
+            "display_name": "List",
+            "actions": [
+                { "http_method": "GET", "action_name": "index", "uri": "/ipd-medication-administration" },
+                { "http_method": "GET", "action_name": "byAdmission", "uri": "/ipd-medication-administration/by-admission/*" }
+            ]
+        },
+        {
+            "scope": "auth:ipd-medication-administration:view",
+            "display_name": "View",
+            "actions": [
+                { "http_method": "GET", "action_name": "show", "uri": "/ipd-medication-administration/*" }
+            ]
+        },
+        {
+            "scope": "auth:ipd-medication-administration:edit",
+            "display_name": "Record Administration",
+            "actions": [
+                { "http_method": "POST", "action_name": "record", "uri": "/ipd-medication-administration/*/record" }
+            ]
+        }
+    ]
+}

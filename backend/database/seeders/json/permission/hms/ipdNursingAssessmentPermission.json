@@ -1,0 +1,65 @@
+{
+    "resource": {
+        "permission_type": "RESOURCE",
+        "name": "ipd-nursing-assessment",
+        "display_name": "IPD - Nursing Assessment",
+        "resource_uri": "ipd-nursing-assessment",
+        "controller_name": "IpdNursingAssessmentController",
+        "server_url_prefix": "auth",
+        "component": "COMMON"
+    },
+    "scopes": [
+        {
+            "scope": "auth:ipd-nursing-assessment:menuAccess",
+            "display_name": "Menu Access",
+            "actions": [
+                { "http_method": "GET", "action_name": "index", "uri": "/ipd-nursing-assessment" }
+            ]
+        },
+        {
+            "scope": "auth:ipd-nursing-assessment:list",
+            "display_name": "List",
+            "actions": [
+                { "http_method": "GET", "action_name": "index", "uri": "/ipd-nursing-assessment" },
+                { "http_method": "GET", "action_name": "dropdown", "uri": "/ipd-nursing-assessment/dropdown" },
+                { "http_method": "GET", "action_name": "byAdmission", "uri": "/ipd-nursing-assessment/by-admission/*" }
+            ]
+        },
+        {
+            "scope": "auth:ipd-nursing-assessment:view",
+            "display_name": "View",
+            "actions": [
+                { "http_method": "GET", "action_name": "show", "uri": "/ipd-nursing-assessment/*" }
+            ]
+        },
+        {
+            "scope": "auth:ipd-nursing-assessment:create",
+            "display_name": "Create",
+            "actions": [
+                { "http_method": "POST", "action_name": "store", "uri": "/ipd-nursing-assessment" }
+            ]
+        },
+        {
+            "scope": "auth:ipd-nursing-assessment:edit",
+            "display_name": "Edit",
+            "actions": [
+                { "http_method": "PUT", "action_name": "update", "uri": "/ipd-nursing-assessment/*" },
+                { "http_method": "PATCH", "action_name": "updateFields", "uri": "/ipd-nursing-assessment/*" }
+            ]
+        },
+        {
+            "scope": "auth:ipd-nursing-assessment:delete",
+            "display_name": "Delete",
+            "actions": [
+                { "http_method": "DELETE", "action_name": "destroy", "uri": "/ipd-nursing-assessment/*" }
+            ]
+        },
+        {
+            "scope": "auth:ipd-nursing-assessment:multiSelect",
+            "display_name": "Multiple Selection",
+            "actions": [
+                { "http_method": "POST", "action_name": "bulk", "uri": "/ipd-nursing-assessment/bulk" }
+            ]
+        }
+    ]
+}

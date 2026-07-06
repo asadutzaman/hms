@@ -1667,4 +1667,116 @@ Route::prefix('api')->group(function () {
         Route::delete('/{id}', [App\Http\Controllers\IpdAdvancePaymentController::class, 'destroy']);
         Route::post('/{id}/apply', [App\Http\Controllers\IpdAdvancePaymentController::class, 'apply']);
     });
+
+    // IPD VITAL
+    Route::group(['prefix' => 'ipd-vital', 'middleware' => ['restrictIp', 'authVerify']], function () {
+        Route::post('/bulk', [App\Http\Controllers\IpdVitalController::class, 'bulk']);
+        Route::get('/dropdown', [App\Http\Controllers\IpdVitalController::class, 'dropdown']);
+        Route::get('/', [App\Http\Controllers\IpdVitalController::class, 'index']);
+        Route::get('/by-admission/{admissionId}', [App\Http\Controllers\IpdVitalController::class, 'byAdmission']);
+        Route::get('/{id}', [App\Http\Controllers\IpdVitalController::class, 'show']);
+        Route::post('/', [App\Http\Controllers\IpdVitalController::class, 'store']);
+        Route::put('/{id}', [App\Http\Controllers\IpdVitalController::class, 'update']);
+        Route::patch('/{id}', [App\Http\Controllers\IpdVitalController::class, 'updateFields']);
+        Route::delete('/{id}', [App\Http\Controllers\IpdVitalController::class, 'destroy']);
+    });
+
+    // IPD NURSING ASSESSMENT
+    Route::group(['prefix' => 'ipd-nursing-assessment', 'middleware' => ['restrictIp', 'authVerify']], function () {
+        Route::post('/bulk', [App\Http\Controllers\IpdNursingAssessmentController::class, 'bulk']);
+        Route::get('/dropdown', [App\Http\Controllers\IpdNursingAssessmentController::class, 'dropdown']);
+        Route::get('/', [App\Http\Controllers\IpdNursingAssessmentController::class, 'index']);
+        Route::get('/by-admission/{admissionId}', [App\Http\Controllers\IpdNursingAssessmentController::class, 'byAdmission']);
+        Route::get('/{id}', [App\Http\Controllers\IpdNursingAssessmentController::class, 'show']);
+        Route::post('/', [App\Http\Controllers\IpdNursingAssessmentController::class, 'store']);
+        Route::put('/{id}', [App\Http\Controllers\IpdNursingAssessmentController::class, 'update']);
+        Route::patch('/{id}', [App\Http\Controllers\IpdNursingAssessmentController::class, 'updateFields']);
+        Route::delete('/{id}', [App\Http\Controllers\IpdNursingAssessmentController::class, 'destroy']);
+    });
+
+    // IPD FLUID BALANCE
+    Route::group(['prefix' => 'ipd-fluid-balance', 'middleware' => ['restrictIp', 'authVerify']], function () {
+        Route::post('/bulk', [App\Http\Controllers\IpdFluidBalanceController::class, 'bulk']);
+        Route::get('/dropdown', [App\Http\Controllers\IpdFluidBalanceController::class, 'dropdown']);
+        Route::get('/', [App\Http\Controllers\IpdFluidBalanceController::class, 'index']);
+        Route::get('/by-admission/{admissionId}', [App\Http\Controllers\IpdFluidBalanceController::class, 'byAdmission']);
+        Route::get('/summary/{admissionId}', [App\Http\Controllers\IpdFluidBalanceController::class, 'summary']);
+        Route::get('/{id}', [App\Http\Controllers\IpdFluidBalanceController::class, 'show']);
+        Route::post('/', [App\Http\Controllers\IpdFluidBalanceController::class, 'store']);
+        Route::put('/{id}', [App\Http\Controllers\IpdFluidBalanceController::class, 'update']);
+        Route::patch('/{id}', [App\Http\Controllers\IpdFluidBalanceController::class, 'updateFields']);
+        Route::delete('/{id}', [App\Http\Controllers\IpdFluidBalanceController::class, 'destroy']);
+    });
+
+    // IPD MEDICATION ORDER
+    Route::group(['prefix' => 'ipd-medication-order', 'middleware' => ['restrictIp', 'authVerify']], function () {
+        Route::post('/bulk', [App\Http\Controllers\IpdMedicationOrderController::class, 'bulk']);
+        Route::get('/dropdown', [App\Http\Controllers\IpdMedicationOrderController::class, 'dropdown']);
+        Route::get('/', [App\Http\Controllers\IpdMedicationOrderController::class, 'index']);
+        Route::get('/by-admission/{admissionId}', [App\Http\Controllers\IpdMedicationOrderController::class, 'byAdmission']);
+        Route::get('/{id}', [App\Http\Controllers\IpdMedicationOrderController::class, 'show']);
+        Route::post('/', [App\Http\Controllers\IpdMedicationOrderController::class, 'store']);
+        Route::put('/{id}', [App\Http\Controllers\IpdMedicationOrderController::class, 'update']);
+        Route::patch('/{id}', [App\Http\Controllers\IpdMedicationOrderController::class, 'updateFields']);
+        Route::delete('/{id}', [App\Http\Controllers\IpdMedicationOrderController::class, 'destroy']);
+        Route::post('/{id}/discontinue', [App\Http\Controllers\IpdMedicationOrderController::class, 'discontinue']);
+        Route::post('/{id}/administer-prn', [App\Http\Controllers\IpdMedicationOrderController::class, 'administerPrn']);
+    });
+
+    // IPD MEDICATION ADMINISTRATION
+    Route::group(['prefix' => 'ipd-medication-administration', 'middleware' => ['restrictIp', 'authVerify']], function () {
+        Route::get('/', [App\Http\Controllers\IpdMedicationAdministrationController::class, 'index']);
+        Route::get('/by-admission/{admissionId}', [App\Http\Controllers\IpdMedicationAdministrationController::class, 'byAdmission']);
+        Route::get('/{id}', [App\Http\Controllers\IpdMedicationAdministrationController::class, 'show']);
+        Route::post('/{id}/record', [App\Http\Controllers\IpdMedicationAdministrationController::class, 'record']);
+    });
+
+    // IPD DISCHARGE SUMMARY
+    Route::group(['prefix' => 'ipd-discharge-summary', 'middleware' => ['restrictIp', 'authVerify']], function () {
+        Route::get('/', [App\Http\Controllers\IpdDischargeSummaryController::class, 'index']);
+        Route::get('/by-admission/{admissionId}', [App\Http\Controllers\IpdDischargeSummaryController::class, 'byAdmission']);
+        Route::get('/{id}', [App\Http\Controllers\IpdDischargeSummaryController::class, 'show']);
+        Route::post('/generate/{admissionId}', [App\Http\Controllers\IpdDischargeSummaryController::class, 'generate']);
+        Route::put('/{id}', [App\Http\Controllers\IpdDischargeSummaryController::class, 'update']);
+        Route::post('/{id}/sign', [App\Http\Controllers\IpdDischargeSummaryController::class, 'sign']);
+    });
+
+    // IPD DEATH CERTIFICATE
+    Route::group(['prefix' => 'ipd-death-certificate', 'middleware' => ['restrictIp', 'authVerify']], function () {
+        Route::get('/', [App\Http\Controllers\IpdDeathCertificateController::class, 'index']);
+        Route::get('/by-admission/{admissionId}', [App\Http\Controllers\IpdDeathCertificateController::class, 'byAdmission']);
+        Route::get('/{id}', [App\Http\Controllers\IpdDeathCertificateController::class, 'show']);
+        Route::post('/', [App\Http\Controllers\IpdDeathCertificateController::class, 'store']);
+        Route::put('/{id}', [App\Http\Controllers\IpdDeathCertificateController::class, 'update']);
+        Route::post('/{id}/certify', [App\Http\Controllers\IpdDeathCertificateController::class, 'certify']);
+    });
+
+    // ER VISIT
+    Route::group(['prefix' => 'er-visit', 'middleware' => ['restrictIp', 'authVerify']], function () {
+        Route::post('/bulk', [App\Http\Controllers\ErVisitController::class, 'bulk']);
+        Route::get('/dropdown', [App\Http\Controllers\ErVisitController::class, 'dropdown']);
+        Route::get('/board', [App\Http\Controllers\ErVisitController::class, 'board']);
+        Route::get('/', [App\Http\Controllers\ErVisitController::class, 'index']);
+        Route::get('/{id}', [App\Http\Controllers\ErVisitController::class, 'show']);
+        Route::post('/', [App\Http\Controllers\ErVisitController::class, 'store']);
+        Route::put('/{id}', [App\Http\Controllers\ErVisitController::class, 'update']);
+        Route::patch('/{id}', [App\Http\Controllers\ErVisitController::class, 'updateFields']);
+        Route::delete('/{id}', [App\Http\Controllers\ErVisitController::class, 'destroy']);
+        Route::post('/{id}/start-treatment', [App\Http\Controllers\ErVisitController::class, 'startTreatment']);
+        Route::post('/{id}/dispose', [App\Http\Controllers\ErVisitController::class, 'dispose']);
+        Route::post('/{id}/link-admission', [App\Http\Controllers\ErVisitController::class, 'linkAdmission']);
+    });
+
+    // ER TRIAGE
+    Route::group(['prefix' => 'er-triage', 'middleware' => ['restrictIp', 'authVerify']], function () {
+        Route::get('/', [App\Http\Controllers\ErTriageController::class, 'index']);
+        Route::get('/by-visit/{erVisitId}', [App\Http\Controllers\ErTriageController::class, 'byVisit']);
+        Route::get('/{id}', [App\Http\Controllers\ErTriageController::class, 'show']);
+        Route::post('/', [App\Http\Controllers\ErTriageController::class, 'store']);
+    });
+
+    // PATIENT HISTORY (longitudinal EMR timeline)
+    Route::group(['prefix' => 'patient-history', 'middleware' => ['restrictIp', 'authVerify']], function () {
+        Route::get('/{patientId}', [App\Http\Controllers\PatientHistoryController::class, 'timeline']);
+    });
 });

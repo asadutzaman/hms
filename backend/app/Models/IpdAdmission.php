@@ -129,4 +129,34 @@ class IpdAdmission extends BaseModel
     {
         return $this->hasMany(IpdAdmissionAuditLog::class, 'ipd_admission_id')->orderByDesc('created_at');
     }
+
+    public function vitals(): HasMany
+    {
+        return $this->hasMany(IpdVital::class, 'admission_id')->orderBy('recorded_at');
+    }
+
+    public function nursingAssessment(): HasOne
+    {
+        return $this->hasOne(IpdNursingAssessment::class, 'admission_id');
+    }
+
+    public function fluidBalances(): HasMany
+    {
+        return $this->hasMany(IpdFluidBalance::class, 'admission_id')->orderBy('recorded_at');
+    }
+
+    public function medicationOrders(): HasMany
+    {
+        return $this->hasMany(IpdMedicationOrder::class, 'admission_id')->orderByDesc('ordered_at');
+    }
+
+    public function dischargeSummary(): HasOne
+    {
+        return $this->hasOne(IpdDischargeSummary::class, 'admission_id');
+    }
+
+    public function deathCertificate(): HasOne
+    {
+        return $this->hasOne(IpdDeathCertificate::class, 'admission_id');
+    }
 }
