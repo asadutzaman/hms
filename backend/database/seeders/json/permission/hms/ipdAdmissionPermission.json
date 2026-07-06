@@ -1,0 +1,73 @@
+{
+    "resource": {
+        "permission_type": "RESOURCE",
+        "name": "ipd-admission",
+        "display_name": "IPD - Admission",
+        "resource_uri": "ipd-admission",
+        "controller_name": "IpdAdmissionController",
+        "server_url_prefix": "auth",
+        "component": "COMMON"
+    },
+    "scopes": [
+        {
+            "scope": "auth:ipd-admission:menuAccess",
+            "display_name": "Menu Access",
+            "actions": [
+                { "http_method": "GET", "action_name": "index", "uri": "/ipd-admission" }
+            ]
+        },
+        {
+            "scope": "auth:ipd-admission:list",
+            "display_name": "List",
+            "actions": [
+                { "http_method": "GET", "action_name": "index", "uri": "/ipd-admission" },
+                { "http_method": "GET", "action_name": "dropdown", "uri": "/ipd-admission/dropdown" }
+            ]
+        },
+        {
+            "scope": "auth:ipd-admission:view",
+            "display_name": "View",
+            "actions": [
+                { "http_method": "GET", "action_name": "show", "uri": "/ipd-admission/*" },
+                { "http_method": "GET", "action_name": "auditLog", "uri": "/ipd-admission/*/audit-log" }
+            ]
+        },
+        {
+            "scope": "auth:ipd-admission:create",
+            "display_name": "Create",
+            "actions": [
+                { "http_method": "POST", "action_name": "store", "uri": "/ipd-admission" }
+            ]
+        },
+        {
+            "scope": "auth:ipd-admission:edit",
+            "display_name": "Edit",
+            "actions": [
+                { "http_method": "PUT", "action_name": "update", "uri": "/ipd-admission/*" },
+                { "http_method": "PATCH", "action_name": "updateFields", "uri": "/ipd-admission/*" },
+                { "http_method": "POST", "action_name": "transferBed", "uri": "/ipd-admission/*/transfer-bed" }
+            ]
+        },
+        {
+            "scope": "auth:ipd-admission:exit",
+            "display_name": "Discharge / Exit",
+            "actions": [
+                { "http_method": "POST", "action_name": "exit", "uri": "/ipd-admission/*/exit" }
+            ]
+        },
+        {
+            "scope": "auth:ipd-admission:delete",
+            "display_name": "Delete",
+            "actions": [
+                { "http_method": "DELETE", "action_name": "destroy", "uri": "/ipd-admission/*" }
+            ]
+        },
+        {
+            "scope": "auth:ipd-admission:multiSelect",
+            "display_name": "Multiple Selection",
+            "actions": [
+                { "http_method": "POST", "action_name": "bulk", "uri": "/ipd-admission/bulk" }
+            ]
+        }
+    ]
+}

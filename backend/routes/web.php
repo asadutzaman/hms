@@ -1566,4 +1566,105 @@ Route::prefix('api')->group(function () {
         Route::patch('/{id}', [App\Http\Controllers\LabTestController::class, 'updateFields']);
         Route::delete('/{id}', [App\Http\Controllers\LabTestController::class, 'destroy']);
     });
+
+    // WARD
+    Route::group(['prefix' => 'ward', 'middleware' => ['restrictIp', 'authVerify']], function () {
+        Route::post('/bulk', [App\Http\Controllers\WardController::class, 'bulk']);
+        Route::get('/dropdown', [App\Http\Controllers\WardController::class, 'dropdown']);
+        Route::get('/', [App\Http\Controllers\WardController::class, 'index']);
+        Route::get('/{id}', [App\Http\Controllers\WardController::class, 'show']);
+        Route::post('/', [App\Http\Controllers\WardController::class, 'store']);
+        Route::put('/{id}', [App\Http\Controllers\WardController::class, 'update']);
+        Route::patch('/{id}', [App\Http\Controllers\WardController::class, 'updateFields']);
+        Route::delete('/{id}', [App\Http\Controllers\WardController::class, 'destroy']);
+    });
+
+    // BED
+    Route::group(['prefix' => 'bed', 'middleware' => ['restrictIp', 'authVerify']], function () {
+        Route::post('/bulk', [App\Http\Controllers\BedController::class, 'bulk']);
+        Route::get('/dropdown', [App\Http\Controllers\BedController::class, 'dropdown']);
+        Route::get('/dashboard', [App\Http\Controllers\BedController::class, 'dashboard']);
+        Route::get('/board', [App\Http\Controllers\BedController::class, 'board']);
+        Route::get('/', [App\Http\Controllers\BedController::class, 'index']);
+        Route::get('/{id}', [App\Http\Controllers\BedController::class, 'show']);
+        Route::post('/', [App\Http\Controllers\BedController::class, 'store']);
+        Route::put('/{id}', [App\Http\Controllers\BedController::class, 'update']);
+        Route::patch('/{id}', [App\Http\Controllers\BedController::class, 'updateFields']);
+        Route::delete('/{id}', [App\Http\Controllers\BedController::class, 'destroy']);
+    });
+
+    // IPD ADMISSION
+    Route::group(['prefix' => 'ipd-admission', 'middleware' => ['restrictIp', 'authVerify']], function () {
+        Route::post('/bulk', [App\Http\Controllers\IpdAdmissionController::class, 'bulk']);
+        Route::get('/dropdown', [App\Http\Controllers\IpdAdmissionController::class, 'dropdown']);
+        Route::get('/', [App\Http\Controllers\IpdAdmissionController::class, 'index']);
+        Route::get('/{id}', [App\Http\Controllers\IpdAdmissionController::class, 'show']);
+        Route::post('/', [App\Http\Controllers\IpdAdmissionController::class, 'store']);
+        Route::put('/{id}', [App\Http\Controllers\IpdAdmissionController::class, 'update']);
+        Route::patch('/{id}', [App\Http\Controllers\IpdAdmissionController::class, 'updateFields']);
+        Route::delete('/{id}', [App\Http\Controllers\IpdAdmissionController::class, 'destroy']);
+        Route::post('/{id}/transfer-bed', [App\Http\Controllers\IpdAdmissionController::class, 'transferBed']);
+        Route::post('/{id}/exit', [App\Http\Controllers\IpdAdmissionController::class, 'exit']);
+        Route::get('/{id}/audit-log', [App\Http\Controllers\IpdAdmissionController::class, 'auditLog']);
+    });
+
+    // IPD BILL
+    Route::group(['prefix' => 'ipd-bill', 'middleware' => ['restrictIp', 'authVerify']], function () {
+        Route::post('/bulk', [App\Http\Controllers\IpdBillController::class, 'bulk']);
+        Route::get('/dropdown', [App\Http\Controllers\IpdBillController::class, 'dropdown']);
+        Route::get('/', [App\Http\Controllers\IpdBillController::class, 'index']);
+        Route::get('/by-admission/{admissionId}', [App\Http\Controllers\IpdBillController::class, 'byAdmission']);
+        Route::get('/{id}', [App\Http\Controllers\IpdBillController::class, 'show']);
+        Route::post('/', [App\Http\Controllers\IpdBillController::class, 'store']);
+        Route::put('/{id}', [App\Http\Controllers\IpdBillController::class, 'update']);
+        Route::patch('/{id}', [App\Http\Controllers\IpdBillController::class, 'updateFields']);
+        Route::delete('/{id}', [App\Http\Controllers\IpdBillController::class, 'destroy']);
+        Route::post('/{id}/refresh-room-charges', [App\Http\Controllers\IpdBillController::class, 'refreshRoomCharges']);
+        Route::post('/{id}/item', [App\Http\Controllers\IpdBillController::class, 'addItem']);
+        Route::delete('/{id}/item/{itemId}', [App\Http\Controllers\IpdBillController::class, 'removeItem']);
+        Route::post('/{id}/payment', [App\Http\Controllers\IpdBillController::class, 'recordPayment']);
+        Route::post('/{id}/payments', [App\Http\Controllers\IpdBillController::class, 'recordSplitPayment']);
+        Route::post('/{id}/waive', [App\Http\Controllers\IpdBillController::class, 'waive']);
+        Route::post('/{id}/discount', [App\Http\Controllers\IpdBillController::class, 'applyDiscount']);
+        Route::post('/{id}/discount/approve', [App\Http\Controllers\IpdBillController::class, 'approveDiscount']);
+        Route::post('/{id}/discount/reject', [App\Http\Controllers\IpdBillController::class, 'rejectDiscount']);
+    });
+
+    // IPD BILL ITEM
+    Route::group(['prefix' => 'ipd-bill-item', 'middleware' => ['restrictIp', 'authVerify']], function () {
+        Route::post('/bulk', [App\Http\Controllers\IpdBillItemController::class, 'bulk']);
+        Route::get('/dropdown', [App\Http\Controllers\IpdBillItemController::class, 'dropdown']);
+        Route::get('/', [App\Http\Controllers\IpdBillItemController::class, 'index']);
+        Route::get('/{id}', [App\Http\Controllers\IpdBillItemController::class, 'show']);
+        Route::post('/', [App\Http\Controllers\IpdBillItemController::class, 'store']);
+        Route::put('/{id}', [App\Http\Controllers\IpdBillItemController::class, 'update']);
+        Route::patch('/{id}', [App\Http\Controllers\IpdBillItemController::class, 'updateFields']);
+        Route::delete('/{id}', [App\Http\Controllers\IpdBillItemController::class, 'destroy']);
+    });
+
+    // IPD BILL PAYMENT
+    Route::group(['prefix' => 'ipd-bill-payment', 'middleware' => ['restrictIp', 'authVerify']], function () {
+        Route::post('/bulk', [App\Http\Controllers\IpdBillPaymentController::class, 'bulk']);
+        Route::get('/dropdown', [App\Http\Controllers\IpdBillPaymentController::class, 'dropdown']);
+        Route::get('/', [App\Http\Controllers\IpdBillPaymentController::class, 'index']);
+        Route::get('/{id}', [App\Http\Controllers\IpdBillPaymentController::class, 'show']);
+        Route::post('/', [App\Http\Controllers\IpdBillPaymentController::class, 'store']);
+        Route::put('/{id}', [App\Http\Controllers\IpdBillPaymentController::class, 'update']);
+        Route::patch('/{id}', [App\Http\Controllers\IpdBillPaymentController::class, 'updateFields']);
+        Route::delete('/{id}', [App\Http\Controllers\IpdBillPaymentController::class, 'destroy']);
+    });
+
+    // IPD ADVANCE PAYMENT
+    Route::group(['prefix' => 'ipd-advance-payment', 'middleware' => ['restrictIp', 'authVerify']], function () {
+        Route::post('/bulk', [App\Http\Controllers\IpdAdvancePaymentController::class, 'bulk']);
+        Route::get('/dropdown', [App\Http\Controllers\IpdAdvancePaymentController::class, 'dropdown']);
+        Route::get('/', [App\Http\Controllers\IpdAdvancePaymentController::class, 'index']);
+        Route::get('/by-admission/{admissionId}', [App\Http\Controllers\IpdAdvancePaymentController::class, 'byAdmission']);
+        Route::get('/{id}', [App\Http\Controllers\IpdAdvancePaymentController::class, 'show']);
+        Route::post('/', [App\Http\Controllers\IpdAdvancePaymentController::class, 'store']);
+        Route::put('/{id}', [App\Http\Controllers\IpdAdvancePaymentController::class, 'update']);
+        Route::patch('/{id}', [App\Http\Controllers\IpdAdvancePaymentController::class, 'updateFields']);
+        Route::delete('/{id}', [App\Http\Controllers\IpdAdvancePaymentController::class, 'destroy']);
+        Route::post('/{id}/apply', [App\Http\Controllers\IpdAdvancePaymentController::class, 'apply']);
+    });
 });

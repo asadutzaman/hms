@@ -1,0 +1,66 @@
+{
+    "resource": {
+        "permission_type": "RESOURCE",
+        "name": "ipd-advance-payment",
+        "display_name": "IPD - Advance Payment",
+        "resource_uri": "ipd-advance-payment",
+        "controller_name": "IpdAdvancePaymentController",
+        "server_url_prefix": "auth",
+        "component": "COMMON"
+    },
+    "scopes": [
+        {
+            "scope": "auth:ipd-advance-payment:menuAccess",
+            "display_name": "Menu Access",
+            "actions": [
+                { "http_method": "GET", "action_name": "index", "uri": "/ipd-advance-payment" }
+            ]
+        },
+        {
+            "scope": "auth:ipd-advance-payment:list",
+            "display_name": "List",
+            "actions": [
+                { "http_method": "GET", "action_name": "index", "uri": "/ipd-advance-payment" },
+                { "http_method": "GET", "action_name": "dropdown", "uri": "/ipd-advance-payment/dropdown" },
+                { "http_method": "GET", "action_name": "byAdmission", "uri": "/ipd-advance-payment/by-admission/*" }
+            ]
+        },
+        {
+            "scope": "auth:ipd-advance-payment:view",
+            "display_name": "View",
+            "actions": [
+                { "http_method": "GET", "action_name": "show", "uri": "/ipd-advance-payment/*" }
+            ]
+        },
+        {
+            "scope": "auth:ipd-advance-payment:create",
+            "display_name": "Create",
+            "actions": [
+                { "http_method": "POST", "action_name": "store", "uri": "/ipd-advance-payment" }
+            ]
+        },
+        {
+            "scope": "auth:ipd-advance-payment:edit",
+            "display_name": "Edit",
+            "actions": [
+                { "http_method": "PUT", "action_name": "update", "uri": "/ipd-advance-payment/*" },
+                { "http_method": "PATCH", "action_name": "updateFields", "uri": "/ipd-advance-payment/*" },
+                { "http_method": "POST", "action_name": "apply", "uri": "/ipd-advance-payment/*/apply" }
+            ]
+        },
+        {
+            "scope": "auth:ipd-advance-payment:delete",
+            "display_name": "Delete",
+            "actions": [
+                { "http_method": "DELETE", "action_name": "destroy", "uri": "/ipd-advance-payment/*" }
+            ]
+        },
+        {
+            "scope": "auth:ipd-advance-payment:multiSelect",
+            "display_name": "Multiple Selection",
+            "actions": [
+                { "http_method": "POST", "action_name": "bulk", "uri": "/ipd-advance-payment/bulk" }
+            ]
+        }
+    ]
+}

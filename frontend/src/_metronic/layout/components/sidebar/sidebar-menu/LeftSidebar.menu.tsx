@@ -468,6 +468,70 @@ export const LeftSidebarMenu = [
 
   {
     type: 'group',
+    title: 'IPD Management',
+    hidden: false,
+    children: [
+      {
+        type: 'item',
+        title: 'Bed Dashboard',
+        permission: 'auth:bed:list',
+        link: {
+          to: '/admin/ipd/bed-dashboard',
+          exactMatch: true,
+          externalUrl: false,
+          openInNewTab: false,
+        },
+        icon: 'element-11',
+        subParent: false,
+        subChildren: [],
+      },
+      {
+        type: 'item',
+        title: 'Ward',
+        permission: 'auth:ward:menuAccess',
+        link: {
+          to: '/admin/ipd/ward',
+          exactMatch: true,
+          externalUrl: false,
+          openInNewTab: false,
+        },
+        icon: 'home-3',
+        subParent: false,
+        subChildren: [],
+      },
+      {
+        type: 'item',
+        title: 'Bed',
+        permission: 'auth:bed:menuAccess',
+        link: {
+          to: '/admin/ipd/bed',
+          exactMatch: true,
+          externalUrl: false,
+          openInNewTab: false,
+        },
+        icon: 'category',
+        subParent: false,
+        subChildren: [],
+      },
+      {
+        type: 'item',
+        title: 'Admission',
+        permission: 'auth:ipd-admission:menuAccess',
+        link: {
+          to: '/admin/ipd/admission',
+          exactMatch: true,
+          externalUrl: false,
+          openInNewTab: false,
+        },
+        icon: 'hospital',
+        subParent: false,
+        subChildren: [],
+      },
+    ],
+  },
+
+  {
+    type: 'group',
     title: 'Doctor Portal',
     hidden: false,
     children: [

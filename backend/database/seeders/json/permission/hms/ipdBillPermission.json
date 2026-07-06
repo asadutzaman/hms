@@ -1,0 +1,80 @@
+{
+    "resource": {
+        "permission_type": "RESOURCE",
+        "name": "ipd-bill",
+        "display_name": "IPD - Bill",
+        "resource_uri": "ipd-bill",
+        "controller_name": "IpdBillController",
+        "server_url_prefix": "auth",
+        "component": "COMMON"
+    },
+    "scopes": [
+        {
+            "scope": "auth:ipd-bill:menuAccess",
+            "display_name": "Menu Access",
+            "actions": [
+                { "http_method": "GET", "action_name": "index", "uri": "/ipd-bill" }
+            ]
+        },
+        {
+            "scope": "auth:ipd-bill:list",
+            "display_name": "List",
+            "actions": [
+                { "http_method": "GET", "action_name": "index", "uri": "/ipd-bill" },
+                { "http_method": "GET", "action_name": "dropdown", "uri": "/ipd-bill/dropdown" },
+                { "http_method": "GET", "action_name": "byAdmission", "uri": "/ipd-bill/by-admission/*" }
+            ]
+        },
+        {
+            "scope": "auth:ipd-bill:view",
+            "display_name": "View",
+            "actions": [
+                { "http_method": "GET", "action_name": "show", "uri": "/ipd-bill/*" }
+            ]
+        },
+        {
+            "scope": "auth:ipd-bill:create",
+            "display_name": "Create",
+            "actions": [
+                { "http_method": "POST", "action_name": "store", "uri": "/ipd-bill" }
+            ]
+        },
+        {
+            "scope": "auth:ipd-bill:edit",
+            "display_name": "Edit",
+            "actions": [
+                { "http_method": "PUT", "action_name": "update", "uri": "/ipd-bill/*" },
+                { "http_method": "PATCH", "action_name": "updateFields", "uri": "/ipd-bill/*" },
+                { "http_method": "POST", "action_name": "refreshRoomCharges", "uri": "/ipd-bill/*/refresh-room-charges" },
+                { "http_method": "POST", "action_name": "addItem", "uri": "/ipd-bill/*/item" },
+                { "http_method": "DELETE", "action_name": "removeItem", "uri": "/ipd-bill/*/item/*" },
+                { "http_method": "POST", "action_name": "recordPayment", "uri": "/ipd-bill/*/payment" },
+                { "http_method": "POST", "action_name": "recordSplitPayment", "uri": "/ipd-bill/*/payments" },
+                { "http_method": "POST", "action_name": "waive", "uri": "/ipd-bill/*/waive" },
+                { "http_method": "POST", "action_name": "applyDiscount", "uri": "/ipd-bill/*/discount" }
+            ]
+        },
+        {
+            "scope": "auth:ipd-bill:approveDiscount",
+            "display_name": "Approve Discount",
+            "actions": [
+                { "http_method": "POST", "action_name": "approveDiscount", "uri": "/ipd-bill/*/discount/approve" },
+                { "http_method": "POST", "action_name": "rejectDiscount", "uri": "/ipd-bill/*/discount/reject" }
+            ]
+        },
+        {
+            "scope": "auth:ipd-bill:delete",
+            "display_name": "Delete",
+            "actions": [
+                { "http_method": "DELETE", "action_name": "destroy", "uri": "/ipd-bill/*" }
+            ]
+        },
+        {
+            "scope": "auth:ipd-bill:multiSelect",
+            "display_name": "Multiple Selection",
+            "actions": [
+                { "http_method": "POST", "action_name": "bulk", "uri": "/ipd-bill/bulk" }
+            ]
+        }
+    ]
+}

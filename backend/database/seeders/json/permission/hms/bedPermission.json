@@ -1,0 +1,110 @@
+{
+    "resource": {
+        "permission_type": "RESOURCE",
+        "name": "bed",
+        "display_name": "IPD - Bed",
+        "resource_uri": "bed",
+        "controller_name": "BedController",
+        "server_url_prefix": "auth",
+        "component": "COMMON"
+    },
+    "scopes": [
+        {
+            "scope": "auth:bed:menuAccess",
+            "display_name": "Menu Access",
+            "actions": [
+                {
+                    "http_method": "GET",
+                    "action_name": "index",
+                    "uri": "/bed"
+                }
+            ]
+        },
+        {
+            "scope": "auth:bed:list",
+            "display_name": "List",
+            "actions": [
+                {
+                    "http_method": "GET",
+                    "action_name": "index",
+                    "uri": "/bed"
+                },
+                {
+                    "http_method": "GET",
+                    "action_name": "dropdown",
+                    "uri": "/bed/dropdown"
+                },
+                {
+                    "http_method": "GET",
+                    "action_name": "dashboard",
+                    "uri": "/bed/dashboard"
+                },
+                {
+                    "http_method": "GET",
+                    "action_name": "board",
+                    "uri": "/bed/board"
+                }
+            ]
+        },
+        {
+            "scope": "auth:bed:view",
+            "display_name": "View",
+            "actions": [
+                {
+                    "http_method": "GET",
+                    "action_name": "show",
+                    "uri": "/bed/*"
+                }
+            ]
+        },
+        {
+            "scope": "auth:bed:create",
+            "display_name": "Create",
+            "actions": [
+                {
+                    "http_method": "POST",
+                    "action_name": "store",
+                    "uri": "/bed"
+                }
+            ]
+        },
+        {
+            "scope": "auth:bed:edit",
+            "display_name": "Edit",
+            "actions": [
+                {
+                    "http_method": "PUT",
+                    "action_name": "update",
+                    "uri": "/bed/*"
+                },
+                {
+                    "http_method": "PATCH",
+                    "action_name": "updateFields",
+                    "uri": "/bed/*"
+                }
+            ]
+        },
+        {
+            "scope": "auth:bed:delete",
+            "display_name": "Delete",
+            "actions": [
+                {
+                    "http_method": "DELETE",
+                    "action_name": "destroy",
+                    "uri": "/bed/*"
+                }
+            ]
+        },
+        {
+            "scope": "auth:bed:multiSelect",
+            "display_name": "Multiple Selection",
+            "actions": [
+                {
+                    "http_method": "POST",
+                    "action_name": "bulk",
+                    "uri": "/bed/bulk"
+                }
+            ]
+        }
+    ]
+}

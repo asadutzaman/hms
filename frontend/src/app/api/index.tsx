@@ -80,6 +80,14 @@ import _OpdBillApi from './OpdBill/OpdBill.api'
 import _OpdBillItemApi from './OpdBillItem/OpdBillItem.api'
 import _OpdBillPaymentApi from './OpdBillPayment/OpdBillPayment.api'
 import _LabTestApi from './LabTest/LabTest.api'
+// IPD
+import _WardApi from './Ipd/Ward.api'
+import _BedApi from './Ipd/Bed.api'
+import _IpdAdmissionApi from './Ipd/IpdAdmission.api'
+import _IpdBillApi from './Ipd/IpdBill.api'
+import _IpdBillItemApi from './Ipd/IpdBillItem.api'
+import _IpdBillPaymentApi from './Ipd/IpdBillPayment.api'
+import _IpdAdvancePaymentApi from './Ipd/IpdAdvancePayment.api'
 
 export const FackApi = new _FackApi()
 export const OauthApi = new _OauthApi()
@@ -163,3 +171,11 @@ export const OpdBillApi = new _OpdBillApi()
 export const OpdBillItemApi = new _OpdBillItemApi()
 export const OpdBillPaymentApi = new _OpdBillPaymentApi()
 export const LabTestApi = new _LabTestApi()
+// IPD
+export const WardApi = new _WardApi()
+export const BedApi = new _BedApi()
+export const IpdAdmissionApi = new _IpdAdmissionApi()
+export const IpdBillApi = new _IpdBillApi()
+export const IpdBillItemApi = new _IpdBillItemApi()
+export const IpdBillPaymentApi = new _IpdBillPaymentApi()
+export const IpdAdvancePaymentApi = new _IpdAdvancePaymentApi()

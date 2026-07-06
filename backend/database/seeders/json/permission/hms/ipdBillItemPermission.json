@@ -1,0 +1,64 @@
+{
+    "resource": {
+        "permission_type": "RESOURCE",
+        "name": "ipd-bill-item",
+        "display_name": "IPD - Bill Item",
+        "resource_uri": "ipd-bill-item",
+        "controller_name": "IpdBillItemController",
+        "server_url_prefix": "auth",
+        "component": "COMMON"
+    },
+    "scopes": [
+        {
+            "scope": "auth:ipd-bill-item:menuAccess",
+            "display_name": "Menu Access",
+            "actions": [
+                { "http_method": "GET", "action_name": "index", "uri": "/ipd-bill-item" }
+            ]
+        },
+        {
+            "scope": "auth:ipd-bill-item:list",
+            "display_name": "List",
+            "actions": [
+                { "http_method": "GET", "action_name": "index", "uri": "/ipd-bill-item" },
+                { "http_method": "GET", "action_name": "dropdown", "uri": "/ipd-bill-item/dropdown" }
+            ]
+        },
+        {
+            "scope": "auth:ipd-bill-item:view",
+            "display_name": "View",
+            "actions": [
+                { "http_method": "GET", "action_name": "show", "uri": "/ipd-bill-item/*" }
+            ]
+        },
+        {
+            "scope": "auth:ipd-bill-item:create",
+            "display_name": "Create",
+            "actions": [
+                { "http_method": "POST", "action_name": "store", "uri": "/ipd-bill-item" }
+            ]
+        },
+        {
+            "scope": "auth:ipd-bill-item:edit",
+            "display_name": "Edit",
+            "actions": [
+                { "http_method": "PUT", "action_name": "update", "uri": "/ipd-bill-item/*" },
+                { "http_method": "PATCH", "action_name": "updateFields", "uri": "/ipd-bill-item/*" }
+            ]
+        },
+        {
+            "scope": "auth:ipd-bill-item:delete",
+            "display_name": "Delete",
+            "actions": [
+                { "http_method": "DELETE", "action_name": "destroy", "uri": "/ipd-bill-item/*" }
+            ]
+        },
+        {
+            "scope": "auth:ipd-bill-item:multiSelect",
+            "display_name": "Multiple Selection",
+            "actions": [
+                { "http_method": "POST", "action_name": "bulk", "uri": "/ipd-bill-item/bulk" }
+            ]
+        }
+    ]
+}

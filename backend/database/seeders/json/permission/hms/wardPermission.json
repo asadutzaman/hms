@@ -1,0 +1,100 @@
+{
+    "resource": {
+        "permission_type": "RESOURCE",
+        "name": "ward",
+        "display_name": "IPD - Ward",
+        "resource_uri": "ward",
+        "controller_name": "WardController",
+        "server_url_prefix": "auth",
+        "component": "COMMON"
+    },
+    "scopes": [
+        {
+            "scope": "auth:ward:menuAccess",
+            "display_name": "Menu Access",
+            "actions": [
+                {
+                    "http_method": "GET",
+                    "action_name": "index",
+                    "uri": "/ward"
+                }
+            ]
+        },
+        {
+            "scope": "auth:ward:list",
+            "display_name": "List",
+            "actions": [
+                {
+                    "http_method": "GET",
+                    "action_name": "index",
+                    "uri": "/ward"
+                },
+                {
+                    "http_method": "GET",
+                    "action_name": "dropdown",
+                    "uri": "/ward/dropdown"
+                }
+            ]
+        },
+        {
+            "scope": "auth:ward:view",
+            "display_name": "View",
+            "actions": [
+                {
+                    "http_method": "GET",
+                    "action_name": "show",
+                    "uri": "/ward/*"
+                }
+            ]
+        },
+        {
+            "scope": "auth:ward:create",
+            "display_name": "Create",
+            "actions": [
+                {
+                    "http_method": "POST",
+                    "action_name": "store",
+                    "uri": "/ward"
+                }
+            ]
+        },
+        {
+            "scope": "auth:ward:edit",
+            "display_name": "Edit",
+            "actions": [
+                {
+                    "http_method": "PUT",
+                    "action_name": "update",
+                    "uri": "/ward/*"
+                },
+                {
+                    "http_method": "PATCH",
+                    "action_name": "updateFields",
+                    "uri": "/ward/*"
+                }
+            ]
+        },
+        {
+            "scope": "auth:ward:delete",
+            "display_name": "Delete",
+            "actions": [
+                {
+                    "http_method": "DELETE",
+                    "action_name": "destroy",
+                    "uri": "/ward/*"
+                }
+            ]
+        },
+        {
+            "scope": "auth:ward:multiSelect",
+            "display_name": "Multiple Selection",
+            "actions": [
+                {
+                    "http_method": "POST",
+                    "action_name": "bulk",
+                    "uri": "/ward/bulk"
+                }
+            ]
+        }
+    ]
+}

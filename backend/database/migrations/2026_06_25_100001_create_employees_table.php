@@ -8,6 +8,10 @@ class CreateEmployeesTable extends Migration
 {
     public function up()
     {
+        if (Schema::hasTable('employees')) {
+            return;
+        }
+
         Schema::create('employees', function (Blueprint $table) {
             $table->id();
             $table->uuid('uuid')->unique()->index();
