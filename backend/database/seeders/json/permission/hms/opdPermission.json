@@ -765,6 +765,11 @@
           "http_method": "POST",
           "action_name": "applyDiscount",
           "uri": "/opd-bill/*/discount"
+        },
+        {
+          "http_method": "POST",
+          "action_name": "applyPackage",
+          "uri": "/opd-bill/*/apply-package"
         }
       ]
     },

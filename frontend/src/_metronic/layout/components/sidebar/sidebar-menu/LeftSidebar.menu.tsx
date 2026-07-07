@@ -626,6 +626,106 @@ export const LeftSidebarMenu = [
 
   {
     type: 'group',
+    title: 'Radiology',
+    hidden: false,
+    children: [
+      {
+        type: 'item',
+        title: 'Radiology Order Worklist',
+        permission: 'auth:radiology-order:menuAccess',
+        link: {
+          to: '/admin/radiology/radiology-order',
+          exactMatch: true,
+          externalUrl: false,
+          openInNewTab: false,
+        },
+        icon: 'scan-barcode',
+        subParent: false,
+        subChildren: [],
+      },
+      {
+        type: 'item',
+        title: 'Radiology Test Catalog',
+        permission: 'auth:radiology-test:menuAccess',
+        link: {
+          to: '/admin/radiology/radiology-test',
+          exactMatch: true,
+          externalUrl: false,
+          openInNewTab: false,
+        },
+        icon: 'scan',
+        subParent: false,
+        subChildren: [],
+      },
+      {
+        type: 'item',
+        title: 'Report Templates',
+        permission: 'auth:radiology-report-template:menuAccess',
+        link: {
+          to: '/admin/radiology/radiology-report-template',
+          exactMatch: true,
+          externalUrl: false,
+          openInNewTab: false,
+        },
+        icon: 'document',
+        subParent: false,
+        subChildren: [],
+      },
+    ],
+  },
+
+  {
+    type: 'group',
+    title: 'Insurance & Billing',
+    hidden: false,
+    children: [
+      {
+        type: 'item',
+        title: 'Insurance Companies',
+        permission: 'auth:insurance-company:menuAccess',
+        link: {
+          to: '/admin/insurance/insurance-company',
+          exactMatch: true,
+          externalUrl: false,
+          openInNewTab: false,
+        },
+        icon: 'shield-tick',
+        subParent: false,
+        subChildren: [],
+      },
+      {
+        type: 'item',
+        title: 'Pre-Authorization',
+        permission: 'auth:pre-authorization:menuAccess',
+        link: {
+          to: '/admin/insurance/pre-authorization',
+          exactMatch: true,
+          externalUrl: false,
+          openInNewTab: false,
+        },
+        icon: 'document-add',
+        subParent: false,
+        subChildren: [],
+      },
+      {
+        type: 'item',
+        title: 'Billing Packages',
+        permission: 'auth:billing-package:menuAccess',
+        link: {
+          to: '/admin/billing/billing-package',
+          exactMatch: true,
+          externalUrl: false,
+          openInNewTab: false,
+        },
+        icon: 'gift',
+        subParent: false,
+        subChildren: [],
+      },
+    ],
+  },
+
+  {
+    type: 'group',
     title: 'Doctor Portal',
     hidden: false,
     children: [

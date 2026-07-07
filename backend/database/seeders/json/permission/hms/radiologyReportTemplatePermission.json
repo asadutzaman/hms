@@ -1,0 +1,64 @@
+{
+    "resource": {
+        "permission_type": "RESOURCE",
+        "name": "radiology-report-template",
+        "display_name": "Radiology Report Template",
+        "resource_uri": "radiology-report-template",
+        "controller_name": "RadiologyReportTemplateController",
+        "server_url_prefix": "auth",
+        "component": "COMMON"
+    },
+    "scopes": [
+        {
+            "scope": "auth:radiology-report-template:menuAccess",
+            "display_name": "Menu Access",
+            "actions": [
+                { "http_method": "GET", "action_name": "index", "uri": "/radiology-report-template" }
+            ]
+        },
+        {
+            "scope": "auth:radiology-report-template:list",
+            "display_name": "List",
+            "actions": [
+                { "http_method": "GET", "action_name": "index", "uri": "/radiology-report-template" },
+                { "http_method": "GET", "action_name": "dropdown", "uri": "/radiology-report-template/dropdown" }
+            ]
+        },
+        {
+            "scope": "auth:radiology-report-template:view",
+            "display_name": "View",
+            "actions": [
+                { "http_method": "GET", "action_name": "show", "uri": "/radiology-report-template/*" }
+            ]
+        },
+        {
+            "scope": "auth:radiology-report-template:create",
+            "display_name": "Create",
+            "actions": [
+                { "http_method": "POST", "action_name": "store", "uri": "/radiology-report-template" }
+            ]
+        },
+        {
+            "scope": "auth:radiology-report-template:edit",
+            "display_name": "Edit",
+            "actions": [
+                { "http_method": "PUT", "action_name": "update", "uri": "/radiology-report-template/*" },
+                { "http_method": "PATCH", "action_name": "updateFields", "uri": "/radiology-report-template/*" }
+            ]
+        },
+        {
+            "scope": "auth:radiology-report-template:delete",
+            "display_name": "Delete",
+            "actions": [
+                { "http_method": "DELETE", "action_name": "destroy", "uri": "/radiology-report-template/*" }
+            ]
+        },
+        {
+            "scope": "auth:radiology-report-template:multiSelect",
+            "display_name": "Multiple Selection",
+            "actions": [
+                { "http_method": "POST", "action_name": "bulk", "uri": "/radiology-report-template/bulk" }
+            ]
+        }
+    ]
+}

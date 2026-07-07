@@ -18,6 +18,8 @@ class DatabaseSeeder extends Seeder
             LabTestSeeder::class,
             LabTestParameterSeeder::class,
             NotificationTemplateSeeder::class,
+            RadiologyTestSeeder::class,
+            InsuranceCompanySeeder::class,
             OpdDemoSeeder::class,
         ]);
     }

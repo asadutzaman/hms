@@ -1,0 +1,64 @@
+{
+    "resource": {
+        "permission_type": "RESOURCE",
+        "name": "insurance-company",
+        "display_name": "Insurance Company",
+        "resource_uri": "insurance-company",
+        "controller_name": "InsuranceCompanyController",
+        "server_url_prefix": "auth",
+        "component": "COMMON"
+    },
+    "scopes": [
+        {
+            "scope": "auth:insurance-company:menuAccess",
+            "display_name": "Menu Access",
+            "actions": [
+                { "http_method": "GET", "action_name": "index", "uri": "/insurance-company" }
+            ]
+        },
+        {
+            "scope": "auth:insurance-company:list",
+            "display_name": "List",
+            "actions": [
+                { "http_method": "GET", "action_name": "index", "uri": "/insurance-company" },
+                { "http_method": "GET", "action_name": "dropdown", "uri": "/insurance-company/dropdown" }
+            ]
+        },
+        {
+            "scope": "auth:insurance-company:view",
+            "display_name": "View",
+            "actions": [
+                { "http_method": "GET", "action_name": "show", "uri": "/insurance-company/*" }
+            ]
+        },
+        {
+            "scope": "auth:insurance-company:create",
+            "display_name": "Create",
+            "actions": [
+                { "http_method": "POST", "action_name": "store", "uri": "/insurance-company" }
+            ]
+        },
+        {
+            "scope": "auth:insurance-company:edit",
+            "display_name": "Edit",
+            "actions": [
+                { "http_method": "PUT", "action_name": "update", "uri": "/insurance-company/*" },
+                { "http_method": "PATCH", "action_name": "updateFields", "uri": "/insurance-company/*" }
+            ]
+        },
+        {
+            "scope": "auth:insurance-company:delete",
+            "display_name": "Delete",
+            "actions": [
+                { "http_method": "DELETE", "action_name": "destroy", "uri": "/insurance-company/*" }
+            ]
+        },
+        {
+            "scope": "auth:insurance-company:multiSelect",
+            "display_name": "Multiple Selection",
+            "actions": [
+                { "http_method": "POST", "action_name": "bulk", "uri": "/insurance-company/bulk" }
+            ]
+        }
+    ]
+}

@@ -56,6 +56,8 @@ class Appointment extends BaseModel
         'updated_by',
         'sort_order',
         'status_active',
+        'reminder_24h_sent_at',
+        'reminder_2h_sent_at',
     ];
 
     protected $hidden = ['deleted_at'];
@@ -87,6 +89,8 @@ class Appointment extends BaseModel
         'created_by'               => 'integer',
         'updated_by'               => 'integer',
         'status_active'            => 'integer',
+        'reminder_24h_sent_at'     => 'datetime:Y-m-d H:i:s',
+        'reminder_2h_sent_at'      => 'datetime:Y-m-d H:i:s',
         'created_at'               => 'datetime:Y-m-d H:i:s',
         'updated_at'               => 'datetime:Y-m-d H:i:s',
     ];

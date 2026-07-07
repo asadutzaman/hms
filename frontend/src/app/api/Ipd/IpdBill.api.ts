@@ -22,6 +22,7 @@ const endpoints = {
   applyDiscount: (id: any) => `${RESOURCE_ENDPOINT}/${id}/discount`,
   approveDiscount: (id: any) => `${RESOURCE_ENDPOINT}/${id}/discount/approve`,
   rejectDiscount: (id: any) => `${RESOURCE_ENDPOINT}/${id}/discount/reject`,
+  applyPackage: (id: any) => `${RESOURCE_ENDPOINT}/${id}/apply-package`,
 }
 
 export default class IpdBillApi {
@@ -58,4 +59,6 @@ export default class IpdBillApi {
     HttpService.post(endpoints.approveDiscount(id), {}, params, headers)
   public rejectDiscount = (id: any, payload = {}, params = {}, headers = {}): AxiosPromise<any> =>
     HttpService.post(endpoints.rejectDiscount(id), payload, params, headers)
+  public applyPackage = (id: any, payload = {}): AxiosPromise<any> =>
+    HttpService.post(endpoints.applyPackage(id), payload)
 }

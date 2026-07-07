@@ -46,6 +46,12 @@ class Kernel extends ConsoleKernel
         // minute — no cron entry exists in this repo/environment, so on a
         // real deployment add one (e.g. `* * * * * php artisan schedule:run`).
         $schedule->command('hms:backup')->dailyAt('02:00')->withoutOverlapping();
+
+        // F-02-05 SMS/Email Appointment Reminders — 24h/2h windows, checked
+        // every 15 minutes (matches the catch-window in
+        // AppointmentReminderService::sendWindow()). Same schedule:run
+        // caveat as above applies.
+        $schedule->command('hms:send-appointment-reminders')->everyFifteenMinutes()->withoutOverlapping();
     }
 
     /**

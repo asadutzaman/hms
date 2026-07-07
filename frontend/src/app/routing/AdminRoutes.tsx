@@ -22,6 +22,9 @@ const AdminRoutes = () => {
   const IpdRoutes = lazy(() => import('../modules/ipd/IpdRoutes'));
   const EmergencyRoutes = lazy(() => import('../modules/emergency/EmergencyRoutes'));
   const LabRoutes = lazy(() => import('../modules/lab/LabRoutes'));
+  const RadiologyRoutes = lazy(() => import('../modules/radiology/RadiologyRoutes'));
+  const InsuranceRoutes = lazy(() => import('../modules/insurance/InsuranceRoutes'));
+  const BillingRoutes = lazy(() => import('../modules/billing/BillingRoutes'));
 
   return (
     <Routes>
@@ -113,6 +116,30 @@ const AdminRoutes = () => {
           element={
             <SuspensedView>
               <LabRoutes />
+            </SuspensedView>
+          }
+        />
+        <Route
+          path={'/radiology/*'}
+          element={
+            <SuspensedView>
+              <RadiologyRoutes />
+            </SuspensedView>
+          }
+        />
+        <Route
+          path={'/insurance/*'}
+          element={
+            <SuspensedView>
+              <InsuranceRoutes />
+            </SuspensedView>
+          }
+        />
+        <Route
+          path={'/billing/*'}
+          element={
+            <SuspensedView>
+              <BillingRoutes />
             </SuspensedView>
           }
         />

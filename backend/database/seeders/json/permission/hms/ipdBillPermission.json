@@ -51,7 +51,8 @@
                 { "http_method": "POST", "action_name": "recordPayment", "uri": "/ipd-bill/*/payment" },
                 { "http_method": "POST", "action_name": "recordSplitPayment", "uri": "/ipd-bill/*/payments" },
                 { "http_method": "POST", "action_name": "waive", "uri": "/ipd-bill/*/waive" },
-                { "http_method": "POST", "action_name": "applyDiscount", "uri": "/ipd-bill/*/discount" }
+                { "http_method": "POST", "action_name": "applyDiscount", "uri": "/ipd-bill/*/discount" },
+                { "http_method": "POST", "action_name": "applyPackage", "uri": "/ipd-bill/*/apply-package" }
             ]
         },
         {

@@ -111,6 +111,19 @@ import _NotificationApi from './Notification/Notification.api'
 import _PatientAttachmentApi from './Patient/PatientAttachment.api'
 // BACKUP
 import _BackupApi from './Setting/Backup.api'
+// INSURANCE / TPA
+import _InsuranceCompanyApi from './Insurance/InsuranceCompany.api'
+import _InsuranceSchemeApi from './Insurance/InsuranceScheme.api'
+import _PreAuthorizationApi from './Insurance/PreAuthorization.api'
+import _InsuranceClaimApi from './Insurance/InsuranceClaim.api'
+// BILLING (Package & Refund)
+import _BillingPackageApi from './Billing/BillingPackage.api'
+import _BillRefundApi from './Billing/BillRefund.api'
+// RADIOLOGY
+import _RadiologyTestApi from './Radiology/RadiologyTest.api'
+import _RadiologyReportTemplateApi from './Radiology/RadiologyReportTemplate.api'
+import _RadiologyOrderApi from './Radiology/RadiologyOrder.api'
+import _RadiologyReportApi from './Radiology/RadiologyReport.api'
 
 export const FackApi = new _FackApi()
 export const OauthApi = new _OauthApi()
@@ -225,3 +238,16 @@ export const NotificationApi = new _NotificationApi()
 export const PatientAttachmentApi = new _PatientAttachmentApi()
 // BACKUP
 export const BackupApi = new _BackupApi()
+// INSURANCE / TPA
+export const InsuranceCompanyApi = new _InsuranceCompanyApi()
+export const InsuranceSchemeApi = new _InsuranceSchemeApi()
+export const PreAuthorizationApi = new _PreAuthorizationApi()
+export const InsuranceClaimApi = new _InsuranceClaimApi()
+// BILLING (Package & Refund)
+export const BillingPackageApi = new _BillingPackageApi()
+export const BillRefundApi = new _BillRefundApi()
+// RADIOLOGY
+export const RadiologyTestApi = new _RadiologyTestApi()
+export const RadiologyReportTemplateApi = new _RadiologyReportTemplateApi()
+export const RadiologyOrderApi = new _RadiologyOrderApi()
+export const RadiologyReportApi = new _RadiologyReportApi()

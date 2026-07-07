@@ -1,0 +1,42 @@
+{
+    "resource": {
+        "permission_type": "RESOURCE",
+        "name": "radiology-report",
+        "display_name": "Radiology Report",
+        "resource_uri": "radiology-report",
+        "controller_name": "RadiologyReportController",
+        "server_url_prefix": "auth",
+        "component": "COMMON"
+    },
+    "scopes": [
+        {
+            "scope": "auth:radiology-report:menuAccess",
+            "display_name": "Menu Access",
+            "actions": [
+                { "http_method": "GET", "action_name": "byOrderItem", "uri": "/radiology-report/by-order-item/*" }
+            ]
+        },
+        {
+            "scope": "auth:radiology-report:view",
+            "display_name": "View",
+            "actions": [
+                { "http_method": "GET", "action_name": "byOrderItem", "uri": "/radiology-report/by-order-item/*" }
+            ]
+        },
+        {
+            "scope": "auth:radiology-report:create",
+            "display_name": "Create",
+            "actions": [
+                { "http_method": "POST", "action_name": "saveDraft", "uri": "/radiology-report/save-draft/*" }
+            ]
+        },
+        {
+            "scope": "auth:radiology-report:edit",
+            "display_name": "Edit",
+            "actions": [
+                { "http_method": "POST", "action_name": "finalize", "uri": "/radiology-report/finalize/*" },
+                { "http_method": "POST", "action_name": "verify", "uri": "/radiology-report/verify/*" }
+            ]
+        }
+    ]
+}

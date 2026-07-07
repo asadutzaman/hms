@@ -1,0 +1,63 @@
+{
+    "resource": {
+        "permission_type": "RESOURCE",
+        "name": "radiology-order",
+        "display_name": "Radiology Order",
+        "resource_uri": "radiology-order",
+        "controller_name": "RadiologyOrderController",
+        "server_url_prefix": "auth",
+        "component": "COMMON"
+    },
+    "scopes": [
+        {
+            "scope": "auth:radiology-order:menuAccess",
+            "display_name": "Menu Access",
+            "actions": [
+                { "http_method": "GET", "action_name": "index", "uri": "/radiology-order" }
+            ]
+        },
+        {
+            "scope": "auth:radiology-order:list",
+            "display_name": "List",
+            "actions": [
+                { "http_method": "GET", "action_name": "index", "uri": "/radiology-order" },
+                { "http_method": "GET", "action_name": "dropdown", "uri": "/radiology-order/dropdown" },
+                { "http_method": "GET", "action_name": "worklist", "uri": "/radiology-order/worklist" },
+                { "http_method": "GET", "action_name": "byPatient", "uri": "/radiology-order/by-patient/*" },
+                { "http_method": "GET", "action_name": "byOpdVisit", "uri": "/radiology-order/by-opd-visit/*" },
+                { "http_method": "GET", "action_name": "byIpdAdmission", "uri": "/radiology-order/by-ipd-admission/*" }
+            ]
+        },
+        {
+            "scope": "auth:radiology-order:view",
+            "display_name": "View",
+            "actions": [
+                { "http_method": "GET", "action_name": "show", "uri": "/radiology-order/*" },
+                { "http_method": "GET", "action_name": "reportPdf", "uri": "/radiology-order/*/report-pdf" }
+            ]
+        },
+        {
+            "scope": "auth:radiology-order:create",
+            "display_name": "Create",
+            "actions": [
+                { "http_method": "POST", "action_name": "store", "uri": "/radiology-order" }
+            ]
+        },
+        {
+            "scope": "auth:radiology-order:edit",
+            "display_name": "Edit",
+            "actions": [
+                { "http_method": "PATCH", "action_name": "updateFields", "uri": "/radiology-order/*" },
+                { "http_method": "POST", "action_name": "cancel", "uri": "/radiology-order/*/cancel" },
+                { "http_method": "POST", "action_name": "markReported", "uri": "/radiology-order/*/mark-reported" }
+            ]
+        },
+        {
+            "scope": "auth:radiology-order:multiSelect",
+            "display_name": "Multiple Selection",
+            "actions": [
+                { "http_method": "POST", "action_name": "bulk", "uri": "/radiology-order/bulk" }
+            ]
+        }
+    ]
+}

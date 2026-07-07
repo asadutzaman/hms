@@ -1527,6 +1527,7 @@ Route::prefix('api')->group(function () {
         Route::post('/{id}/discount', [App\Http\Controllers\OpdBillController::class, 'applyDiscount']);
         Route::post('/{id}/discount/approve', [App\Http\Controllers\OpdBillController::class, 'approveDiscount']);
         Route::post('/{id}/discount/reject', [App\Http\Controllers\OpdBillController::class, 'rejectDiscount']);
+        Route::post('/{id}/apply-package', [App\Http\Controllers\OpdBillController::class, 'applyPackage']);
         Route::get('/{id}/print', [App\Http\Controllers\OpdBillController::class, 'print']);
         Route::get('/{id}/receipt-pdf', [App\Http\Controllers\OpdBillController::class, 'receiptPdf']);
     });
@@ -1629,6 +1630,7 @@ Route::prefix('api')->group(function () {
         Route::post('/{id}/discount', [App\Http\Controllers\IpdBillController::class, 'applyDiscount']);
         Route::post('/{id}/discount/approve', [App\Http\Controllers\IpdBillController::class, 'approveDiscount']);
         Route::post('/{id}/discount/reject', [App\Http\Controllers\IpdBillController::class, 'rejectDiscount']);
+        Route::post('/{id}/apply-package', [App\Http\Controllers\IpdBillController::class, 'applyPackage']);
     });
 
     // IPD BILL ITEM
@@ -1846,5 +1848,130 @@ Route::prefix('api')->group(function () {
         Route::get('/', [App\Http\Controllers\BackupController::class, 'index']);
         Route::post('/run', [App\Http\Controllers\BackupController::class, 'run']);
         Route::get('/{id}/download', [App\Http\Controllers\BackupController::class, 'download']);
+    });
+
+    // INSURANCE COMPANY (F-20-01)
+    Route::group(['prefix' => 'insurance-company', 'middleware' => ['restrictIp', 'authVerify']], function () {
+        Route::post('/bulk', [App\Http\Controllers\InsuranceCompanyController::class, 'bulk']);
+        Route::get('/dropdown', [App\Http\Controllers\InsuranceCompanyController::class, 'dropdown']);
+        Route::get('/', [App\Http\Controllers\InsuranceCompanyController::class, 'index']);
+        Route::get('/{id}', [App\Http\Controllers\InsuranceCompanyController::class, 'show']);
+        Route::post('/', [App\Http\Controllers\InsuranceCompanyController::class, 'store']);
+        Route::put('/{id}', [App\Http\Controllers\InsuranceCompanyController::class, 'update']);
+        Route::patch('/{id}', [App\Http\Controllers\InsuranceCompanyController::class, 'updateFields']);
+        Route::delete('/{id}', [App\Http\Controllers\InsuranceCompanyController::class, 'destroy']);
+    });
+
+    // INSURANCE SCHEME
+    Route::group(['prefix' => 'insurance-scheme', 'middleware' => ['restrictIp', 'authVerify']], function () {
+        Route::post('/bulk', [App\Http\Controllers\InsuranceSchemeController::class, 'bulk']);
+        Route::get('/dropdown', [App\Http\Controllers\InsuranceSchemeController::class, 'dropdown']);
+        Route::get('/by-company/{insuranceCompanyId}', [App\Http\Controllers\InsuranceSchemeController::class, 'byCompany']);
+        Route::get('/', [App\Http\Controllers\InsuranceSchemeController::class, 'index']);
+        Route::get('/{id}', [App\Http\Controllers\InsuranceSchemeController::class, 'show']);
+        Route::post('/', [App\Http\Controllers\InsuranceSchemeController::class, 'store']);
+        Route::put('/{id}', [App\Http\Controllers\InsuranceSchemeController::class, 'update']);
+        Route::patch('/{id}', [App\Http\Controllers\InsuranceSchemeController::class, 'updateFields']);
+        Route::delete('/{id}', [App\Http\Controllers\InsuranceSchemeController::class, 'destroy']);
+    });
+
+    // PRE-AUTHORIZATION (F-20-02)
+    Route::group(['prefix' => 'pre-authorization', 'middleware' => ['restrictIp', 'authVerify']], function () {
+        Route::post('/bulk', [App\Http\Controllers\PreAuthorizationController::class, 'bulk']);
+        Route::get('/dropdown', [App\Http\Controllers\PreAuthorizationController::class, 'dropdown']);
+        Route::get('/pending', [App\Http\Controllers\PreAuthorizationController::class, 'pending']);
+        Route::get('/by-patient/{patientId}', [App\Http\Controllers\PreAuthorizationController::class, 'byPatient']);
+        Route::get('/', [App\Http\Controllers\PreAuthorizationController::class, 'index']);
+        Route::get('/{id}', [App\Http\Controllers\PreAuthorizationController::class, 'show']);
+        Route::post('/', [App\Http\Controllers\PreAuthorizationController::class, 'store']);
+        Route::post('/{id}/under-review', [App\Http\Controllers\PreAuthorizationController::class, 'markUnderReview']);
+        Route::post('/{id}/approve', [App\Http\Controllers\PreAuthorizationController::class, 'approve']);
+        Route::post('/{id}/reject', [App\Http\Controllers\PreAuthorizationController::class, 'reject']);
+    });
+
+    // INSURANCE CLAIM / TPA BILLING (F-08-05)
+    Route::group(['prefix' => 'insurance-claim', 'middleware' => ['restrictIp', 'authVerify']], function () {
+        Route::post('/bulk', [App\Http\Controllers\InsuranceClaimController::class, 'bulk']);
+        Route::get('/dropdown', [App\Http\Controllers\InsuranceClaimController::class, 'dropdown']);
+        Route::get('/by-patient/{patientId}', [App\Http\Controllers\InsuranceClaimController::class, 'byPatient']);
+        Route::get('/by-bill', [App\Http\Controllers\InsuranceClaimController::class, 'byBill']);
+        Route::get('/', [App\Http\Controllers\InsuranceClaimController::class, 'index']);
+        Route::get('/{id}', [App\Http\Controllers\InsuranceClaimController::class, 'show']);
+        Route::post('/', [App\Http\Controllers\InsuranceClaimController::class, 'store']);
+        Route::post('/{id}/submit', [App\Http\Controllers\InsuranceClaimController::class, 'submit']);
+        Route::post('/{id}/status', [App\Http\Controllers\InsuranceClaimController::class, 'updateStatus']);
+    });
+
+    // BILLING PACKAGE (F-08-06)
+    Route::group(['prefix' => 'billing-package', 'middleware' => ['restrictIp', 'authVerify']], function () {
+        Route::post('/bulk', [App\Http\Controllers\BillingPackageController::class, 'bulk']);
+        Route::get('/dropdown', [App\Http\Controllers\BillingPackageController::class, 'dropdown']);
+        Route::get('/', [App\Http\Controllers\BillingPackageController::class, 'index']);
+        Route::get('/{id}', [App\Http\Controllers\BillingPackageController::class, 'show']);
+        Route::post('/', [App\Http\Controllers\BillingPackageController::class, 'store']);
+        Route::put('/{id}', [App\Http\Controllers\BillingPackageController::class, 'update']);
+        Route::patch('/{id}', [App\Http\Controllers\BillingPackageController::class, 'updateFields']);
+        Route::put('/{id}/items', [App\Http\Controllers\BillingPackageController::class, 'updateItems']);
+        Route::delete('/{id}', [App\Http\Controllers\BillingPackageController::class, 'destroy']);
+    });
+
+    // BILL REFUND (F-08-04)
+    Route::group(['prefix' => 'bill-refund', 'middleware' => ['restrictIp', 'authVerify']], function () {
+        Route::get('/pending', [App\Http\Controllers\BillRefundController::class, 'pending']);
+        Route::get('/by-bill', [App\Http\Controllers\BillRefundController::class, 'byBill']);
+        Route::get('/', [App\Http\Controllers\BillRefundController::class, 'index']);
+        Route::get('/{id}', [App\Http\Controllers\BillRefundController::class, 'show']);
+        Route::post('/request', [App\Http\Controllers\BillRefundController::class, 'request']);
+        Route::post('/{id}/approve', [App\Http\Controllers\BillRefundController::class, 'approve']);
+        Route::post('/{id}/reject', [App\Http\Controllers\BillRefundController::class, 'reject']);
+    });
+
+    // RADIOLOGY TEST CATALOG (F-06-01)
+    Route::group(['prefix' => 'radiology-test', 'middleware' => ['restrictIp', 'authVerify']], function () {
+        Route::post('/bulk', [App\Http\Controllers\RadiologyTestController::class, 'bulk']);
+        Route::get('/dropdown', [App\Http\Controllers\RadiologyTestController::class, 'dropdown']);
+        Route::get('/', [App\Http\Controllers\RadiologyTestController::class, 'index']);
+        Route::get('/{id}', [App\Http\Controllers\RadiologyTestController::class, 'show']);
+        Route::post('/', [App\Http\Controllers\RadiologyTestController::class, 'store']);
+        Route::put('/{id}', [App\Http\Controllers\RadiologyTestController::class, 'update']);
+        Route::patch('/{id}', [App\Http\Controllers\RadiologyTestController::class, 'updateFields']);
+        Route::delete('/{id}', [App\Http\Controllers\RadiologyTestController::class, 'destroy']);
+    });
+
+    // RADIOLOGY REPORT TEMPLATE (F-06-03)
+    Route::group(['prefix' => 'radiology-report-template', 'middleware' => ['restrictIp', 'authVerify']], function () {
+        Route::post('/bulk', [App\Http\Controllers\RadiologyReportTemplateController::class, 'bulk']);
+        Route::get('/dropdown', [App\Http\Controllers\RadiologyReportTemplateController::class, 'dropdown']);
+        Route::get('/', [App\Http\Controllers\RadiologyReportTemplateController::class, 'index']);
+        Route::get('/{id}', [App\Http\Controllers\RadiologyReportTemplateController::class, 'show']);
+        Route::post('/', [App\Http\Controllers\RadiologyReportTemplateController::class, 'store']);
+        Route::put('/{id}', [App\Http\Controllers\RadiologyReportTemplateController::class, 'update']);
+        Route::patch('/{id}', [App\Http\Controllers\RadiologyReportTemplateController::class, 'updateFields']);
+        Route::delete('/{id}', [App\Http\Controllers\RadiologyReportTemplateController::class, 'destroy']);
+    });
+
+    // RADIOLOGY ORDER (F-06-01)
+    Route::group(['prefix' => 'radiology-order', 'middleware' => ['restrictIp', 'authVerify']], function () {
+        Route::post('/bulk', [App\Http\Controllers\RadiologyOrderController::class, 'bulk']);
+        Route::get('/dropdown', [App\Http\Controllers\RadiologyOrderController::class, 'dropdown']);
+        Route::get('/worklist', [App\Http\Controllers\RadiologyOrderController::class, 'worklist']);
+        Route::get('/by-patient/{patientId}', [App\Http\Controllers\RadiologyOrderController::class, 'byPatient']);
+        Route::get('/by-opd-visit/{opdVisitId}', [App\Http\Controllers\RadiologyOrderController::class, 'byOpdVisit']);
+        Route::get('/by-ipd-admission/{admissionId}', [App\Http\Controllers\RadiologyOrderController::class, 'byIpdAdmission']);
+        Route::get('/', [App\Http\Controllers\RadiologyOrderController::class, 'index']);
+        Route::get('/{id}', [App\Http\Controllers\RadiologyOrderController::class, 'show']);
+        Route::post('/', [App\Http\Controllers\RadiologyOrderController::class, 'store']);
+        Route::patch('/{id}', [App\Http\Controllers\RadiologyOrderController::class, 'updateFields']);
+        Route::post('/{id}/cancel', [App\Http\Controllers\RadiologyOrderController::class, 'cancel']);
+        Route::get('/{id}/report-pdf', [App\Http\Controllers\RadiologyOrderController::class, 'reportPdf']);
+        Route::post('/{id}/mark-reported', [App\Http\Controllers\RadiologyOrderController::class, 'markReported']);
+    });
+
+    // RADIOLOGY REPORT (F-06-03)
+    Route::group(['prefix' => 'radiology-report', 'middleware' => ['restrictIp', 'authVerify']], function () {
+        Route::get('/by-order-item/{orderItemId}', [App\Http\Controllers\RadiologyReportController::class, 'byOrderItem']);
+        Route::post('/save-draft/{orderItemId}', [App\Http\Controllers\RadiologyReportController::class, 'saveDraft']);
+        Route::post('/finalize/{orderItemId}', [App\Http\Controllers\RadiologyReportController::class, 'finalize']);
+        Route::post('/verify/{orderItemId}', [App\Http\Controllers\RadiologyReportController::class, 'verify']);
     });
 });

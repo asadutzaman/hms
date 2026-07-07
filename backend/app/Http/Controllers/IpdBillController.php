@@ -267,4 +267,31 @@ class IpdBillController extends Controller
             $this->errorResponse($e->getMessage());
         }
     }
+
+    /**
+     * POST /ipd-bill/{id}/apply-package — Body: { billing_package_id }
+     * (F-08-06 Package & Bundle Billing.)
+     */
+    public function applyPackage(Request $request, $id)
+    {
+        DB::beginTransaction();
+        try {
+            $request->validate(['billing_package_id' => ['required', 'integer', 'exists:billing_packages,id']]);
+
+            $result = app(\App\Services\Billing\PackageBillingService::class)->applyToIpdBill(
+                (int) $id,
+                (int) $request->input('billing_package_id')
+            );
+
+            DB::commit();
+            $response = new $this->resource($result, false);
+            return $this->successResourceResponse($response);
+        } catch (ValidationException $e) {
+            DB::rollBack();
+            throw new ValidatorException($e);
+        } catch (Exception $e) {
+            DB::rollBack();
+            $this->errorResponse($e->getMessage());
+        }
+    }
 }

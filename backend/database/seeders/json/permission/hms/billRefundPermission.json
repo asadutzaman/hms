@@ -1,0 +1,51 @@
+{
+    "resource": {
+        "permission_type": "RESOURCE",
+        "name": "bill-refund",
+        "display_name": "Bill Refund",
+        "resource_uri": "bill-refund",
+        "controller_name": "BillRefundController",
+        "server_url_prefix": "auth",
+        "component": "COMMON"
+    },
+    "scopes": [
+        {
+            "scope": "auth:bill-refund:menuAccess",
+            "display_name": "Menu Access",
+            "actions": [
+                { "http_method": "GET", "action_name": "index", "uri": "/bill-refund" }
+            ]
+        },
+        {
+            "scope": "auth:bill-refund:list",
+            "display_name": "List",
+            "actions": [
+                { "http_method": "GET", "action_name": "index", "uri": "/bill-refund" },
+                { "http_method": "GET", "action_name": "pending", "uri": "/bill-refund/pending" },
+                { "http_method": "GET", "action_name": "byBill", "uri": "/bill-refund/by-bill" }
+            ]
+        },
+        {
+            "scope": "auth:bill-refund:view",
+            "display_name": "View",
+            "actions": [
+                { "http_method": "GET", "action_name": "show", "uri": "/bill-refund/*" }
+            ]
+        },
+        {
+            "scope": "auth:bill-refund:create",
+            "display_name": "Create",
+            "actions": [
+                { "http_method": "POST", "action_name": "request", "uri": "/bill-refund/request" }
+            ]
+        },
+        {
+            "scope": "auth:bill-refund:approve",
+            "display_name": "Approve/Reject",
+            "actions": [
+                { "http_method": "POST", "action_name": "approve", "uri": "/bill-refund/*/approve" },
+                { "http_method": "POST", "action_name": "reject", "uri": "/bill-refund/*/reject" }
+            ]
+        }
+    ]
+}

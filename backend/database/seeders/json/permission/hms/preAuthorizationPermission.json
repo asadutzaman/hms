@@ -1,0 +1,60 @@
+{
+    "resource": {
+        "permission_type": "RESOURCE",
+        "name": "pre-authorization",
+        "display_name": "Pre-Authorization",
+        "resource_uri": "pre-authorization",
+        "controller_name": "PreAuthorizationController",
+        "server_url_prefix": "auth",
+        "component": "COMMON"
+    },
+    "scopes": [
+        {
+            "scope": "auth:pre-authorization:menuAccess",
+            "display_name": "Menu Access",
+            "actions": [
+                { "http_method": "GET", "action_name": "index", "uri": "/pre-authorization" }
+            ]
+        },
+        {
+            "scope": "auth:pre-authorization:list",
+            "display_name": "List",
+            "actions": [
+                { "http_method": "GET", "action_name": "index", "uri": "/pre-authorization" },
+                { "http_method": "GET", "action_name": "dropdown", "uri": "/pre-authorization/dropdown" },
+                { "http_method": "GET", "action_name": "pending", "uri": "/pre-authorization/pending" },
+                { "http_method": "GET", "action_name": "byPatient", "uri": "/pre-authorization/by-patient/*" }
+            ]
+        },
+        {
+            "scope": "auth:pre-authorization:view",
+            "display_name": "View",
+            "actions": [
+                { "http_method": "GET", "action_name": "show", "uri": "/pre-authorization/*" }
+            ]
+        },
+        {
+            "scope": "auth:pre-authorization:create",
+            "display_name": "Create",
+            "actions": [
+                { "http_method": "POST", "action_name": "store", "uri": "/pre-authorization" }
+            ]
+        },
+        {
+            "scope": "auth:pre-authorization:edit",
+            "display_name": "Edit",
+            "actions": [
+                { "http_method": "POST", "action_name": "markUnderReview", "uri": "/pre-authorization/*/under-review" },
+                { "http_method": "POST", "action_name": "approve", "uri": "/pre-authorization/*/approve" },
+                { "http_method": "POST", "action_name": "reject", "uri": "/pre-authorization/*/reject" }
+            ]
+        },
+        {
+            "scope": "auth:pre-authorization:multiSelect",
+            "display_name": "Multiple Selection",
+            "actions": [
+                { "http_method": "POST", "action_name": "bulk", "uri": "/pre-authorization/bulk" }
+            ]
+        }
+    ]
+}

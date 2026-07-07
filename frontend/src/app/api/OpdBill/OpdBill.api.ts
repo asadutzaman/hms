@@ -18,6 +18,7 @@ const endpoints = {
     recordSplitPayment: (id: any) => `${RESOURCE_ENDPOINT}/${id}/payments`,
     waive: (id: any) => `${RESOURCE_ENDPOINT}/${id}/waive`,
     applyDiscount: (id: any) => `${RESOURCE_ENDPOINT}/${id}/discount`,
+    applyPackage: (id: any) => `${RESOURCE_ENDPOINT}/${id}/apply-package`,
     approveDiscount: (id: any) => `${RESOURCE_ENDPOINT}/${id}/discount/approve`,
     rejectDiscount: (id: any) => `${RESOURCE_ENDPOINT}/${id}/discount/reject`,
     byVisit: (id: any) => `${RESOURCE_ENDPOINT}/by-visit/${id}`,
@@ -79,4 +80,7 @@ export default class OpdBillApi {
 
     public receiptPdf = (id: any): AxiosPromise<any> =>
         HttpService.get(endpoints.receiptPdf(id), {}, {}, 'blob')
+
+    public applyPackage = (id: any, payload = {}): AxiosPromise<any> =>
+        HttpService.post(endpoints.applyPackage(id), payload)
 }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Exceptions\ValidatorException;
 use App\Http\Resources\OpdBillResource;
 use App\Repositories\OpdBillRepository;
+use App\Services\Billing\PackageBillingService;
 use App\Services\Opd\OpdBillService;
 use App\Traits\Controller\RestControllerTrait;
 use App\Validators\OpdBillValidator;
@@ -222,6 +223,33 @@ class OpdBillController extends Controller
             $reason = $request->input('reason');
             $actorId = Auth::id();
             $result = app(OpdBillService::class)->waive($id, $actorId, $reason);
+
+            DB::commit();
+            $response = new $this->resource($result->fresh(), false);
+            return $this->successResourceResponse($response);
+        } catch (ValidationException $e) {
+            DB::rollBack();
+            throw new ValidatorException($e);
+        } catch (Exception $e) {
+            DB::rollBack();
+            $this->errorResponse($e->getMessage());
+        }
+    }
+
+    /**
+     * POST /opd-bill/{id}/apply-package — Body: { billing_package_id }
+     * (F-08-06 Package & Bundle Billing.)
+     */
+    public function applyPackage(Request $request, $id)
+    {
+        DB::beginTransaction();
+        try {
+            $request->validate(['billing_package_id' => ['required', 'integer', 'exists:billing_packages,id']]);
+
+            $result = app(PackageBillingService::class)->applyToOpdBill(
+                (int) $id,
+                (int) $request->input('billing_package_id')
+            );
 
             DB::commit();
             $response = new $this->resource($result->fresh(), false);

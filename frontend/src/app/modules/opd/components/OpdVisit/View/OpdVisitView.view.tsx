@@ -51,6 +51,8 @@ import DrugSelect from 'src/app/components/Dropdown/DrugSelect'
 import Icd10Select from 'src/app/components/Dropdown/Icd10Select'
 import ReferralProcedurePanel from '../Tabs/ReferralProcedurePanel'
 import LabOrdersPanel from 'src/app/components/LabOrder/LabOrdersPanel'
+import RadiologyOrdersPanel from 'src/app/components/RadiologyOrder/RadiologyOrdersPanel'
+import BillExtrasPanel from 'src/app/components/Billing/BillExtrasPanel'
 import {usePermissionContext} from 'src/app/hooks/context/usePermissionContext'
 
 const {TextArea} = Input
@@ -851,6 +853,14 @@ const OpdVisitView: FC<any> = ({itemData, handleCallbackFunc}) => {
           ) : (
             <Empty description='No payments recorded yet' />
           )}
+
+          <BillExtrasPanel
+            billId={bill.id}
+            patientId={itemData.patient_id}
+            billableType='opd_bill'
+            bill={bill}
+            onChanged={notifyReload}
+          />
         </>
       )}
     </div>
@@ -880,6 +890,17 @@ const OpdVisitView: FC<any> = ({itemData, handleCallbackFunc}) => {
       label: 'Lab Orders',
       children: (
         <LabOrdersPanel
+          patientId={itemData.patient_id}
+          patientLabel={itemData.patient_name}
+          opdVisitId={itemData.id}
+        />
+      ),
+    },
+    {
+      key: 'radiology-orders',
+      label: 'Radiology Orders',
+      children: (
+        <RadiologyOrdersPanel
           patientId={itemData.patient_id}
           patientLabel={itemData.patient_name}
           opdVisitId={itemData.id}

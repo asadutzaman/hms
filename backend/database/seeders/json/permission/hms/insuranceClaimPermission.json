@@ -1,0 +1,59 @@
+{
+    "resource": {
+        "permission_type": "RESOURCE",
+        "name": "insurance-claim",
+        "display_name": "Insurance Claim (TPA Billing)",
+        "resource_uri": "insurance-claim",
+        "controller_name": "InsuranceClaimController",
+        "server_url_prefix": "auth",
+        "component": "COMMON"
+    },
+    "scopes": [
+        {
+            "scope": "auth:insurance-claim:menuAccess",
+            "display_name": "Menu Access",
+            "actions": [
+                { "http_method": "GET", "action_name": "index", "uri": "/insurance-claim" }
+            ]
+        },
+        {
+            "scope": "auth:insurance-claim:list",
+            "display_name": "List",
+            "actions": [
+                { "http_method": "GET", "action_name": "index", "uri": "/insurance-claim" },
+                { "http_method": "GET", "action_name": "dropdown", "uri": "/insurance-claim/dropdown" },
+                { "http_method": "GET", "action_name": "byPatient", "uri": "/insurance-claim/by-patient/*" },
+                { "http_method": "GET", "action_name": "byBill", "uri": "/insurance-claim/by-bill" }
+            ]
+        },
+        {
+            "scope": "auth:insurance-claim:view",
+            "display_name": "View",
+            "actions": [
+                { "http_method": "GET", "action_name": "show", "uri": "/insurance-claim/*" }
+            ]
+        },
+        {
+            "scope": "auth:insurance-claim:create",
+            "display_name": "Create",
+            "actions": [
+                { "http_method": "POST", "action_name": "store", "uri": "/insurance-claim" }
+            ]
+        },
+        {
+            "scope": "auth:insurance-claim:edit",
+            "display_name": "Edit",
+            "actions": [
+                { "http_method": "POST", "action_name": "submit", "uri": "/insurance-claim/*/submit" },
+                { "http_method": "POST", "action_name": "updateStatus", "uri": "/insurance-claim/*/status" }
+            ]
+        },
+        {
+            "scope": "auth:insurance-claim:multiSelect",
+            "display_name": "Multiple Selection",
+            "actions": [
+                { "http_method": "POST", "action_name": "bulk", "uri": "/insurance-claim/bulk" }
+            ]
+        }
+    ]
+}

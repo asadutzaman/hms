@@ -1,0 +1,65 @@
+{
+    "resource": {
+        "permission_type": "RESOURCE",
+        "name": "billing-package",
+        "display_name": "Billing Package",
+        "resource_uri": "billing-package",
+        "controller_name": "BillingPackageController",
+        "server_url_prefix": "auth",
+        "component": "COMMON"
+    },
+    "scopes": [
+        {
+            "scope": "auth:billing-package:menuAccess",
+            "display_name": "Menu Access",
+            "actions": [
+                { "http_method": "GET", "action_name": "index", "uri": "/billing-package" }
+            ]
+        },
+        {
+            "scope": "auth:billing-package:list",
+            "display_name": "List",
+            "actions": [
+                { "http_method": "GET", "action_name": "index", "uri": "/billing-package" },
+                { "http_method": "GET", "action_name": "dropdown", "uri": "/billing-package/dropdown" }
+            ]
+        },
+        {
+            "scope": "auth:billing-package:view",
+            "display_name": "View",
+            "actions": [
+                { "http_method": "GET", "action_name": "show", "uri": "/billing-package/*" }
+            ]
+        },
+        {
+            "scope": "auth:billing-package:create",
+            "display_name": "Create",
+            "actions": [
+                { "http_method": "POST", "action_name": "store", "uri": "/billing-package" }
+            ]
+        },
+        {
+            "scope": "auth:billing-package:edit",
+            "display_name": "Edit",
+            "actions": [
+                { "http_method": "PUT", "action_name": "update", "uri": "/billing-package/*" },
+                { "http_method": "PATCH", "action_name": "updateFields", "uri": "/billing-package/*" },
+                { "http_method": "PUT", "action_name": "updateItems", "uri": "/billing-package/*/items" }
+            ]
+        },
+        {
+            "scope": "auth:billing-package:delete",
+            "display_name": "Delete",
+            "actions": [
+                { "http_method": "DELETE", "action_name": "destroy", "uri": "/billing-package/*" }
+            ]
+        },
+        {
+            "scope": "auth:billing-package:multiSelect",
+            "display_name": "Multiple Selection",
+            "actions": [
+                { "http_method": "POST", "action_name": "bulk", "uri": "/billing-package/bulk" }
+            ]
+        }
+    ]
+}

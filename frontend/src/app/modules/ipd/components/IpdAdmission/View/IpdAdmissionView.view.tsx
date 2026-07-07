@@ -35,6 +35,8 @@ import {IpdAdmissionApi, IpdBillApi, IpdAdvancePaymentApi, BedApi} from 'src/app
 import AuditLogPanel from 'src/app/components/AuditLog/AuditLogPanel'
 import NursingTab from '../Tabs/NursingTab'
 import LabOrdersPanel from 'src/app/components/LabOrder/LabOrdersPanel'
+import RadiologyOrdersPanel from 'src/app/components/RadiologyOrder/RadiologyOrdersPanel'
+import BillExtrasPanel from 'src/app/components/Billing/BillExtrasPanel'
 import MedicationTab from '../Tabs/MedicationTab'
 import DischargeTab from '../Tabs/DischargeTab'
 import WardSelect from 'src/app/components/Dropdown/WardSelect'
@@ -584,6 +586,14 @@ const IpdAdmissionView: FC<any> = ({itemData, handleCallbackFunc}) => {
           ) : (
             <Empty description='No advance payments received yet' />
           )}
+
+          <BillExtrasPanel
+            billId={bill.id}
+            patientId={itemData.patient_id}
+            billableType='ipd_bill'
+            bill={bill}
+            onChanged={notifyReload}
+          />
         </>
       )}
     </div>
@@ -599,6 +609,17 @@ const IpdAdmissionView: FC<any> = ({itemData, handleCallbackFunc}) => {
       label: 'Lab Orders',
       children: (
         <LabOrdersPanel
+          patientId={itemData.patient_id}
+          patientLabel={itemData.patient_name}
+          ipdAdmissionId={itemData.id}
+        />
+      ),
+    },
+    {
+      key: 'radiology-orders',
+      label: 'Radiology Orders',
+      children: (
+        <RadiologyOrdersPanel
           patientId={itemData.patient_id}
           patientLabel={itemData.patient_name}
           ipdAdmissionId={itemData.id}

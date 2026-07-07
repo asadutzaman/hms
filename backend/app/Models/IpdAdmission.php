@@ -164,4 +164,9 @@ class IpdAdmission extends BaseModel
     {
         return $this->hasMany(LabOrder::class, 'ipd_admission_id')->orderByDesc('ordered_at');
     }
+
+    public function radiologyOrders(): HasMany
+    {
+        return $this->hasMany(RadiologyOrder::class, 'ipd_admission_id')->orderByDesc('ordered_at');
+    }
 }

@@ -4,16 +4,18 @@ namespace App\Enums;
 
 class IpdBillStatusEnum extends BaseEnum
 {
-    const UNPAID  = 'unpaid';
-    const PARTIAL = 'partial';
-    const PAID    = 'paid';
-    const WAIVED  = 'waived';
+    const UNPAID   = 'unpaid';
+    const PARTIAL  = 'partial';
+    const PAID     = 'paid';
+    const WAIVED   = 'waived';
+    const REFUNDED = 'refunded';
 
     public static $valueMap = [
-        self::UNPAID  => 'Unpaid',
-        self::PARTIAL => 'Partial',
-        self::PAID    => 'Paid',
-        self::WAIVED  => 'Waived',
+        self::UNPAID   => 'Unpaid',
+        self::PARTIAL  => 'Partial',
+        self::PAID     => 'Paid',
+        self::WAIVED   => 'Waived',
+        self::REFUNDED => 'Refunded',
     ];
 
     public static function getList()

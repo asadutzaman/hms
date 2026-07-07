@@ -21,6 +21,7 @@ class IpdBill extends BaseModel
     protected $fillable = [
         'organogram_id',
         'admission_id',
+        'billing_package_id',
         'bill_no',
         'subtotal',
         'discount',
@@ -52,6 +53,7 @@ class IpdBill extends BaseModel
         'id'                   => 'integer',
         'organogram_id'        => 'integer',
         'admission_id'         => 'integer',
+        'billing_package_id'   => 'integer',
         'subtotal'             => 'decimal:2',
         'discount'             => 'decimal:2',
         'discount_approved_by' => 'integer',
@@ -105,5 +107,10 @@ class IpdBill extends BaseModel
     public function payments(): HasMany
     {
         return $this->hasMany(IpdBillPayment::class, 'ipd_bill_id')->orderBy('paid_at');
+    }
+
+    public function billingPackage(): BelongsTo
+    {
+        return $this->belongsTo(BillingPackage::class, 'billing_package_id');
     }
 }

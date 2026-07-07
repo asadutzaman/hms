@@ -129,6 +129,11 @@ class OpdVisit extends BaseModel
         return $this->hasMany(LabOrder::class, 'opd_visit_id')->orderBy('ordered_at');
     }
 
+    public function radiologyOrders(): HasMany
+    {
+        return $this->hasMany(RadiologyOrder::class, 'opd_visit_id')->orderBy('ordered_at');
+    }
+
     public function bill(): HasOne
     {
         return $this->hasOne(OpdBill::class, 'opd_visit_id');

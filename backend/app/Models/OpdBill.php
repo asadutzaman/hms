@@ -20,6 +20,7 @@ class OpdBill extends BaseModel
     protected $fillable = [
         'organogram_id',
         'opd_visit_id',
+        'billing_package_id',
         'bill_no',
         'subtotal',
         'discount',
@@ -45,6 +46,7 @@ class OpdBill extends BaseModel
         'id'                    => 'integer',
         'organogram_id'         => 'integer',
         'opd_visit_id'          => 'integer',
+        'billing_package_id'    => 'integer',
         'subtotal'              => 'decimal:2',
         'discount'              => 'decimal:2',
         'tax'                   => 'decimal:2',
@@ -91,5 +93,10 @@ class OpdBill extends BaseModel
     public function biller(): BelongsTo
     {
         return $this->belongsTo(User::class, 'billed_by');
+    }
+
+    public function billingPackage(): BelongsTo
+    {
+        return $this->belongsTo(BillingPackage::class, 'billing_package_id');
     }
 }

@@ -1,0 +1,65 @@
+{
+    "resource": {
+        "permission_type": "RESOURCE",
+        "name": "insurance-scheme",
+        "display_name": "Insurance Scheme",
+        "resource_uri": "insurance-scheme",
+        "controller_name": "InsuranceSchemeController",
+        "server_url_prefix": "auth",
+        "component": "COMMON"
+    },
+    "scopes": [
+        {
+            "scope": "auth:insurance-scheme:menuAccess",
+            "display_name": "Menu Access",
+            "actions": [
+                { "http_method": "GET", "action_name": "index", "uri": "/insurance-scheme" }
+            ]
+        },
+        {
+            "scope": "auth:insurance-scheme:list",
+            "display_name": "List",
+            "actions": [
+                { "http_method": "GET", "action_name": "index", "uri": "/insurance-scheme" },
+                { "http_method": "GET", "action_name": "dropdown", "uri": "/insurance-scheme/dropdown" },
+                { "http_method": "GET", "action_name": "byCompany", "uri": "/insurance-scheme/by-company/*" }
+            ]
+        },
+        {
+            "scope": "auth:insurance-scheme:view",
+            "display_name": "View",
+            "actions": [
+                { "http_method": "GET", "action_name": "show", "uri": "/insurance-scheme/*" }
+            ]
+        },
+        {
+            "scope": "auth:insurance-scheme:create",
+            "display_name": "Create",
+            "actions": [
+                { "http_method": "POST", "action_name": "store", "uri": "/insurance-scheme" }
+            ]
+        },
+        {
+            "scope": "auth:insurance-scheme:edit",
+            "display_name": "Edit",
+            "actions": [
+                { "http_method": "PUT", "action_name": "update", "uri": "/insurance-scheme/*" },
+                { "http_method": "PATCH", "action_name": "updateFields", "uri": "/insurance-scheme/*" }
+            ]
+        },
+        {
+            "scope": "auth:insurance-scheme:delete",
+            "display_name": "Delete",
+            "actions": [
+                { "http_method": "DELETE", "action_name": "destroy", "uri": "/insurance-scheme/*" }
+            ]
+        },
+        {
+            "scope": "auth:insurance-scheme:multiSelect",
+            "display_name": "Multiple Selection",
+            "actions": [
+                { "http_method": "POST", "action_name": "bulk", "uri": "/insurance-scheme/bulk" }
+            ]
+        }
+    ]
+}

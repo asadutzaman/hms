@@ -44,6 +44,59 @@ class NotificationService
         return $this->dispatch($userId, $channel, $type, $subject, $body, $data);
     }
 
+    /**
+     * Send templated notifications directly to a contact address (email or
+     * phone) rather than a User record — needed for patient-facing
+     * notifications (e.g. appointment reminders), since Patient is a
+     * separate table from User and has no portal/login yet. Skips the
+     * `notifications` table entirely (that table is the staff-facing
+     * in-app notification center; there is nothing to show a patient who
+     * can't log in), and silently skips channels with no matching template
+     * or no contact address, same convention as sendEvent().
+     *
+     * @param array{email?: ?string, phone?: ?string} $contact
+     * @return array<int, bool> keyed by channel => whether delivery succeeded
+     */
+    public function sendEventToContact(string $eventKey, array $contact, array $data, array $channels): array
+    {
+        $results = [];
+        foreach ($channels as $channel) {
+            $template = $this->templateRepository->findByKey("{$eventKey}.{$channel}");
+            if (!$template) {
+                continue;
+            }
+
+            $subject = $template->subject_template ? $this->render($template->subject_template, $data) : null;
+            $body = $this->render($template->body_template, $data);
+
+            try {
+                if ($channel === 'email') {
+                    if (empty($contact['email'])) {
+                        continue;
+                    }
+                    Mail::raw($body, function ($message) use ($contact, $subject) {
+                        $message->to($contact['email'])->subject($subject ?? '');
+                    });
+                } elseif ($channel === 'sms') {
+                    if (empty($contact['phone'])) {
+                        continue;
+                    }
+                    if (!app(SmsGatewayInterface::class)->send($contact['phone'], $body)) {
+                        throw new \RuntimeException('SMS gateway rejected the message.');
+                    }
+                } else {
+                    continue;
+                }
+                $results[$channel] = true;
+            } catch (\Throwable $e) {
+                Log::warning("Contact notification delivery failed (channel={$channel}, event={$eventKey}): " . $e->getMessage());
+                $results[$channel] = false;
+            }
+        }
+
+        return $results;
+    }
+
     protected function dispatch(int $userId, string $channel, string $type, ?string $subjectTemplate, string $bodyTemplate, array $data): Notification
     {
         $subject = $subjectTemplate ? $this->render($subjectTemplate, $data) : null;
