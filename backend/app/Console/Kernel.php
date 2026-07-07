@@ -40,6 +40,12 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         // $schedule->command('inspire')->hourly();
+
+        // F-15-06 Database Backup & Restore. Note: this only fires if
+        // `php artisan schedule:run` is actually invoked by an OS cron every
+        // minute — no cron entry exists in this repo/environment, so on a
+        // real deployment add one (e.g. `* * * * * php artisan schedule:run`).
+        $schedule->command('hms:backup')->dailyAt('02:00')->withoutOverlapping();
     }
 
     /**

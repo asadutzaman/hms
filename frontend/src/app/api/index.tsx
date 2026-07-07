@@ -80,6 +80,10 @@ import _OpdBillApi from './OpdBill/OpdBill.api'
 import _OpdBillItemApi from './OpdBillItem/OpdBillItem.api'
 import _OpdBillPaymentApi from './OpdBillPayment/OpdBillPayment.api'
 import _LabTestApi from './LabTest/LabTest.api'
+// LAB (LIS)
+import _LabOrderApi from './Lab/LabOrder.api'
+import _LabSampleApi from './Lab/LabSample.api'
+import _LabResultApi from './Lab/LabResult.api'
 // IPD
 import _WardApi from './Ipd/Ward.api'
 import _BedApi from './Ipd/Bed.api'
@@ -100,6 +104,13 @@ import _ErVisitApi from './Emergency/ErVisit.api'
 import _ErTriageApi from './Emergency/ErTriage.api'
 // PATIENT HISTORY
 import _PatientHistoryApi from './PatientHistory/PatientHistory.api'
+// NOTIFICATION
+import _NotificationTemplateApi from './Notification/NotificationTemplate.api'
+import _NotificationApi from './Notification/Notification.api'
+// PATIENT ATTACHMENT
+import _PatientAttachmentApi from './Patient/PatientAttachment.api'
+// BACKUP
+import _BackupApi from './Setting/Backup.api'
 
 export const FackApi = new _FackApi()
 export const OauthApi = new _OauthApi()
@@ -183,6 +194,10 @@ export const OpdBillApi = new _OpdBillApi()
 export const OpdBillItemApi = new _OpdBillItemApi()
 export const OpdBillPaymentApi = new _OpdBillPaymentApi()
 export const LabTestApi = new _LabTestApi()
+// LAB (LIS)
+export const LabOrderApi = new _LabOrderApi()
+export const LabSampleApi = new _LabSampleApi()
+export const LabResultApi = new _LabResultApi()
 // IPD
 export const WardApi = new _WardApi()
 export const BedApi = new _BedApi()
@@ -203,3 +218,10 @@ export const ErVisitApi = new _ErVisitApi()
 export const ErTriageApi = new _ErTriageApi()
 // PATIENT HISTORY
 export const PatientHistoryApi = new _PatientHistoryApi()
+// NOTIFICATION
+export const NotificationTemplateApi = new _NotificationTemplateApi()
+export const NotificationApi = new _NotificationApi()
+// PATIENT ATTACHMENT
+export const PatientAttachmentApi = new _PatientAttachmentApi()
+// BACKUP
+export const BackupApi = new _BackupApi()

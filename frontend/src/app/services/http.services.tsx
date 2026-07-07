@@ -189,6 +189,19 @@ class _HttpService {
     });
   }
 
+  public async uploadWithFields(url: string, formData: FormData): Promise<any> {
+    const headers = { ...this.headers };
+    // @ts-ignore
+    delete headers['Content-Type'];
+    return this.request({
+      method: 'POST',
+      url: url,
+      params: {},
+      body: formData,
+      headers: headers,
+    });
+  }
+
   public async getImage(url: string): Promise<any> {
     const headers = { ...this.headers };
     return this.request({ method: 'GET', url: url, headers: headers });

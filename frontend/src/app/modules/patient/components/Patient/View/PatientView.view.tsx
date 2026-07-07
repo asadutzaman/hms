@@ -5,6 +5,7 @@ import EditAction from 'src/app/components/Actions/EditAction'
 import DeleteAction from 'src/app/components/Actions/DeleteAction'
 import AuditLogPanel from 'src/app/components/AuditLog/AuditLogPanel'
 import AllergyPanel from 'src/app/components/Allergy/AllergyPanel'
+import PatientAttachmentPanel from 'src/app/components/PatientAttachment/PatientAttachmentPanel'
 import PatientTimelinePanel from 'src/app/components/PatientHistory/PatientTimelinePanel'
 import {PatientApi} from 'src/app/api'
 import {PatientAction} from '../Actions/Patient.actions'
@@ -225,6 +226,9 @@ const PatientView: FC<any> = ({itemData, handleCallbackFunc}) => {
   // ── TAB: CLINICAL TIMELINE ────────────────────────────────────────────────
   const timelineTab = <PatientTimelinePanel patientId={itemData.id} />
 
+  // ── TAB: ATTACHMENTS ──────────────────────────────────────────────────────
+  const attachmentsTab = <PatientAttachmentPanel patientId={itemData.id} />
+
   // ── TAB: AUDIT LOG ────────────────────────────────────────────────────────
   const auditLogTab = (
     <AuditLogPanel
@@ -240,6 +244,7 @@ const PatientView: FC<any> = ({itemData, handleCallbackFunc}) => {
     {key: 'medical', label: 'Medical History', children: medicalTab},
     {key: 'allergies', label: 'Allergies', children: allergiesTab},
     {key: 'timeline', label: 'Clinical Timeline', children: timelineTab},
+    {key: 'attachments', label: 'Attachments', children: attachmentsTab},
     {key: 'insurance', label: 'Insurance', children: insuranceTab},
     {key: 'flags', label: 'Flags & Notes', children: flagsTab},
     {key: 'audit', label: 'Audit Log', children: auditLogTab},

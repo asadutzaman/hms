@@ -6,6 +6,7 @@ use App\Enums\StatusEnum;
 use App\Traits\Model\Uuid;
 use App\Traits\Model\Autofill;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class LabTest extends BaseModel
 {
@@ -58,4 +59,9 @@ class LabTest extends BaseModel
         'status_flag' => 1,
         'status'      => StatusEnum::ACTIVE,
     ];
+
+    public function parameters(): HasMany
+    {
+        return $this->hasMany(LabTestParameter::class, 'lab_test_id')->orderBy('sequence');
+    }
 }

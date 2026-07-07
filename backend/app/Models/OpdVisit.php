@@ -119,6 +119,16 @@ class OpdVisit extends BaseModel
         return $this->hasMany(OpdInvestigationOrder::class, 'opd_visit_id')->orderBy('ordered_at');
     }
 
+    /**
+     * Sprint 6 LIS orders — deliberately separate from investigationOrders()
+     * above, which is dead code (its Model/Validator/Resource reference DB
+     * columns that were never migrated; see project_hms_sprint6_scope memory).
+     */
+    public function labOrders(): HasMany
+    {
+        return $this->hasMany(LabOrder::class, 'opd_visit_id')->orderBy('ordered_at');
+    }
+
     public function bill(): HasOne
     {
         return $this->hasOne(OpdBill::class, 'opd_visit_id');

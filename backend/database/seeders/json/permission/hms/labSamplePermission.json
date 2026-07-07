@@ -1,0 +1,42 @@
+{
+    "resource": {
+        "permission_type": "RESOURCE",
+        "name": "lab-sample",
+        "display_name": "Lab Sample",
+        "resource_uri": "lab-sample",
+        "controller_name": "LabSampleController",
+        "server_url_prefix": "auth",
+        "component": "COMMON"
+    },
+    "scopes": [
+        {
+            "scope": "auth:lab-sample:menuAccess",
+            "display_name": "Menu Access",
+            "actions": [
+                { "http_method": "GET", "action_name": "byOrder", "uri": "/lab-sample/by-order/*" }
+            ]
+        },
+        {
+            "scope": "auth:lab-sample:list",
+            "display_name": "List",
+            "actions": [
+                { "http_method": "GET", "action_name": "byOrder", "uri": "/lab-sample/by-order/*" }
+            ]
+        },
+        {
+            "scope": "auth:lab-sample:create",
+            "display_name": "Create",
+            "actions": [
+                { "http_method": "POST", "action_name": "collect", "uri": "/lab-sample/collect" },
+                { "http_method": "POST", "action_name": "receiveByBarcode", "uri": "/lab-sample/receive-by-barcode" }
+            ]
+        },
+        {
+            "scope": "auth:lab-sample:edit",
+            "display_name": "Edit",
+            "actions": [
+                { "http_method": "POST", "action_name": "reject", "uri": "/lab-sample/*/reject" }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,41 @@
+{
+    "resource": {
+        "permission_type": "RESOURCE",
+        "name": "backup",
+        "display_name": "Database Backup",
+        "resource_uri": "backup",
+        "controller_name": "BackupController",
+        "server_url_prefix": "auth",
+        "component": "COMMON"
+    },
+    "scopes": [
+        {
+            "scope": "auth:backup:menuAccess",
+            "display_name": "Menu Access",
+            "actions": [
+                { "http_method": "GET", "action_name": "index", "uri": "/backup" }
+            ]
+        },
+        {
+            "scope": "auth:backup:list",
+            "display_name": "List",
+            "actions": [
+                { "http_method": "GET", "action_name": "index", "uri": "/backup" }
+            ]
+        },
+        {
+            "scope": "auth:backup:create",
+            "display_name": "Create",
+            "actions": [
+                { "http_method": "POST", "action_name": "run", "uri": "/backup/run" }
+            ]
+        },
+        {
+            "scope": "auth:backup:view",
+            "display_name": "View",
+            "actions": [
+                { "http_method": "GET", "action_name": "download", "uri": "/backup/*/download" }
+            ]
+        }
+    ]
+}

@@ -1565,6 +1565,7 @@ Route::prefix('api')->group(function () {
         Route::put('/{id}', [App\Http\Controllers\LabTestController::class, 'update']);
         Route::patch('/{id}', [App\Http\Controllers\LabTestController::class, 'updateFields']);
         Route::delete('/{id}', [App\Http\Controllers\LabTestController::class, 'destroy']);
+        Route::put('/{id}/parameters', [App\Http\Controllers\LabTestController::class, 'updateParameters']);
     });
 
     // WARD
@@ -1778,5 +1779,72 @@ Route::prefix('api')->group(function () {
     // PATIENT HISTORY (longitudinal EMR timeline)
     Route::group(['prefix' => 'patient-history', 'middleware' => ['restrictIp', 'authVerify']], function () {
         Route::get('/{patientId}', [App\Http\Controllers\PatientHistoryController::class, 'timeline']);
+    });
+
+    // LAB ORDER
+    Route::group(['prefix' => 'lab-order', 'middleware' => ['restrictIp', 'authVerify']], function () {
+        Route::post('/bulk', [App\Http\Controllers\LabOrderController::class, 'bulk']);
+        Route::get('/dropdown', [App\Http\Controllers\LabOrderController::class, 'dropdown']);
+        Route::get('/worklist', [App\Http\Controllers\LabOrderController::class, 'worklist']);
+        Route::get('/by-patient/{patientId}', [App\Http\Controllers\LabOrderController::class, 'byPatient']);
+        Route::get('/by-opd-visit/{opdVisitId}', [App\Http\Controllers\LabOrderController::class, 'byOpdVisit']);
+        Route::get('/by-ipd-admission/{admissionId}', [App\Http\Controllers\LabOrderController::class, 'byIpdAdmission']);
+        Route::get('/', [App\Http\Controllers\LabOrderController::class, 'index']);
+        Route::get('/{id}', [App\Http\Controllers\LabOrderController::class, 'show']);
+        Route::post('/', [App\Http\Controllers\LabOrderController::class, 'store']);
+        Route::patch('/{id}', [App\Http\Controllers\LabOrderController::class, 'updateFields']);
+        Route::post('/{id}/cancel', [App\Http\Controllers\LabOrderController::class, 'cancel']);
+        Route::get('/{id}/report-pdf', [App\Http\Controllers\LabOrderController::class, 'reportPdf']);
+        Route::post('/{id}/mark-reported', [App\Http\Controllers\LabOrderController::class, 'markReported']);
+    });
+
+    // LAB SAMPLE
+    Route::group(['prefix' => 'lab-sample', 'middleware' => ['restrictIp', 'authVerify']], function () {
+        Route::get('/by-order/{orderId}', [App\Http\Controllers\LabSampleController::class, 'byOrder']);
+        Route::post('/collect', [App\Http\Controllers\LabSampleController::class, 'collect']);
+        Route::post('/receive-by-barcode', [App\Http\Controllers\LabSampleController::class, 'receiveByBarcode']);
+        Route::post('/{id}/reject', [App\Http\Controllers\LabSampleController::class, 'reject']);
+    });
+
+    // LAB RESULT
+    Route::group(['prefix' => 'lab-result', 'middleware' => ['restrictIp', 'authVerify']], function () {
+        Route::get('/by-order-item/{orderItemId}', [App\Http\Controllers\LabResultController::class, 'byOrderItem']);
+        Route::post('/enter/{orderItemId}', [App\Http\Controllers\LabResultController::class, 'enter']);
+        Route::post('/verify/{orderItemId}', [App\Http\Controllers\LabResultController::class, 'verify']);
+    });
+
+    // NOTIFICATION TEMPLATE
+    Route::group(['prefix' => 'notification-template', 'middleware' => ['restrictIp', 'authVerify']], function () {
+        Route::post('/bulk', [App\Http\Controllers\NotificationTemplateController::class, 'bulk']);
+        Route::get('/dropdown', [App\Http\Controllers\NotificationTemplateController::class, 'dropdown']);
+        Route::get('/', [App\Http\Controllers\NotificationTemplateController::class, 'index']);
+        Route::get('/{id}', [App\Http\Controllers\NotificationTemplateController::class, 'show']);
+        Route::post('/', [App\Http\Controllers\NotificationTemplateController::class, 'store']);
+        Route::put('/{id}', [App\Http\Controllers\NotificationTemplateController::class, 'update']);
+        Route::patch('/{id}', [App\Http\Controllers\NotificationTemplateController::class, 'updateFields']);
+        Route::delete('/{id}', [App\Http\Controllers\NotificationTemplateController::class, 'destroy']);
+    });
+
+    // NOTIFICATION (in-app, per-user)
+    Route::group(['prefix' => 'notification', 'middleware' => ['restrictIp', 'authVerify']], function () {
+        Route::get('/my', [App\Http\Controllers\NotificationController::class, 'my']);
+        Route::get('/unread-count', [App\Http\Controllers\NotificationController::class, 'unreadCount']);
+        Route::patch('/read-all', [App\Http\Controllers\NotificationController::class, 'markAllRead']);
+        Route::patch('/{id}/read', [App\Http\Controllers\NotificationController::class, 'markRead']);
+    });
+
+    // PATIENT ATTACHMENT (clinical documents / scans, F-16-04)
+    Route::group(['prefix' => 'patient-attachment', 'middleware' => ['restrictIp', 'authVerify']], function () {
+        Route::get('/by-patient/{patientId}', [App\Http\Controllers\PatientAttachmentController::class, 'byPatient']);
+        Route::post('/upload', [App\Http\Controllers\PatientAttachmentController::class, 'upload']);
+        Route::get('/{id}', [App\Http\Controllers\PatientAttachmentController::class, 'show']);
+        Route::delete('/{id}', [App\Http\Controllers\PatientAttachmentController::class, 'destroy']);
+    });
+
+    // BACKUP (F-15-06 — list/run/download only; restore is CLI-only, see hms:restore)
+    Route::group(['prefix' => 'backup', 'middleware' => ['restrictIp', 'authVerify']], function () {
+        Route::get('/', [App\Http\Controllers\BackupController::class, 'index']);
+        Route::post('/run', [App\Http\Controllers\BackupController::class, 'run']);
+        Route::get('/{id}/download', [App\Http\Controllers\BackupController::class, 'download']);
     });
 });

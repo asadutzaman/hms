@@ -1,0 +1,41 @@
+{
+    "resource": {
+        "permission_type": "RESOURCE",
+        "name": "lab-result",
+        "display_name": "Lab Result",
+        "resource_uri": "lab-result",
+        "controller_name": "LabResultController",
+        "server_url_prefix": "auth",
+        "component": "COMMON"
+    },
+    "scopes": [
+        {
+            "scope": "auth:lab-result:menuAccess",
+            "display_name": "Menu Access",
+            "actions": [
+                { "http_method": "GET", "action_name": "byOrderItem", "uri": "/lab-result/by-order-item/*" }
+            ]
+        },
+        {
+            "scope": "auth:lab-result:view",
+            "display_name": "View",
+            "actions": [
+                { "http_method": "GET", "action_name": "byOrderItem", "uri": "/lab-result/by-order-item/*" }
+            ]
+        },
+        {
+            "scope": "auth:lab-result:create",
+            "display_name": "Create",
+            "actions": [
+                { "http_method": "POST", "action_name": "enter", "uri": "/lab-result/enter/*" }
+            ]
+        },
+        {
+            "scope": "auth:lab-result:edit",
+            "display_name": "Edit",
+            "actions": [
+                { "http_method": "POST", "action_name": "verify", "uri": "/lab-result/verify/*" }
+            ]
+        }
+    ]
+}

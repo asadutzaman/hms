@@ -13,6 +13,7 @@ const endpoints = {
     delete: (id: any) => `${RESOURCE_ENDPOINT}/${id}`,
     bulk: () => `${RESOURCE_ENDPOINT}/bulk`,
     dropdown: () => `${RESOURCE_ENDPOINT}/dropdown`,
+    updateParameters: (id: any) => `${RESOURCE_ENDPOINT}/${id}/parameters`,
 }
 
 export default class LabTestApi {
@@ -39,4 +40,7 @@ export default class LabTestApi {
 
     public dropdown = (params = {}, headers = {}): AxiosPromise<any> =>
         HttpService.get(endpoints.dropdown(), params, headers)
+
+    public updateParameters = (id: any, payload = {}, params = {}, headers = {}): AxiosPromise<any> =>
+        HttpService.put(endpoints.updateParameters(id), payload, params, headers)
 }

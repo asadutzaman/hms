@@ -1,0 +1,63 @@
+{
+    "resource": {
+        "permission_type": "RESOURCE",
+        "name": "lab-order",
+        "display_name": "Lab Order",
+        "resource_uri": "lab-order",
+        "controller_name": "LabOrderController",
+        "server_url_prefix": "auth",
+        "component": "COMMON"
+    },
+    "scopes": [
+        {
+            "scope": "auth:lab-order:menuAccess",
+            "display_name": "Menu Access",
+            "actions": [
+                { "http_method": "GET", "action_name": "index", "uri": "/lab-order" }
+            ]
+        },
+        {
+            "scope": "auth:lab-order:list",
+            "display_name": "List",
+            "actions": [
+                { "http_method": "GET", "action_name": "index", "uri": "/lab-order" },
+                { "http_method": "GET", "action_name": "dropdown", "uri": "/lab-order/dropdown" },
+                { "http_method": "GET", "action_name": "worklist", "uri": "/lab-order/worklist" },
+                { "http_method": "GET", "action_name": "byPatient", "uri": "/lab-order/by-patient/*" },
+                { "http_method": "GET", "action_name": "byOpdVisit", "uri": "/lab-order/by-opd-visit/*" },
+                { "http_method": "GET", "action_name": "byIpdAdmission", "uri": "/lab-order/by-ipd-admission/*" }
+            ]
+        },
+        {
+            "scope": "auth:lab-order:view",
+            "display_name": "View",
+            "actions": [
+                { "http_method": "GET", "action_name": "show", "uri": "/lab-order/*" },
+                { "http_method": "GET", "action_name": "reportPdf", "uri": "/lab-order/*/report-pdf" }
+            ]
+        },
+        {
+            "scope": "auth:lab-order:create",
+            "display_name": "Create",
+            "actions": [
+                { "http_method": "POST", "action_name": "store", "uri": "/lab-order" }
+            ]
+        },
+        {
+            "scope": "auth:lab-order:edit",
+            "display_name": "Edit",
+            "actions": [
+                { "http_method": "PATCH", "action_name": "updateFields", "uri": "/lab-order/*" },
+                { "http_method": "POST", "action_name": "cancel", "uri": "/lab-order/*/cancel" },
+                { "http_method": "POST", "action_name": "markReported", "uri": "/lab-order/*/mark-reported" }
+            ]
+        },
+        {
+            "scope": "auth:lab-order:multiSelect",
+            "display_name": "Multiple Selection",
+            "actions": [
+                { "http_method": "POST", "action_name": "bulk", "uri": "/lab-order/bulk" }
+            ]
+        }
+    ]
+}

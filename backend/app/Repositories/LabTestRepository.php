@@ -16,7 +16,7 @@ class LabTestRepository extends BaseRepository
 
     protected $oDataService;
 
-    protected $fieldSearchable = ['title', 'description'];
+    protected $fieldSearchable = ['code', 'name', 'category'];
 
     public function __construct()
     {
@@ -26,5 +26,10 @@ class LabTestRepository extends BaseRepository
     {
         $this->request      = request();
         $this->oDataService = (new ODataService())->init();
+    }
+
+    public function withParameters(int $id): LabTest
+    {
+        return $this->newQuery()->with(['parameters.referenceRanges'])->findOrFail($id);
     }
 }

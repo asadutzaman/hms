@@ -13,20 +13,28 @@ class LabTestValidator extends BaseValidator
 
     public function rules()
     {
+        $common = [
+            'category'      => ['nullable', 'string', 'max:100'],
+            'sample_type'   => ['nullable', 'string', 'max:50'],
+            'tat_hours'     => ['nullable', 'integer', 'min:0'],
+            'default_price' => ['nullable', 'numeric', 'min:0'],
+            'is_active'     => ['nullable', 'boolean'],
+            'description'   => ['nullable', 'string'],
+        ];
+
         switch ($this->request->method()) {
             case 'GET':
             case 'DELETE':
                 return [];
 
             case 'POST':
-                return [
-                    'name' => ['required'],
-                ];
+                $common['code'] = ['required', 'string', 'max:30', 'unique:lab_tests,code'];
+                $common['name'] = ['required', 'string', 'max:255'];
+                return $common;
             case 'PUT':
             case 'PATCH':
-                return [
-                    'name' => ['required'],
-                ];
+                $common['name'] = ['nullable', 'string', 'max:255'];
+                return $common;
             default:
                 break;
         }
@@ -36,22 +44,23 @@ class LabTestValidator extends BaseValidator
     {
         $messages = parent::messages();
 
-        $includesMessages = [
-            'name.required'   => 'Name is required.',
-        ];
-
-        return array_merge($messages, $includesMessages);
+        return array_merge($messages, [
+            'code.required' => 'Test code is required.',
+            'code.unique'   => 'A test with this code already exists.',
+            'name.required' => 'Test name is required.',
+        ]);
     }
 
     public function attributes()
     {
         $attributes = parent::attributes();
 
-        $includesAttributes = [
-            'name' => 'Name',
-        ];
-
-        return array_merge($attributes, $includesAttributes);
+        return array_merge($attributes, [
+            'code'          => 'Test Code',
+            'name'          => 'Test Name',
+            'sample_type'   => 'Sample Type',
+            'tat_hours'     => 'Turnaround Time (hours)',
+            'default_price' => 'Default Price',
+        ]);
     }
-
 }

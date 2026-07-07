@@ -1,0 +1,65 @@
+{
+    "resource": {
+        "permission_type": "RESOURCE",
+        "name": "lab-test",
+        "display_name": "Lab Test Catalog",
+        "resource_uri": "lab-test",
+        "controller_name": "LabTestController",
+        "server_url_prefix": "auth",
+        "component": "COMMON"
+    },
+    "scopes": [
+        {
+            "scope": "auth:lab-test:menuAccess",
+            "display_name": "Menu Access",
+            "actions": [
+                { "http_method": "GET", "action_name": "index", "uri": "/lab-test" }
+            ]
+        },
+        {
+            "scope": "auth:lab-test:list",
+            "display_name": "List",
+            "actions": [
+                { "http_method": "GET", "action_name": "index", "uri": "/lab-test" },
+                { "http_method": "GET", "action_name": "dropdown", "uri": "/lab-test/dropdown" }
+            ]
+        },
+        {
+            "scope": "auth:lab-test:view",
+            "display_name": "View",
+            "actions": [
+                { "http_method": "GET", "action_name": "show", "uri": "/lab-test/*" }
+            ]
+        },
+        {
+            "scope": "auth:lab-test:create",
+            "display_name": "Create",
+            "actions": [
+                { "http_method": "POST", "action_name": "store", "uri": "/lab-test" }
+            ]
+        },
+        {
+            "scope": "auth:lab-test:edit",
+            "display_name": "Edit",
+            "actions": [
+                { "http_method": "PUT", "action_name": "update", "uri": "/lab-test/*" },
+                { "http_method": "PATCH", "action_name": "updateFields", "uri": "/lab-test/*" },
+                { "http_method": "PUT", "action_name": "updateParameters", "uri": "/lab-test/*/parameters" }
+            ]
+        },
+        {
+            "scope": "auth:lab-test:delete",
+            "display_name": "Delete",
+            "actions": [
+                { "http_method": "DELETE", "action_name": "destroy", "uri": "/lab-test/*" }
+            ]
+        },
+        {
+            "scope": "auth:lab-test:multiSelect",
+            "display_name": "Multiple Selection",
+            "actions": [
+                { "http_method": "POST", "action_name": "bulk", "uri": "/lab-test/bulk" }
+            ]
+        }
+    ]
+}

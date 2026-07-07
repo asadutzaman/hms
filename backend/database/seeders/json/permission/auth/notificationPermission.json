@@ -1,0 +1,36 @@
+{
+    "resource": {
+        "permission_type": "RESOURCE",
+        "name": "notification",
+        "display_name": "Notification Center",
+        "resource_uri": "notification",
+        "controller_name": "NotificationController",
+        "server_url_prefix": "auth",
+        "component": "COMMON"
+    },
+    "scopes": [
+        {
+            "scope": "auth:notification:menuAccess",
+            "display_name": "Menu Access",
+            "actions": [
+                { "http_method": "GET", "action_name": "my", "uri": "/notification/my" }
+            ]
+        },
+        {
+            "scope": "auth:notification:list",
+            "display_name": "List",
+            "actions": [
+                { "http_method": "GET", "action_name": "my", "uri": "/notification/my" },
+                { "http_method": "GET", "action_name": "unreadCount", "uri": "/notification/unread-count" }
+            ]
+        },
+        {
+            "scope": "auth:notification:edit",
+            "display_name": "Edit",
+            "actions": [
+                { "http_method": "PATCH", "action_name": "markRead", "uri": "/notification/*/read" },
+                { "http_method": "PATCH", "action_name": "markAllRead", "uri": "/notification/read-all" }
+            ]
+        }
+    ]
+}

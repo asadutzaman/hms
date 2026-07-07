@@ -180,6 +180,39 @@ export const LeftSidebarMenu = [
           },
         ],
       },
+      // SYSTEM
+      {
+        type: 'item',
+        title: 'System',
+        permission: 'auth:backup:menuAccess',
+        link: { to: '/' },
+        icon: 'setting-2',
+        subParent: true,
+        subChildren: [
+          {
+            type: 'item',
+            title: 'Notification Templates',
+            permission: 'auth:notification-template:menuAccess',
+            link: {
+              to: '/admin/setting/notification-template',
+              exactMatch: true,
+              externalUrl: false,
+              openInNewTab: false,
+            },
+          },
+          {
+            type: 'item',
+            title: 'Database Backup',
+            permission: 'auth:backup:menuAccess',
+            link: {
+              to: '/admin/setting/backup',
+              exactMatch: true,
+              externalUrl: false,
+              openInNewTab: false,
+            },
+          },
+        ],
+      },
     ],
   },
 
@@ -348,17 +381,6 @@ export const LeftSidebarMenu = [
             permission: 'auth:opd:list',
             link: {
               to: '/admin/opd/display-board',
-              exactMatch: true,
-              externalUrl: false,
-              openInNewTab: false,
-            },
-          },
-          {
-            type: 'item',
-            title: 'Lab Tests',
-            permission: 'auth:opd:menuAccess',
-            link: {
-              to: '/admin/opd/lab-tests',
               exactMatch: true,
               externalUrl: false,
               openInNewTab: false,
@@ -560,6 +582,42 @@ export const LeftSidebarMenu = [
           openInNewTab: false,
         },
         icon: 'ambulance',
+        subParent: false,
+        subChildren: [],
+      },
+    ],
+  },
+
+  {
+    type: 'group',
+    title: 'Laboratory',
+    hidden: false,
+    children: [
+      {
+        type: 'item',
+        title: 'Lab Order Worklist',
+        permission: 'auth:lab-order:menuAccess',
+        link: {
+          to: '/admin/lab/lab-order',
+          exactMatch: true,
+          externalUrl: false,
+          openInNewTab: false,
+        },
+        icon: 'flask',
+        subParent: false,
+        subChildren: [],
+      },
+      {
+        type: 'item',
+        title: 'Lab Test Catalog',
+        permission: 'auth:lab-test:menuAccess',
+        link: {
+          to: '/admin/lab/lab-test',
+          exactMatch: true,
+          externalUrl: false,
+          openInNewTab: false,
+        },
+        icon: 'test-tube',
         subParent: false,
         subChildren: [],
       },

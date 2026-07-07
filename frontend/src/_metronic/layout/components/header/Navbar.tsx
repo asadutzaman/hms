@@ -1,12 +1,13 @@
 import clsx from 'clsx';
 import { KTIcon, toAbsoluteUrl } from '../../../helpers';
-import { HeaderUserMenu, ThemeModeSwitcher } from '../../../partials';
+import { HeaderUserMenu, NotificationMenu, ThemeModeSwitcher } from '../../../partials';
 import { useLayout } from '../../core';
 import SwitchOrganizationController from '../../../../app/modules/auth/components/SwitchOrganization/SwitchOrganization.controller';
 import { LanguageSelector } from 'src/app/components/Language/LanguageSelector';
-import { useContext } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { AuthContext } from 'src/app/context/auth/auth.context';
 import { useLang } from 'src/app/hooks/useLang';
+import { NotificationApi } from 'src/app/api';
 
 const itemClass = 'ms-1 ms-lg-3';
 const btnClass =
@@ -18,6 +19,13 @@ const Navbar = () => {
   const { config } = useLayout();
   const { branchName } = useContext(AuthContext);
   const { t } = useLang();
+  const [unreadCount, setUnreadCount] = useState(0);
+
+  useEffect(() => {
+    NotificationApi.unreadCount()
+      .then((res: any) => setUnreadCount(res?.data?.count ?? 0))
+      .catch(() => setUnreadCount(0));
+  }, []);
 
   return (
     <div className="app-navbar">
@@ -33,6 +41,23 @@ const Navbar = () => {
         <div className="cursor-pointer symbol">
           <LanguageSelector />
         </div>
+      </div>
+
+      <div className={clsx('app-navbar-item', itemClass)}>
+        <div
+          className={clsx('position-relative', btnClass)}
+          data-kt-menu-trigger="{default: 'click'}"
+          data-kt-menu-attach="parent"
+          data-kt-menu-placement="bottom-end"
+        >
+          <KTIcon iconName="notification" className={btnIconClass} />
+          {unreadCount > 0 && (
+            <span className="position-absolute top-0 start-100 translate-middle badge badge-circle badge-danger fs-9">
+              {unreadCount > 9 ? '9+' : unreadCount}
+            </span>
+          )}
+        </div>
+        <NotificationMenu />
       </div>
 
       <div className={clsx('app-navbar-item', itemClass)}>

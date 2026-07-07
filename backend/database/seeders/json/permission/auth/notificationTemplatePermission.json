@@ -1,0 +1,64 @@
+{
+    "resource": {
+        "permission_type": "RESOURCE",
+        "name": "notification-template",
+        "display_name": "Notification Template",
+        "resource_uri": "notification-template",
+        "controller_name": "NotificationTemplateController",
+        "server_url_prefix": "auth",
+        "component": "COMMON"
+    },
+    "scopes": [
+        {
+            "scope": "auth:notification-template:menuAccess",
+            "display_name": "Menu Access",
+            "actions": [
+                { "http_method": "GET", "action_name": "index", "uri": "/notification-template" }
+            ]
+        },
+        {
+            "scope": "auth:notification-template:list",
+            "display_name": "List",
+            "actions": [
+                { "http_method": "GET", "action_name": "index", "uri": "/notification-template" },
+                { "http_method": "GET", "action_name": "dropdown", "uri": "/notification-template/dropdown" }
+            ]
+        },
+        {
+            "scope": "auth:notification-template:view",
+            "display_name": "View",
+            "actions": [
+                { "http_method": "GET", "action_name": "show", "uri": "/notification-template/*" }
+            ]
+        },
+        {
+            "scope": "auth:notification-template:create",
+            "display_name": "Create",
+            "actions": [
+                { "http_method": "POST", "action_name": "store", "uri": "/notification-template" }
+            ]
+        },
+        {
+            "scope": "auth:notification-template:edit",
+            "display_name": "Edit",
+            "actions": [
+                { "http_method": "PUT", "action_name": "update", "uri": "/notification-template/*" },
+                { "http_method": "PATCH", "action_name": "updateFields", "uri": "/notification-template/*" }
+            ]
+        },
+        {
+            "scope": "auth:notification-template:delete",
+            "display_name": "Delete",
+            "actions": [
+                { "http_method": "DELETE", "action_name": "destroy", "uri": "/notification-template/*" }
+            ]
+        },
+        {
+            "scope": "auth:notification-template:multiSelect",
+            "display_name": "Multiple Selection",
+            "actions": [
+                { "http_method": "POST", "action_name": "bulk", "uri": "/notification-template/bulk" }
+            ]
+        }
+    ]
+}

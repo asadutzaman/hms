@@ -34,6 +34,7 @@ import {DateTimeUtils} from 'src/app/utils'
 import {IpdAdmissionApi, IpdBillApi, IpdAdvancePaymentApi, BedApi} from 'src/app/api'
 import AuditLogPanel from 'src/app/components/AuditLog/AuditLogPanel'
 import NursingTab from '../Tabs/NursingTab'
+import LabOrdersPanel from 'src/app/components/LabOrder/LabOrdersPanel'
 import MedicationTab from '../Tabs/MedicationTab'
 import DischargeTab from '../Tabs/DischargeTab'
 import WardSelect from 'src/app/components/Dropdown/WardSelect'
@@ -593,6 +594,17 @@ const IpdAdmissionView: FC<any> = ({itemData, handleCallbackFunc}) => {
     {key: 'nursing', label: 'Nursing', children: <NursingTab admissionId={itemData.id} />},
     {key: 'medications', label: 'Medications (MAR)', children: <MedicationTab admissionId={itemData.id} />},
     {key: 'billing', label: 'Billing', children: billingTab},
+    {
+      key: 'lab-orders',
+      label: 'Lab Orders',
+      children: (
+        <LabOrdersPanel
+          patientId={itemData.patient_id}
+          patientLabel={itemData.patient_name}
+          ipdAdmissionId={itemData.id}
+        />
+      ),
+    },
     {
       key: 'discharge',
       label: 'Discharge',

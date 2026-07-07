@@ -16,6 +16,8 @@ class DatabaseSeeder extends Seeder
         $this->call([
             AuthSeeder::class,
             LabTestSeeder::class,
+            LabTestParameterSeeder::class,
+            NotificationTemplateSeeder::class,
             OpdDemoSeeder::class,
         ]);
     }

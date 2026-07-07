@@ -50,6 +50,7 @@ import PrescriptionDispensePanel from 'src/app/modules/pharmacy/components/Presc
 import DrugSelect from 'src/app/components/Dropdown/DrugSelect'
 import Icd10Select from 'src/app/components/Dropdown/Icd10Select'
 import ReferralProcedurePanel from '../Tabs/ReferralProcedurePanel'
+import LabOrdersPanel from 'src/app/components/LabOrder/LabOrdersPanel'
 import {usePermissionContext} from 'src/app/hooks/context/usePermissionContext'
 
 const {TextArea} = Input
@@ -874,6 +875,17 @@ const OpdVisitView: FC<any> = ({itemData, handleCallbackFunc}) => {
       ),
     },
     {key: 'billing', label: 'Billing', children: billingTab},
+    {
+      key: 'lab-orders',
+      label: 'Lab Orders',
+      children: (
+        <LabOrdersPanel
+          patientId={itemData.patient_id}
+          patientLabel={itemData.patient_name}
+          opdVisitId={itemData.id}
+        />
+      ),
+    },
     {
       key: 'audit',
       label: 'Audit Log',

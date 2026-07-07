@@ -159,4 +159,9 @@ class IpdAdmission extends BaseModel
     {
         return $this->hasOne(IpdDeathCertificate::class, 'admission_id');
     }
+
+    public function labOrders(): HasMany
+    {
+        return $this->hasMany(LabOrder::class, 'ipd_admission_id')->orderByDesc('ordered_at');
+    }
 }
