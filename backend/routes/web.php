@@ -1211,6 +1211,13 @@ Route::prefix('api')->group(function () {
         Route::get('/daily-collection-export', [App\Http\Controllers\Report\DailyCollectionReportController::class, 'getDailyCollectionExport']);
         Route::get('/controlled-drug-register', [App\Http\Controllers\Report\ControlledDrugRegisterReportController::class, 'getRegisterList']);
         Route::get('/item-low-stock-alerts', [App\Http\Controllers\Report\ItemLowStockReportController::class, 'alerts']);
+
+        // Sprint 8 — MIS / Analytics
+        Route::get('/mis-dashboard', [App\Http\Controllers\Report\MisExecutiveDashboardController::class, 'getDashboard']);
+        Route::get('/occupancy-revenue', [App\Http\Controllers\Report\OccupancyRevenueReportController::class, 'getReport']);
+        Route::get('/doctor-productivity', [App\Http\Controllers\Report\DoctorProductivityReportController::class, 'getReport']);
+        Route::get('/pharmacy-sales-analytics', [App\Http\Controllers\Report\PharmacySalesAnalyticsController::class, 'getReport']);
+        Route::get('/lab-revenue-analytics', [App\Http\Controllers\Report\LabRevenueAnalyticsController::class, 'getReport']);
     });
 
     // EXPORT
@@ -1631,6 +1638,7 @@ Route::prefix('api')->group(function () {
         Route::post('/{id}/discount/approve', [App\Http\Controllers\IpdBillController::class, 'approveDiscount']);
         Route::post('/{id}/discount/reject', [App\Http\Controllers\IpdBillController::class, 'rejectDiscount']);
         Route::post('/{id}/apply-package', [App\Http\Controllers\IpdBillController::class, 'applyPackage']);
+        Route::get('/{id}/receipt-pdf', [App\Http\Controllers\IpdBillController::class, 'receiptPdf']);
     });
 
     // IPD BILL ITEM
@@ -1973,5 +1981,42 @@ Route::prefix('api')->group(function () {
         Route::post('/save-draft/{orderItemId}', [App\Http\Controllers\RadiologyReportController::class, 'saveDraft']);
         Route::post('/finalize/{orderItemId}', [App\Http\Controllers\RadiologyReportController::class, 'finalize']);
         Route::post('/verify/{orderItemId}', [App\Http\Controllers\RadiologyReportController::class, 'verify']);
+    });
+
+    // PATIENT PORTAL (Sprint 8, F-17-xx) — a fully separate auth stack from
+    // staff (patientAuthVerify, not authVerify — see project_hms_sprint8_scope
+    // memory). The two auth entry points (request-otp/verify-otp) are
+    // deliberately unauthenticated; everything else requires a patient token.
+    Route::group(['prefix' => 'patient-portal', 'middleware' => ['restrictIp']], function () {
+        Route::group(['prefix' => 'auth'], function () {
+            Route::post('/request-otp', [App\Http\Controllers\PatientPortal\PatientAuthController::class, 'requestOtp']);
+            Route::post('/verify-otp', [App\Http\Controllers\PatientPortal\PatientAuthController::class, 'verifyOtp']);
+
+            Route::group(['middleware' => ['patientAuthVerify']], function () {
+                Route::post('/logout', [App\Http\Controllers\PatientPortal\PatientAuthController::class, 'logout']);
+                Route::get('/me', [App\Http\Controllers\PatientPortal\PatientAuthController::class, 'me']);
+                Route::patch('/profile', [App\Http\Controllers\PatientPortal\PatientAuthController::class, 'updateProfile']);
+            });
+        });
+
+        Route::group(['middleware' => ['patientAuthVerify']], function () {
+            Route::get('/prescriptions', [App\Http\Controllers\PatientPortal\PatientPortalPrescriptionController::class, 'index']);
+            Route::get('/prescriptions/{id}/pdf', [App\Http\Controllers\PatientPortal\PatientPortalPrescriptionController::class, 'pdf']);
+
+            Route::get('/lab-reports', [App\Http\Controllers\PatientPortal\PatientPortalLabReportController::class, 'index']);
+            Route::get('/lab-reports/{id}/pdf', [App\Http\Controllers\PatientPortal\PatientPortalLabReportController::class, 'pdf']);
+
+            Route::get('/bills/opd', [App\Http\Controllers\PatientPortal\PatientPortalBillController::class, 'opdBills']);
+            Route::get('/bills/ipd', [App\Http\Controllers\PatientPortal\PatientPortalBillController::class, 'ipdBills']);
+            Route::get('/bills/opd/{id}/pdf', [App\Http\Controllers\PatientPortal\PatientPortalBillController::class, 'opdBillPdf']);
+            Route::get('/bills/ipd/{id}/pdf', [App\Http\Controllers\PatientPortal\PatientPortalBillController::class, 'ipdBillPdf']);
+
+            Route::get('/appointments/available-slots', [App\Http\Controllers\PatientPortal\PatientPortalAppointmentController::class, 'availableSlots']);
+            Route::get('/appointments', [App\Http\Controllers\PatientPortal\PatientPortalAppointmentController::class, 'index']);
+            Route::post('/appointments', [App\Http\Controllers\PatientPortal\PatientPortalAppointmentController::class, 'store']);
+            Route::post('/appointments/{id}/cancel', [App\Http\Controllers\PatientPortal\PatientPortalAppointmentController::class, 'cancel']);
+
+            Route::get('/timeline', [App\Http\Controllers\PatientPortal\PatientPortalTimelineController::class, 'myTimeline']);
+        });
     });
 });

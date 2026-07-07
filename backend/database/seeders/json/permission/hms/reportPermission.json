@@ -19,6 +19,41 @@
                     "uri": "/hms/report/daily-collection"
                 }
             ]
+        },
+        {
+            "scope": "auth:mis-dashboard-report:menuAccess",
+            "display_name": "MIS Executive Dashboard",
+            "actions": [
+                { "http_method": "GET", "action_name": "getDashboard", "uri": "/report/mis-dashboard" }
+            ]
+        },
+        {
+            "scope": "auth:occupancy-revenue-report:menuAccess",
+            "display_name": "Occupancy & Revenue Report",
+            "actions": [
+                { "http_method": "GET", "action_name": "getReport", "uri": "/report/occupancy-revenue" }
+            ]
+        },
+        {
+            "scope": "auth:doctor-productivity-report:menuAccess",
+            "display_name": "Doctor Revenue & Productivity Report",
+            "actions": [
+                { "http_method": "GET", "action_name": "getReport", "uri": "/report/doctor-productivity" }
+            ]
+        },
+        {
+            "scope": "auth:pharmacy-sales-analytics-report:menuAccess",
+            "display_name": "Pharmacy Sales Analytics",
+            "actions": [
+                { "http_method": "GET", "action_name": "getReport", "uri": "/report/pharmacy-sales-analytics" }
+            ]
+        },
+        {
+            "scope": "auth:lab-revenue-analytics-report:menuAccess",
+            "display_name": "Lab Revenue Analytics",
+            "actions": [
+                { "http_method": "GET", "action_name": "getReport", "uri": "/report/lab-revenue-analytics" }
+            ]
         }
     ]
 }

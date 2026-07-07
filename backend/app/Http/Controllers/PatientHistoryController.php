@@ -8,21 +8,29 @@ use App\Models\OpdVisit;
 use App\Traits\Controller\RestControllerTrait;
 use Carbon\Carbon;
 use Exception;
+use Illuminate\Http\Request;
 
 class PatientHistoryController extends Controller
 {
     use RestControllerTrait;
 
     /**
-     * GET /patient-history/{patientId} — a single unified, chronologically
-     * sorted timeline across OPD visits, IPD admissions, and ER visits for
-     * one patient (F-16-01). Each entry carries a `type` discriminator plus
-     * whatever detail that visit type needs (diagnoses/Rx/labs for OPD;
-     * vitals/medications/bill for IPD; triage for ER) so the frontend can
-     * render one feed without knowing which system it came from.
+     * GET /patient-history/{patientId}?type=opd_visit|ipd_admission|er_visit
+     * — a single unified, chronologically sorted timeline across OPD
+     * visits, IPD admissions, and ER visits for one patient (F-16-01).
+     * Each entry carries a `type` discriminator plus whatever detail that
+     * visit type needs (diagnoses/Rx/labs for OPD; vitals/medications/bill
+     * for IPD; triage for ER) so the frontend can render one feed without
+     * knowing which system it came from. Optional `type` filter (F-16-05)
+     * applies last so it works identically for the staff-facing call here
+     * and the patient-portal's self-scoped call
+     * (PatientPortalTimelineController::myTimeline), which delegates
+     * straight into this method.
      */
-    public function timeline(int $patientId)
+    public function timeline(int $patientId, ?Request $request = null)
     {
+        $request = $request ?? request();
+
         try {
             $opdVisits = OpdVisit::query()
                 ->where('patient_id', $patientId)
@@ -93,6 +101,11 @@ class PatientHistoryController extends Controller
                 ->merge($erVisits)
                 ->sortByDesc(fn ($entry) => Carbon::parse($entry['date'])->timestamp)
                 ->values();
+
+            $typeFilter = $request->query('type');
+            if (!empty($typeFilter)) {
+                $timeline = $timeline->where('type', $typeFilter)->values();
+            }
 
             return $this->successResponse(['timeline' => $timeline]);
         } catch (Exception $e) {

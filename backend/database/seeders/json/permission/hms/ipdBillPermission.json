@@ -29,7 +29,8 @@
             "scope": "auth:ipd-bill:view",
             "display_name": "View",
             "actions": [
-                { "http_method": "GET", "action_name": "show", "uri": "/ipd-bill/*" }
+                { "http_method": "GET", "action_name": "show", "uri": "/ipd-bill/*" },
+                { "http_method": "GET", "action_name": "receiptPdf", "uri": "/ipd-bill/*/receipt-pdf" }
             ]
         },
         {

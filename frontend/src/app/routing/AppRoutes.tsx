@@ -12,6 +12,7 @@ import { ErrorsPage } from '../modules/errors/ErrorsPage'
 import { App } from '../App'
 import ProtectedAdminRoute from './NavigationRoute/ProtectedAdminRoute'
 import AuthRoutes from '../modules/auth/AuthRoutes'
+import PatientPortalRoutes from '../modules/patientPortal/PatientPortalRoutes'
 
 /**
  * Base URL of the website.
@@ -32,6 +33,7 @@ const AppRoutes: FC = () => {
                     </Route>
 
                     <Route path='auth/*' element={<AuthRoutes />} />
+                    <Route path='patient-portal/*' element={<PatientPortalRoutes />} />
                     <Route path='error/*' element={<ErrorsPage />} />
                 </Route>
             </Routes>

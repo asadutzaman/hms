@@ -37,6 +37,16 @@ const endpoints = {
   getControlledDrugRegisterReport: () => `${RESOURCE_ENDPOINT}/controlled-drug-register`,
   // REORDER ALERTS
   getItemLowStockAlerts: () => `${RESOURCE_ENDPOINT}/item-low-stock-alerts`,
+  // MIS EXECUTIVE DASHBOARD (Sprint 8, F-14-02)
+  getMisDashboard: () => `${RESOURCE_ENDPOINT}/mis-dashboard`,
+  // OCCUPANCY & REVENUE (Sprint 8, F-14-03)
+  getOccupancyRevenueReport: () => `${RESOURCE_ENDPOINT}/occupancy-revenue`,
+  // DOCTOR PRODUCTIVITY (Sprint 8, F-14-05)
+  getDoctorProductivityReport: () => `${RESOURCE_ENDPOINT}/doctor-productivity`,
+  // PHARMACY SALES ANALYTICS (Sprint 8, F-14-07)
+  getPharmacySalesAnalyticsReport: () => `${RESOURCE_ENDPOINT}/pharmacy-sales-analytics`,
+  // LAB REVENUE ANALYTICS (Sprint 8, F-14-08)
+  getLabRevenueAnalyticsReport: () => `${RESOURCE_ENDPOINT}/lab-revenue-analytics`,
 }
 
 export default class ReportScmApi {
@@ -132,6 +142,31 @@ export default class ReportScmApi {
   // REORDER ALERTS
   public getItemLowStockAlerts = (params = {}, headers = {}): AxiosPromise<any> => {
     const url = endpoints.getItemLowStockAlerts()
+    return HttpService.get(url, params, headers)
+  }
+  // MIS EXECUTIVE DASHBOARD
+  public getMisDashboard = (params = {}, headers = {}): AxiosPromise<any> => {
+    const url = endpoints.getMisDashboard()
+    return HttpService.get(url, params, headers)
+  }
+  // OCCUPANCY & REVENUE
+  public getOccupancyRevenueReport = (params = {}, headers = {}): AxiosPromise<any> => {
+    const url = endpoints.getOccupancyRevenueReport()
+    return HttpService.get(url, params, headers)
+  }
+  // DOCTOR PRODUCTIVITY
+  public getDoctorProductivityReport = (params = {}, headers = {}): AxiosPromise<any> => {
+    const url = endpoints.getDoctorProductivityReport()
+    return HttpService.get(url, params, headers)
+  }
+  // PHARMACY SALES ANALYTICS
+  public getPharmacySalesAnalyticsReport = (params = {}, headers = {}): AxiosPromise<any> => {
+    const url = endpoints.getPharmacySalesAnalyticsReport()
+    return HttpService.get(url, params, headers)
+  }
+  // LAB REVENUE ANALYTICS
+  public getLabRevenueAnalyticsReport = (params = {}, headers = {}): AxiosPromise<any> => {
+    const url = endpoints.getLabRevenueAnalyticsReport()
     return HttpService.get(url, params, headers)
   }
 }

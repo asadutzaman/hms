@@ -52,6 +52,13 @@ class NotificationTemplateSeeder extends Seeder
                 'subject_template' => 'Appointment Today — {{appointment_time}}',
                 'body_template' => "Dear {{patient_name}},\n\nThis is a reminder that your appointment ({{appointment_no}}) is today at {{appointment_time}}. Please arrive on time.\n\nThank you.",
             ],
+            [
+                'key' => 'patient_login_otp.email',
+                'name' => 'Patient Portal Login OTP — Email',
+                'channel' => 'email',
+                'subject_template' => 'Your login code: {{otp_code}}',
+                'body_template' => "Dear {{patient_name}},\n\nYour login code for the patient portal is: {{otp_code}}\n\nThis code expires in {{expires_in}} minutes. If you did not request this, please ignore this email.",
+            ],
         ];
 
         foreach ($rows as $r) {

@@ -1,12 +1,19 @@
 import React from 'react';
 import { Route, Routes } from 'react-router';
-// import ExampleReportListController from './Example/List/ExampleReportList.controller'
-// import ExampleReportListController from './components/Example/List/ExampleReportList.controller'
+import MisDashboardListController from './MisDashboard/List/MisDashboardList.controller';
+import OccupancyRevenueListController from './OccupancyRevenue/List/OccupancyRevenueList.controller';
+import DoctorProductivityListController from './DoctorProductivity/List/DoctorProductivityList.controller';
+import PharmacySalesAnalyticsListController from './PharmacySalesAnalytics/List/PharmacySalesAnalyticsList.controller';
+import LabRevenueAnalyticsListController from './LabRevenueAnalytics/List/LabRevenueAnalyticsList.controller';
 
 const ReportRoutes = () => {
   return (
     <Routes>
-      {/* <Route path={"/scm/item-stock"} element={<ExampleReportListController />} /> */}
+      <Route path={'/mis-dashboard'} element={<MisDashboardListController />} />
+      <Route path={'/occupancy-revenue'} element={<OccupancyRevenueListController />} />
+      <Route path={'/doctor-productivity'} element={<DoctorProductivityListController />} />
+      <Route path={'/pharmacy-sales-analytics'} element={<PharmacySalesAnalyticsListController />} />
+      <Route path={'/lab-revenue-analytics'} element={<LabRevenueAnalyticsListController />} />
     </Routes>
   );
 };

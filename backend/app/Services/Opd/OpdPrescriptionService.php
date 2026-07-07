@@ -195,7 +195,7 @@ class OpdPrescriptionService
     /**
      * Render the prescription as a downloadable PDF, and mark it printed.
      */
-    public function renderPdf(int $prescriptionId, int $actorId)
+    public function renderPdf(int $prescriptionId, int $actorId, bool $markAsPrinted = true)
     {
         $prescription = $this->rxRepo->newQuery()
             ->with(['items', 'visit.patient', 'visit.doctor', 'visit.department'])
@@ -225,7 +225,9 @@ class OpdPrescriptionService
             'departmentName' => $departmentName,
         ]);
 
-        $this->markPrinted($prescription->id, $actorId);
+        if ($markAsPrinted) {
+            $this->markPrinted($prescription->id, $actorId);
+        }
 
         return $pdf->stream("prescription-{$visit->opd_no}.pdf");
     }

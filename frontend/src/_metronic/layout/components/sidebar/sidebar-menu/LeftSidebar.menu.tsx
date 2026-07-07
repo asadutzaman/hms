@@ -977,6 +977,78 @@ export const LeftSidebarMenu = [
     ],
   },
 
+  {
+    type: 'group',
+    title: 'MIS & Analytics',
+    hidden: false,
+    children: [
+      {
+        type: 'item',
+        title: 'Reports',
+        link: { to: '/' },
+        icon: 'chart-simple',
+        subParent: true,
+        subChildren: [
+          {
+            type: 'item',
+            title: 'Executive Dashboard',
+            permission: 'auth:mis-dashboard-report:menuAccess',
+            link: {
+              to: '/admin/report/mis-dashboard',
+              exactMatch: true,
+              externalUrl: false,
+              openInNewTab: false,
+            },
+          },
+          {
+            type: 'item',
+            title: 'Occupancy & Revenue',
+            permission: 'auth:occupancy-revenue-report:menuAccess',
+            link: {
+              to: '/admin/report/occupancy-revenue',
+              exactMatch: true,
+              externalUrl: false,
+              openInNewTab: false,
+            },
+          },
+          {
+            type: 'item',
+            title: 'Doctor Productivity',
+            permission: 'auth:doctor-productivity-report:menuAccess',
+            link: {
+              to: '/admin/report/doctor-productivity',
+              exactMatch: true,
+              externalUrl: false,
+              openInNewTab: false,
+            },
+          },
+          {
+            type: 'item',
+            title: 'Pharmacy Sales Analytics',
+            permission: 'auth:pharmacy-sales-analytics-report:menuAccess',
+            link: {
+              to: '/admin/report/pharmacy-sales-analytics',
+              exactMatch: true,
+              externalUrl: false,
+              openInNewTab: false,
+            },
+          },
+          {
+            type: 'item',
+            title: 'Lab Revenue Analytics',
+            permission: 'auth:lab-revenue-analytics-report:menuAccess',
+            link: {
+              to: '/admin/report/lab-revenue-analytics',
+              exactMatch: true,
+              externalUrl: false,
+              openInNewTab: false,
+            },
+          },
+        ],
+      },
+    ],
+  },
+
   // {
   //   type: 'group',
   //   title: 'Inventory',

@@ -124,6 +124,7 @@ import _RadiologyTestApi from './Radiology/RadiologyTest.api'
 import _RadiologyReportTemplateApi from './Radiology/RadiologyReportTemplate.api'
 import _RadiologyOrderApi from './Radiology/RadiologyOrder.api'
 import _RadiologyReportApi from './Radiology/RadiologyReport.api'
+import _PatientPortalApi from './PatientPortal/PatientPortal.api'
 
 export const FackApi = new _FackApi()
 export const OauthApi = new _OauthApi()
@@ -251,3 +252,5 @@ export const RadiologyTestApi = new _RadiologyTestApi()
 export const RadiologyReportTemplateApi = new _RadiologyReportTemplateApi()
 export const RadiologyOrderApi = new _RadiologyOrderApi()
 export const RadiologyReportApi = new _RadiologyReportApi()
+// PATIENT PORTAL (Sprint 8, F-17-xx)
+export const PatientPortalApi = new _PatientPortalApi()

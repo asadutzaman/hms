@@ -20,6 +20,7 @@ use App\Repositories\IpdAdvancePaymentRepository;
 use App\Repositories\IpdBillItemRepository;
 use App\Repositories\IpdBillPaymentRepository;
 use App\Repositories\IpdBillRepository;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
@@ -525,6 +526,23 @@ class IpdBillService
         }
 
         return $bill->balance <= 0 || in_array($bill->bill_status, [IpdBillStatusEnum::PAID, IpdBillStatusEnum::WAIVED], true);
+    }
+
+    /* ---------- Receipt PDF (F-17-04 — IPD had no PDF generation at all before Sprint 8) ---------- */
+
+    public function renderReceiptPdf(int $billId)
+    {
+        $bill = $this->billRepository->newQuery()
+            ->with(['items', 'payments', 'admission.patient', 'admission.ward', 'admission.bed', 'admission.attendingDoctor'])
+            ->find($billId);
+
+        if (!$bill) {
+            throw new ApiException('Bill not found.', 404);
+        }
+
+        $pdf = Pdf::loadView('pdf.ipd_receipt', ['bill' => $bill]);
+
+        return $pdf->stream("receipt-{$bill->bill_no}.pdf");
     }
 
     /* ---------- Totals ---------- */

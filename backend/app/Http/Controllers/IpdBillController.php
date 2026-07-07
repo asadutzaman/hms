@@ -294,4 +294,14 @@ class IpdBillController extends Controller
             $this->errorResponse($e->getMessage());
         }
     }
+
+    /** GET /ipd-bill/{id}/receipt-pdf (F-17-04 gap-fill — IPD had no receipt PDF before Sprint 8) */
+    public function receiptPdf($id)
+    {
+        try {
+            return app(IpdBillService::class)->renderReceiptPdf((int) $id);
+        } catch (Exception $e) {
+            $this->errorResponse($e->getMessage());
+        }
+    }
 }
