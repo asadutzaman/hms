@@ -8,6 +8,7 @@ class OpdBillItemTypeEnum extends BaseEnum
     const PRESCRIPTION  = 'prescription';
     const INVESTIGATION = 'investigation';
     const PACKAGE       = 'package';
+    const INSURANCE_ADJUSTMENT = 'insurance_adjustment';
     const OTHER         = 'other';
 
     public static $valueMap = [
@@ -15,6 +16,7 @@ class OpdBillItemTypeEnum extends BaseEnum
         self::PRESCRIPTION  => 'Prescription',
         self::INVESTIGATION => 'Investigation',
         self::PACKAGE       => 'Package',
+        self::INSURANCE_ADJUSTMENT => 'Insurance Adjustment',
         self::OTHER         => 'Other',
     ];
 

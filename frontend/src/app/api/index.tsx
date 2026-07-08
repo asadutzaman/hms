@@ -56,6 +56,17 @@ import _EmployeeApi from './Company/Employee.api'
 // PATIENT
 import _PatientApi from './Patient/Patient.api'
 import _PatientAllergyApi from './Patient/PatientAllergy.api'
+import _PatientChronicConditionApi from './Patient/PatientChronicCondition.api'
+import _TheatreApi from './Ot/Theatre.api'
+import _OtBookingApi from './Ot/OtBooking.api'
+import _SurgeryNoteApi from './Ot/SurgeryNote.api'
+import _AnaesthesiaRecordApi from './Ot/AnaesthesiaRecord.api'
+import _InsuranceClaimSettlementApi from './Insurance/InsuranceClaimSettlement.api'
+import _ShiftApi from './Hr/Shift.api'
+import _LeaveTypeApi from './Hr/LeaveType.api'
+import _AttendanceRecordApi from './Hr/AttendanceRecord.api'
+import _LeaveRequestApi from './Hr/LeaveRequest.api'
+import _LeaveBalanceApi from './Hr/LeaveBalance.api'
 // APPOINTMENT
 import _AppointmentApi from './Appointment/Appointment.api'
 import _DoctorScheduleApi from './DoctorSchedule/DoctorSchedule.api'
@@ -183,6 +194,20 @@ export const ReportInvApi = new _ReportInvApi()
 // PATIENT
 export const PatientApi = new _PatientApi()
 export const PatientAllergyApi = new _PatientAllergyApi()
+export const PatientChronicConditionApi = new _PatientChronicConditionApi()
+// SURGERY & OT (Sprint 9, F-09-xx)
+export const TheatreApi = new _TheatreApi()
+export const OtBookingApi = new _OtBookingApi()
+export const SurgeryNoteApi = new _SurgeryNoteApi()
+export const AnaesthesiaRecordApi = new _AnaesthesiaRecordApi()
+// INSURANCE CLAIM SETTLEMENT (Sprint 9, F-20-05)
+export const InsuranceClaimSettlementApi = new _InsuranceClaimSettlementApi()
+// HR ATTENDANCE & LEAVE (Sprint 9, F-13-02/03)
+export const ShiftApi = new _ShiftApi()
+export const LeaveTypeApi = new _LeaveTypeApi()
+export const AttendanceRecordApi = new _AttendanceRecordApi()
+export const LeaveRequestApi = new _LeaveRequestApi()
+export const LeaveBalanceApi = new _LeaveBalanceApi()
 // COMPANY
 export const EmployeeApi = new _EmployeeApi()
 // APPOINTMENT

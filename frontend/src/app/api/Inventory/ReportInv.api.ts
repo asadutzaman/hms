@@ -47,6 +47,8 @@ const endpoints = {
   getPharmacySalesAnalyticsReport: () => `${RESOURCE_ENDPOINT}/pharmacy-sales-analytics`,
   // LAB REVENUE ANALYTICS (Sprint 8, F-14-08)
   getLabRevenueAnalyticsReport: () => `${RESOURCE_ENDPOINT}/lab-revenue-analytics`,
+  // ATTENDANCE (Sprint 9, F-13-02)
+  getAttendanceReport: () => `${RESOURCE_ENDPOINT}/attendance`,
 }
 
 export default class ReportScmApi {
@@ -167,6 +169,11 @@ export default class ReportScmApi {
   // LAB REVENUE ANALYTICS
   public getLabRevenueAnalyticsReport = (params = {}, headers = {}): AxiosPromise<any> => {
     const url = endpoints.getLabRevenueAnalyticsReport()
+    return HttpService.get(url, params, headers)
+  }
+  // ATTENDANCE
+  public getAttendanceReport = (params = {}, headers = {}): AxiosPromise<any> => {
+    const url = endpoints.getAttendanceReport()
     return HttpService.get(url, params, headers)
   }
 }

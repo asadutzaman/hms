@@ -11,6 +11,7 @@ class IpdBillItemTypeEnum extends BaseEnum
     const INVESTIGATION = 'investigation';
     const PHARMACY      = 'pharmacy';
     const PACKAGE       = 'package';
+    const INSURANCE_ADJUSTMENT = 'insurance_adjustment';
     const OTHER         = 'other';
 
     public static $valueMap = [
@@ -21,6 +22,7 @@ class IpdBillItemTypeEnum extends BaseEnum
         self::INVESTIGATION => 'Investigation',
         self::PHARMACY      => 'Pharmacy',
         self::PACKAGE       => 'Package',
+        self::INSURANCE_ADJUSTMENT => 'Insurance Adjustment',
         self::OTHER         => 'Other',
     ];
 

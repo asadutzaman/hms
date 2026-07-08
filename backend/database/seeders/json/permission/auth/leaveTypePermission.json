@@ -1,0 +1,64 @@
+{
+    "resource": {
+        "permission_type": "RESOURCE",
+        "name": "leave-type",
+        "display_name": "Leave Type",
+        "resource_uri": "leave-type",
+        "controller_name": "LeaveTypeController",
+        "server_url_prefix": "auth",
+        "component": "COMMON"
+    },
+    "scopes": [
+        {
+            "scope": "auth:leave-type:menuAccess",
+            "display_name": "Menu Access",
+            "actions": [
+                { "http_method": "GET", "action_name": "index", "uri": "/leave-type" }
+            ]
+        },
+        {
+            "scope": "auth:leave-type:list",
+            "display_name": "List",
+            "actions": [
+                { "http_method": "GET", "action_name": "index", "uri": "/leave-type" },
+                { "http_method": "GET", "action_name": "dropdown", "uri": "/leave-type/dropdown" }
+            ]
+        },
+        {
+            "scope": "auth:leave-type:view",
+            "display_name": "View",
+            "actions": [
+                { "http_method": "GET", "action_name": "show", "uri": "/leave-type/*" }
+            ]
+        },
+        {
+            "scope": "auth:leave-type:create",
+            "display_name": "Create",
+            "actions": [
+                { "http_method": "POST", "action_name": "store", "uri": "/leave-type" }
+            ]
+        },
+        {
+            "scope": "auth:leave-type:edit",
+            "display_name": "Edit",
+            "actions": [
+                { "http_method": "PUT", "action_name": "update", "uri": "/leave-type/*" },
+                { "http_method": "PATCH", "action_name": "updateFields", "uri": "/leave-type/*" }
+            ]
+        },
+        {
+            "scope": "auth:leave-type:delete",
+            "display_name": "Delete",
+            "actions": [
+                { "http_method": "DELETE", "action_name": "destroy", "uri": "/leave-type/*" }
+            ]
+        },
+        {
+            "scope": "auth:leave-type:multiSelect",
+            "display_name": "Multiple Selection",
+            "actions": [
+                { "http_method": "POST", "action_name": "bulk", "uri": "/leave-type/bulk" }
+            ]
+        }
+    ]
+}

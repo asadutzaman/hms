@@ -1,0 +1,37 @@
+{
+    "resource": {
+        "permission_type": "RESOURCE",
+        "name": "attendance-record",
+        "display_name": "Attendance",
+        "resource_uri": "attendance-record",
+        "controller_name": "AttendanceRecordController",
+        "server_url_prefix": "auth",
+        "component": "COMMON"
+    },
+    "scopes": [
+        {
+            "scope": "auth:attendance-record:menuAccess",
+            "display_name": "Menu Access",
+            "actions": [
+                { "http_method": "GET", "action_name": "forEmployee", "uri": "/attendance-record/employee/*" }
+            ]
+        },
+        {
+            "scope": "auth:attendance-record:list",
+            "display_name": "List",
+            "actions": [
+                { "http_method": "GET", "action_name": "forEmployee", "uri": "/attendance-record/employee/*" }
+            ]
+        },
+        {
+            "scope": "auth:attendance-record:create",
+            "display_name": "Create",
+            "actions": [
+                { "http_method": "POST", "action_name": "checkIn", "uri": "/attendance-record/check-in" },
+                { "http_method": "POST", "action_name": "checkOut", "uri": "/attendance-record/check-out" },
+                { "http_method": "POST", "action_name": "manualEntry", "uri": "/attendance-record/manual-entry" },
+                { "http_method": "POST", "action_name": "sync", "uri": "/attendance-record/sync" }
+            ]
+        }
+    ]
+}

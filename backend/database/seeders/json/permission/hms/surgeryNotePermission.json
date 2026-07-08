@@ -1,0 +1,32 @@
+{
+    "resource": {
+        "permission_type": "RESOURCE",
+        "name": "surgery-note",
+        "display_name": "Surgery Note & WHO Safety Checklist",
+        "resource_uri": "surgery-note",
+        "controller_name": "SurgeryNoteController",
+        "server_url_prefix": "auth",
+        "component": "COMMON"
+    },
+    "scopes": [
+        {
+            "scope": "auth:surgery-note:view",
+            "display_name": "View",
+            "actions": [
+                { "http_method": "GET", "action_name": "show", "uri": "/surgery-note/booking/*" }
+            ]
+        },
+        {
+            "scope": "auth:surgery-note:edit",
+            "display_name": "Edit",
+            "actions": [
+                { "http_method": "POST", "action_name": "savePreOp", "uri": "/surgery-note/booking/*/pre-op" },
+                { "http_method": "POST", "action_name": "signIn", "uri": "/surgery-note/booking/*/who-sign-in" },
+                { "http_method": "POST", "action_name": "timeOut", "uri": "/surgery-note/booking/*/who-time-out" },
+                { "http_method": "POST", "action_name": "signOut", "uri": "/surgery-note/booking/*/who-sign-out" },
+                { "http_method": "POST", "action_name": "saveOpNotes", "uri": "/surgery-note/booking/*/op-notes" },
+                { "http_method": "POST", "action_name": "surgeonSign", "uri": "/surgery-note/booking/*/surgeon-sign" }
+            ]
+        }
+    ]
+}

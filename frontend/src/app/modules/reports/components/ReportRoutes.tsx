@@ -5,6 +5,7 @@ import OccupancyRevenueListController from './OccupancyRevenue/List/OccupancyRev
 import DoctorProductivityListController from './DoctorProductivity/List/DoctorProductivityList.controller';
 import PharmacySalesAnalyticsListController from './PharmacySalesAnalytics/List/PharmacySalesAnalyticsList.controller';
 import LabRevenueAnalyticsListController from './LabRevenueAnalytics/List/LabRevenueAnalyticsList.controller';
+import AttendanceReportListController from './AttendanceReport/List/AttendanceReportList.controller';
 
 const ReportRoutes = () => {
   return (
@@ -14,6 +15,7 @@ const ReportRoutes = () => {
       <Route path={'/doctor-productivity'} element={<DoctorProductivityListController />} />
       <Route path={'/pharmacy-sales-analytics'} element={<PharmacySalesAnalyticsListController />} />
       <Route path={'/lab-revenue-analytics'} element={<LabRevenueAnalyticsListController />} />
+      <Route path={'/attendance'} element={<AttendanceReportListController />} />
     </Routes>
   );
 };

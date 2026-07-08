@@ -56,6 +56,27 @@ class InsuranceClaimController extends Controller
         }
     }
 
+    /** GET /insurance-claim/tracking — F-20-04 status-bucket summary + aging list. */
+    public function tracking()
+    {
+        try {
+            $summary = $this->repository->trackingSummary();
+            return $this->successResponse($summary);
+        } catch (Exception $e) {
+            $this->errorResponse($e->getMessage());
+        }
+    }
+
+    /** GET /insurance-claim/{id}/form-pdf — F-20-03 claim document bundle. */
+    public function formPdf($id)
+    {
+        try {
+            return app(InsuranceClaimService::class)->renderClaimPdf((int) $id);
+        } catch (Exception $e) {
+            $this->errorResponse($e->getMessage());
+        }
+    }
+
     /** GET /insurance-claim/by-bill?billable_type=opd_bill&billable_id=1 */
     public function byBill(Request $request)
     {
@@ -113,13 +134,21 @@ class InsuranceClaimController extends Controller
         }
     }
 
-    /** POST /insurance-claim/{id}/status — Body: { claim_status, approved_amount?, notes? } */
+    /**
+     * POST /insurance-claim/{id}/status — Body: { claim_status, approved_amount?, notes? }.
+     * 'settled' is deliberately excluded — Sprint 9 (F-20-05) requires
+     * settlement to always go through InsuranceClaimSettlementController's
+     * settle() endpoint, which creates the bank-receipt-matched settlement
+     * record (and bills the patient for any shortfall) atomically with the
+     * status transition. Allowing 'settled' here too would let a claim end
+     * up in 'settled' status with no settlement record behind it.
+     */
     public function updateStatus(Request $request, $id)
     {
         DB::beginTransaction();
         try {
             $request->validate([
-                'claim_status'    => ['required', Rule::in(['under_review', 'approved', 'partially_approved', 'rejected', 'settled'])],
+                'claim_status'    => ['required', Rule::in(['under_review', 'approved', 'partially_approved', 'rejected'])],
                 'approved_amount' => ['nullable', 'numeric', 'min:0'],
                 'notes'           => ['nullable', 'string'],
             ]);

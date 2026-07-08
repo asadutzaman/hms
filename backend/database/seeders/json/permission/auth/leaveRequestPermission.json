@@ -1,0 +1,42 @@
+{
+    "resource": {
+        "permission_type": "RESOURCE",
+        "name": "leave-request",
+        "display_name": "Leave Request",
+        "resource_uri": "leave-request",
+        "controller_name": "LeaveRequestController",
+        "server_url_prefix": "auth",
+        "component": "COMMON"
+    },
+    "scopes": [
+        {
+            "scope": "auth:leave-request:menuAccess",
+            "display_name": "Menu Access",
+            "actions": [
+                { "http_method": "GET", "action_name": "index", "uri": "/leave-request" }
+            ]
+        },
+        {
+            "scope": "auth:leave-request:list",
+            "display_name": "List",
+            "actions": [
+                { "http_method": "GET", "action_name": "index", "uri": "/leave-request" },
+                { "http_method": "GET", "action_name": "forEmployee", "uri": "/leave-request/employee/*" }
+            ]
+        },
+        {
+            "scope": "auth:leave-request:view",
+            "display_name": "View",
+            "actions": [
+                { "http_method": "GET", "action_name": "show", "uri": "/leave-request/*" }
+            ]
+        },
+        {
+            "scope": "auth:leave-request:create",
+            "display_name": "Create",
+            "actions": [
+                { "http_method": "POST", "action_name": "store", "uri": "/leave-request" }
+            ]
+        }
+    ]
+}

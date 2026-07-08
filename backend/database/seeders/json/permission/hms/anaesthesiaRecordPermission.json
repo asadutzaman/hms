@@ -1,0 +1,35 @@
+{
+    "resource": {
+        "permission_type": "RESOURCE",
+        "name": "anaesthesia-record",
+        "display_name": "Anaesthesia Record",
+        "resource_uri": "anaesthesia-record",
+        "controller_name": "AnaesthesiaRecordController",
+        "server_url_prefix": "auth",
+        "component": "COMMON"
+    },
+    "scopes": [
+        {
+            "scope": "auth:anaesthesia-record:view",
+            "display_name": "View",
+            "actions": [
+                { "http_method": "GET", "action_name": "show", "uri": "/anaesthesia-record/booking/*" }
+            ]
+        },
+        {
+            "scope": "auth:anaesthesia-record:create",
+            "display_name": "Create",
+            "actions": [
+                { "http_method": "POST", "action_name": "store", "uri": "/anaesthesia-record/booking/*" }
+            ]
+        },
+        {
+            "scope": "auth:anaesthesia-record:edit",
+            "display_name": "Edit",
+            "actions": [
+                { "http_method": "POST", "action_name": "addEntry", "uri": "/anaesthesia-record/*/entry" },
+                { "http_method": "POST", "action_name": "end", "uri": "/anaesthesia-record/*/end" }
+            ]
+        }
+    ]
+}

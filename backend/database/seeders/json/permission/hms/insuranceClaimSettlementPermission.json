@@ -1,0 +1,27 @@
+{
+    "resource": {
+        "permission_type": "RESOURCE",
+        "name": "insurance-claim-settlement",
+        "display_name": "Insurance Claim Settlement",
+        "resource_uri": "insurance-claim-settlement",
+        "controller_name": "InsuranceClaimSettlementController",
+        "server_url_prefix": "auth",
+        "component": "COMMON"
+    },
+    "scopes": [
+        {
+            "scope": "auth:insurance-claim-settlement:list",
+            "display_name": "List",
+            "actions": [
+                { "http_method": "GET", "action_name": "byClaim", "uri": "/insurance-claim-settlement/by-claim/*" }
+            ]
+        },
+        {
+            "scope": "auth:insurance-claim-settlement:create",
+            "display_name": "Create",
+            "actions": [
+                { "http_method": "POST", "action_name": "store", "uri": "/insurance-claim-settlement" }
+            ]
+        }
+    ]
+}

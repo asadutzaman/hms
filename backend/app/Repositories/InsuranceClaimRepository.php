@@ -52,4 +52,36 @@ class InsuranceClaimRepository extends BaseRepository
             ->orderByDesc('created_at')
             ->get();
     }
+
+    /**
+     * F-20-04 Claim Tracking & Status — status-bucket counts/amounts plus a
+     * "days in current status" aging list for anything not yet settled or
+     * rejected (terminal statuses). Status transitions here are always
+     * manual entry (InsuranceClaimService::updateStatus) — no real insurer
+     * portal to sync from exists, so "or manual entry" is the only half of
+     * the acceptance criteria this app can actually satisfy.
+     */
+    public function trackingSummary(): array
+    {
+        $counts = $this->newQuery()
+            ->selectRaw('claim_status, COUNT(*) as claim_count, COALESCE(SUM(claimed_amount), 0) as total_claimed, COALESCE(SUM(approved_amount), 0) as total_approved')
+            ->groupBy('claim_status')
+            ->get();
+
+        $pending = $this->newQuery()
+            ->with(['patient', 'insuranceCompany'])
+            ->whereNotIn('claim_status', ['settled', 'rejected'])
+            ->orderBy('submitted_at')
+            ->get()
+            ->map(function ($claim) {
+                $referenceDate = $claim->submitted_at ?? $claim->created_at;
+                $claim->days_in_status = $referenceDate ? now()->diffInDays($referenceDate) : null;
+                return $claim;
+            });
+
+        return [
+            'status_counts' => $counts,
+            'pending_claims' => $pending,
+        ];
+    }
 }

@@ -1,0 +1,41 @@
+{
+    "resource": {
+        "permission_type": "RESOURCE",
+        "name": "patient-chronic-condition",
+        "display_name": "Chronic Disease Management",
+        "resource_uri": "patient-chronic-condition",
+        "controller_name": "PatientChronicConditionController",
+        "server_url_prefix": "auth",
+        "component": "COMMON"
+    },
+    "scopes": [
+        {
+            "scope": "auth:patient-chronic-condition:list",
+            "display_name": "List",
+            "actions": [
+                { "http_method": "GET", "action_name": "byPatient", "uri": "/patient-chronic-condition/by-patient/*" }
+            ]
+        },
+        {
+            "scope": "auth:patient-chronic-condition:view",
+            "display_name": "View",
+            "actions": [
+                { "http_method": "GET", "action_name": "show", "uri": "/patient-chronic-condition/*" }
+            ]
+        },
+        {
+            "scope": "auth:patient-chronic-condition:create",
+            "display_name": "Create",
+            "actions": [
+                { "http_method": "POST", "action_name": "store", "uri": "/patient-chronic-condition" }
+            ]
+        },
+        {
+            "scope": "auth:patient-chronic-condition:edit",
+            "display_name": "Edit",
+            "actions": [
+                { "http_method": "POST", "action_name": "addReading", "uri": "/patient-chronic-condition/*/reading" }
+            ]
+        }
+    ]
+}

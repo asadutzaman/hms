@@ -14,6 +14,8 @@ const endpoints = {
     byBill: () => `${RESOURCE_ENDPOINT}/by-bill`,
     submit: (id: any) => `${RESOURCE_ENDPOINT}/${id}/submit`,
     updateStatus: (id: any) => `${RESOURCE_ENDPOINT}/${id}/status`,
+    tracking: () => `${RESOURCE_ENDPOINT}/tracking`,
+    formPdf: (id: any) => `${RESOURCE_ENDPOINT}/${id}/form-pdf`,
 }
 
 export default class InsuranceClaimApi {
@@ -41,4 +43,9 @@ export default class InsuranceClaimApi {
 
     public updateStatus = (id: any, payload = {}): AxiosPromise<any> =>
         HttpService.post(endpoints.updateStatus(id), payload)
+
+    public tracking = (): AxiosPromise<any> => HttpService.get(endpoints.tracking())
+
+    public downloadFormPdf = (id: any): AxiosPromise<any> =>
+        HttpService.get(endpoints.formPdf(id), {}, {}, 'blob')
 }

@@ -54,6 +54,13 @@
             "actions": [
                 { "http_method": "GET", "action_name": "getReport", "uri": "/report/lab-revenue-analytics" }
             ]
+        },
+        {
+            "scope": "auth:attendance-report:menuAccess",
+            "display_name": "Attendance Report",
+            "actions": [
+                { "http_method": "GET", "action_name": "getReport", "uri": "/report/attendance" }
+            ]
         }
     ]
 }

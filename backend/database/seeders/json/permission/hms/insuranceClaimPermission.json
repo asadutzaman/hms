@@ -23,14 +23,16 @@
                 { "http_method": "GET", "action_name": "index", "uri": "/insurance-claim" },
                 { "http_method": "GET", "action_name": "dropdown", "uri": "/insurance-claim/dropdown" },
                 { "http_method": "GET", "action_name": "byPatient", "uri": "/insurance-claim/by-patient/*" },
-                { "http_method": "GET", "action_name": "byBill", "uri": "/insurance-claim/by-bill" }
+                { "http_method": "GET", "action_name": "byBill", "uri": "/insurance-claim/by-bill" },
+                { "http_method": "GET", "action_name": "tracking", "uri": "/insurance-claim/tracking" }
             ]
         },
         {
             "scope": "auth:insurance-claim:view",
             "display_name": "View",
             "actions": [
-                { "http_method": "GET", "action_name": "show", "uri": "/insurance-claim/*" }
+                { "http_method": "GET", "action_name": "show", "uri": "/insurance-claim/*" },
+                { "http_method": "GET", "action_name": "formPdf", "uri": "/insurance-claim/*/form-pdf" }
             ]
         },
         {

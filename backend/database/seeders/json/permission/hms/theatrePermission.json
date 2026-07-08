@@ -1,0 +1,64 @@
+{
+    "resource": {
+        "permission_type": "RESOURCE",
+        "name": "theatre",
+        "display_name": "Theatre",
+        "resource_uri": "theatre",
+        "controller_name": "TheatreController",
+        "server_url_prefix": "auth",
+        "component": "COMMON"
+    },
+    "scopes": [
+        {
+            "scope": "auth:theatre:menuAccess",
+            "display_name": "Menu Access",
+            "actions": [
+                { "http_method": "GET", "action_name": "index", "uri": "/theatre" }
+            ]
+        },
+        {
+            "scope": "auth:theatre:list",
+            "display_name": "List",
+            "actions": [
+                { "http_method": "GET", "action_name": "index", "uri": "/theatre" },
+                { "http_method": "GET", "action_name": "dropdown", "uri": "/theatre/dropdown" }
+            ]
+        },
+        {
+            "scope": "auth:theatre:view",
+            "display_name": "View",
+            "actions": [
+                { "http_method": "GET", "action_name": "show", "uri": "/theatre/*" }
+            ]
+        },
+        {
+            "scope": "auth:theatre:create",
+            "display_name": "Create",
+            "actions": [
+                { "http_method": "POST", "action_name": "store", "uri": "/theatre" }
+            ]
+        },
+        {
+            "scope": "auth:theatre:edit",
+            "display_name": "Edit",
+            "actions": [
+                { "http_method": "PUT", "action_name": "update", "uri": "/theatre/*" },
+                { "http_method": "PATCH", "action_name": "updateFields", "uri": "/theatre/*" }
+            ]
+        },
+        {
+            "scope": "auth:theatre:delete",
+            "display_name": "Delete",
+            "actions": [
+                { "http_method": "DELETE", "action_name": "destroy", "uri": "/theatre/*" }
+            ]
+        },
+        {
+            "scope": "auth:theatre:multiSelect",
+            "display_name": "Multiple Selection",
+            "actions": [
+                { "http_method": "POST", "action_name": "bulk", "uri": "/theatre/bulk" }
+            ]
+        }
+    ]
+}

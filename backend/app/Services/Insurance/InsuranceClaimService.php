@@ -8,6 +8,7 @@ use App\Models\InsuranceClaim;
 use App\Models\IpdBill;
 use App\Models\OpdBill;
 use App\Repositories\InsuranceClaimRepository;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
@@ -102,6 +103,32 @@ class InsuranceClaimService
             'ipd_bill' => IpdBill::query()->findOrFail($billableId),
             default => throw new ApiException('Unknown billable type.', 422),
         };
+    }
+
+    /**
+     * F-20-03 "Claim document bundle created; submitted per insurer format"
+     * — satisfied by a single unified claim + bill PDF (not a per-insurer
+     * template engine, out of scope for this sprint's SP budget — same
+     * scope decision as Sprint 7's TPA billing PDF).
+     */
+    public function renderClaimPdf(int $claimId)
+    {
+        $claim = InsuranceClaim::query()
+            ->with(['patient', 'insuranceCompany', 'insuranceScheme', 'preAuthorization'])
+            ->find($claimId);
+
+        if (!$claim) {
+            throw new ApiException('Claim not found.', 404);
+        }
+
+        $bill = match ($claim->billable_type) {
+            'opd_bill' => OpdBill::query()->with('items')->find($claim->billable_id),
+            'ipd_bill' => IpdBill::query()->with('items')->find($claim->billable_id),
+            default => null,
+        };
+
+        $pdf = Pdf::loadView('pdf.insurance_claim', ['claim' => $claim, 'bill' => $bill]);
+        return $pdf->stream("claim-{$claim->claim_no}.pdf");
     }
 
     protected function generateClaimNo(string $dateYmd): string

@@ -1218,6 +1218,9 @@ Route::prefix('api')->group(function () {
         Route::get('/doctor-productivity', [App\Http\Controllers\Report\DoctorProductivityReportController::class, 'getReport']);
         Route::get('/pharmacy-sales-analytics', [App\Http\Controllers\Report\PharmacySalesAnalyticsController::class, 'getReport']);
         Route::get('/lab-revenue-analytics', [App\Http\Controllers\Report\LabRevenueAnalyticsController::class, 'getReport']);
+
+        // Sprint 9 — Attendance shift-wise report
+        Route::get('/attendance', [App\Http\Controllers\Report\AttendanceReportController::class, 'getReport']);
     });
 
     // EXPORT
@@ -1897,17 +1900,25 @@ Route::prefix('api')->group(function () {
         Route::post('/{id}/reject', [App\Http\Controllers\PreAuthorizationController::class, 'reject']);
     });
 
-    // INSURANCE CLAIM / TPA BILLING (F-08-05)
+    // INSURANCE CLAIM / TPA BILLING (F-08-05, extended Sprint 9 F-20-03/04)
     Route::group(['prefix' => 'insurance-claim', 'middleware' => ['restrictIp', 'authVerify']], function () {
         Route::post('/bulk', [App\Http\Controllers\InsuranceClaimController::class, 'bulk']);
         Route::get('/dropdown', [App\Http\Controllers\InsuranceClaimController::class, 'dropdown']);
+        Route::get('/tracking', [App\Http\Controllers\InsuranceClaimController::class, 'tracking']);
         Route::get('/by-patient/{patientId}', [App\Http\Controllers\InsuranceClaimController::class, 'byPatient']);
         Route::get('/by-bill', [App\Http\Controllers\InsuranceClaimController::class, 'byBill']);
         Route::get('/', [App\Http\Controllers\InsuranceClaimController::class, 'index']);
         Route::get('/{id}', [App\Http\Controllers\InsuranceClaimController::class, 'show']);
+        Route::get('/{id}/form-pdf', [App\Http\Controllers\InsuranceClaimController::class, 'formPdf']);
         Route::post('/', [App\Http\Controllers\InsuranceClaimController::class, 'store']);
         Route::post('/{id}/submit', [App\Http\Controllers\InsuranceClaimController::class, 'submit']);
         Route::post('/{id}/status', [App\Http\Controllers\InsuranceClaimController::class, 'updateStatus']);
+    });
+
+    // INSURANCE CLAIM SETTLEMENT (Sprint 9, F-20-05)
+    Route::group(['prefix' => 'insurance-claim-settlement', 'middleware' => ['restrictIp', 'authVerify']], function () {
+        Route::get('/by-claim/{claimId}', [App\Http\Controllers\InsuranceClaimSettlementController::class, 'byClaim']);
+        Route::post('/', [App\Http\Controllers\InsuranceClaimSettlementController::class, 'store']);
     });
 
     // BILLING PACKAGE (F-08-06)
@@ -1981,6 +1992,104 @@ Route::prefix('api')->group(function () {
         Route::post('/save-draft/{orderItemId}', [App\Http\Controllers\RadiologyReportController::class, 'saveDraft']);
         Route::post('/finalize/{orderItemId}', [App\Http\Controllers\RadiologyReportController::class, 'finalize']);
         Route::post('/verify/{orderItemId}', [App\Http\Controllers\RadiologyReportController::class, 'verify']);
+    });
+
+    // THEATRE MASTER (Sprint 9, F-09-01)
+    Route::group(['prefix' => 'theatre', 'middleware' => ['restrictIp', 'authVerify']], function () {
+        Route::post('/bulk', [App\Http\Controllers\TheatreController::class, 'bulk']);
+        Route::get('/dropdown', [App\Http\Controllers\TheatreController::class, 'dropdown']);
+        Route::get('/', [App\Http\Controllers\TheatreController::class, 'index']);
+        Route::get('/{id}', [App\Http\Controllers\TheatreController::class, 'show']);
+        Route::post('/', [App\Http\Controllers\TheatreController::class, 'store']);
+        Route::put('/{id}', [App\Http\Controllers\TheatreController::class, 'update']);
+        Route::patch('/{id}', [App\Http\Controllers\TheatreController::class, 'updateFields']);
+        Route::delete('/{id}', [App\Http\Controllers\TheatreController::class, 'destroy']);
+    });
+
+    // OT BOOKING (Sprint 9, F-09-01)
+    Route::group(['prefix' => 'ot-booking', 'middleware' => ['restrictIp', 'authVerify']], function () {
+        Route::get('/theatre-schedule', [App\Http\Controllers\OtBookingController::class, 'theatreSchedule']);
+        Route::get('/', [App\Http\Controllers\OtBookingController::class, 'index']);
+        Route::get('/{id}', [App\Http\Controllers\OtBookingController::class, 'show']);
+        Route::post('/', [App\Http\Controllers\OtBookingController::class, 'store']);
+        Route::patch('/{id}/reschedule', [App\Http\Controllers\OtBookingController::class, 'reschedule']);
+        Route::post('/{id}/cancel', [App\Http\Controllers\OtBookingController::class, 'cancel']);
+        Route::post('/{id}/start', [App\Http\Controllers\OtBookingController::class, 'start']);
+        Route::post('/{id}/complete', [App\Http\Controllers\OtBookingController::class, 'complete']);
+    });
+
+    // SURGERY NOTE & WHO SAFETY CHECKLIST (Sprint 9, F-09-02)
+    Route::group(['prefix' => 'surgery-note', 'middleware' => ['restrictIp', 'authVerify']], function () {
+        Route::get('/booking/{otBookingId}', [App\Http\Controllers\SurgeryNoteController::class, 'show']);
+        Route::post('/booking/{otBookingId}/pre-op', [App\Http\Controllers\SurgeryNoteController::class, 'savePreOp']);
+        Route::post('/booking/{otBookingId}/who-sign-in', [App\Http\Controllers\SurgeryNoteController::class, 'signIn']);
+        Route::post('/booking/{otBookingId}/who-time-out', [App\Http\Controllers\SurgeryNoteController::class, 'timeOut']);
+        Route::post('/booking/{otBookingId}/who-sign-out', [App\Http\Controllers\SurgeryNoteController::class, 'signOut']);
+        Route::post('/booking/{otBookingId}/op-notes', [App\Http\Controllers\SurgeryNoteController::class, 'saveOpNotes']);
+        Route::post('/booking/{otBookingId}/surgeon-sign', [App\Http\Controllers\SurgeryNoteController::class, 'surgeonSign']);
+    });
+
+    // ANAESTHESIA RECORD (Sprint 9, F-09-03)
+    Route::group(['prefix' => 'anaesthesia-record', 'middleware' => ['restrictIp', 'authVerify']], function () {
+        Route::get('/booking/{otBookingId}', [App\Http\Controllers\AnaesthesiaRecordController::class, 'show']);
+        Route::post('/booking/{otBookingId}', [App\Http\Controllers\AnaesthesiaRecordController::class, 'store']);
+        Route::post('/{id}/entry', [App\Http\Controllers\AnaesthesiaRecordController::class, 'addEntry']);
+        Route::post('/{id}/end', [App\Http\Controllers\AnaesthesiaRecordController::class, 'end']);
+    });
+
+    // SHIFT MASTER (Sprint 9, F-13-02)
+    Route::group(['prefix' => 'shift', 'middleware' => ['restrictIp', 'authVerify']], function () {
+        Route::post('/bulk', [App\Http\Controllers\ShiftController::class, 'bulk']);
+        Route::get('/dropdown', [App\Http\Controllers\ShiftController::class, 'dropdown']);
+        Route::get('/', [App\Http\Controllers\ShiftController::class, 'index']);
+        Route::get('/{id}', [App\Http\Controllers\ShiftController::class, 'show']);
+        Route::post('/', [App\Http\Controllers\ShiftController::class, 'store']);
+        Route::put('/{id}', [App\Http\Controllers\ShiftController::class, 'update']);
+        Route::patch('/{id}', [App\Http\Controllers\ShiftController::class, 'updateFields']);
+        Route::delete('/{id}', [App\Http\Controllers\ShiftController::class, 'destroy']);
+    });
+
+    // ATTENDANCE (Sprint 9, F-13-02)
+    Route::group(['prefix' => 'attendance-record', 'middleware' => ['restrictIp', 'authVerify']], function () {
+        Route::get('/employee/{employeeId}', [App\Http\Controllers\AttendanceRecordController::class, 'forEmployee']);
+        Route::post('/check-in', [App\Http\Controllers\AttendanceRecordController::class, 'checkIn']);
+        Route::post('/check-out', [App\Http\Controllers\AttendanceRecordController::class, 'checkOut']);
+        Route::post('/manual-entry', [App\Http\Controllers\AttendanceRecordController::class, 'manualEntry']);
+        Route::post('/sync', [App\Http\Controllers\AttendanceRecordController::class, 'sync']);
+    });
+
+    // LEAVE TYPE MASTER (Sprint 9, F-13-03)
+    Route::group(['prefix' => 'leave-type', 'middleware' => ['restrictIp', 'authVerify']], function () {
+        Route::post('/bulk', [App\Http\Controllers\LeaveTypeController::class, 'bulk']);
+        Route::get('/dropdown', [App\Http\Controllers\LeaveTypeController::class, 'dropdown']);
+        Route::get('/', [App\Http\Controllers\LeaveTypeController::class, 'index']);
+        Route::get('/{id}', [App\Http\Controllers\LeaveTypeController::class, 'show']);
+        Route::post('/', [App\Http\Controllers\LeaveTypeController::class, 'store']);
+        Route::put('/{id}', [App\Http\Controllers\LeaveTypeController::class, 'update']);
+        Route::patch('/{id}', [App\Http\Controllers\LeaveTypeController::class, 'updateFields']);
+        Route::delete('/{id}', [App\Http\Controllers\LeaveTypeController::class, 'destroy']);
+    });
+
+    // LEAVE REQUEST (Sprint 9, F-13-03) — approve/reject via generic /workflow-transition
+    Route::group(['prefix' => 'leave-request', 'middleware' => ['restrictIp', 'authVerify']], function () {
+        Route::get('/employee/{employeeId}', [App\Http\Controllers\LeaveRequestController::class, 'forEmployee']);
+        Route::get('/', [App\Http\Controllers\LeaveRequestController::class, 'index']);
+        Route::get('/{id}', [App\Http\Controllers\LeaveRequestController::class, 'show']);
+        Route::post('/', [App\Http\Controllers\LeaveRequestController::class, 'store']);
+    });
+
+    // LEAVE BALANCE (Sprint 9, F-13-03)
+    Route::group(['prefix' => 'leave-balance', 'middleware' => ['restrictIp', 'authVerify']], function () {
+        Route::get('/employee/{employeeId}', [App\Http\Controllers\LeaveBalanceController::class, 'forEmployee']);
+        Route::post('/allocate', [App\Http\Controllers\LeaveBalanceController::class, 'allocate']);
+    });
+
+    // CHRONIC DISEASE MANAGEMENT (Sprint 9, F-16-03)
+    Route::group(['prefix' => 'patient-chronic-condition', 'middleware' => ['restrictIp', 'authVerify']], function () {
+        Route::get('/by-patient/{patientId}', [App\Http\Controllers\PatientChronicConditionController::class, 'byPatient']);
+        Route::get('/{id}', [App\Http\Controllers\PatientChronicConditionController::class, 'show']);
+        Route::post('/', [App\Http\Controllers\PatientChronicConditionController::class, 'store']);
+        Route::post('/{id}/reading', [App\Http\Controllers\PatientChronicConditionController::class, 'addReading']);
     });
 
     // PATIENT PORTAL (Sprint 8, F-17-xx) — a fully separate auth stack from

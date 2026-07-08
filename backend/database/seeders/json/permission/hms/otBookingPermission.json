@@ -1,0 +1,52 @@
+{
+    "resource": {
+        "permission_type": "RESOURCE",
+        "name": "ot-booking",
+        "display_name": "OT Booking",
+        "resource_uri": "ot-booking",
+        "controller_name": "OtBookingController",
+        "server_url_prefix": "auth",
+        "component": "COMMON"
+    },
+    "scopes": [
+        {
+            "scope": "auth:ot-booking:menuAccess",
+            "display_name": "Menu Access",
+            "actions": [
+                { "http_method": "GET", "action_name": "index", "uri": "/ot-booking" }
+            ]
+        },
+        {
+            "scope": "auth:ot-booking:list",
+            "display_name": "List",
+            "actions": [
+                { "http_method": "GET", "action_name": "index", "uri": "/ot-booking" },
+                { "http_method": "GET", "action_name": "theatreSchedule", "uri": "/ot-booking/theatre-schedule" }
+            ]
+        },
+        {
+            "scope": "auth:ot-booking:view",
+            "display_name": "View",
+            "actions": [
+                { "http_method": "GET", "action_name": "show", "uri": "/ot-booking/*" }
+            ]
+        },
+        {
+            "scope": "auth:ot-booking:create",
+            "display_name": "Create",
+            "actions": [
+                { "http_method": "POST", "action_name": "store", "uri": "/ot-booking" }
+            ]
+        },
+        {
+            "scope": "auth:ot-booking:edit",
+            "display_name": "Edit",
+            "actions": [
+                { "http_method": "PATCH", "action_name": "reschedule", "uri": "/ot-booking/*/reschedule" },
+                { "http_method": "POST", "action_name": "cancel", "uri": "/ot-booking/*/cancel" },
+                { "http_method": "POST", "action_name": "start", "uri": "/ot-booking/*/start" },
+                { "http_method": "POST", "action_name": "complete", "uri": "/ot-booking/*/complete" }
+            ]
+        }
+    ]
+}

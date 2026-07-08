@@ -1,0 +1,27 @@
+{
+    "resource": {
+        "permission_type": "RESOURCE",
+        "name": "leave-balance",
+        "display_name": "Leave Balance",
+        "resource_uri": "leave-balance",
+        "controller_name": "LeaveBalanceController",
+        "server_url_prefix": "auth",
+        "component": "COMMON"
+    },
+    "scopes": [
+        {
+            "scope": "auth:leave-balance:list",
+            "display_name": "List",
+            "actions": [
+                { "http_method": "GET", "action_name": "forEmployee", "uri": "/leave-balance/employee/*" }
+            ]
+        },
+        {
+            "scope": "auth:leave-balance:edit",
+            "display_name": "Edit",
+            "actions": [
+                { "http_method": "POST", "action_name": "allocate", "uri": "/leave-balance/allocate" }
+            ]
+        }
+    ]
+}
