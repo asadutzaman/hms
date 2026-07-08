@@ -144,7 +144,16 @@ class OpdDemoSeeder extends Seeder
         // 9. Generate the bill. The repo is idempotent and will auto-transition
         //    completed -> billed when auto_bill=true.
         // -------------------------------------------------------------------------
-        $bill = app(OpdBillService::class)->generate($visit->id, $this->actorId, ['auto_bill' => true]);
+        // A walk-in visit has no appointment_id, so resolveConsultationFee()
+        // yields 0 and the prescription/investigation items don't carry a
+        // unit_price either (model/migration drift) -- add an explicit
+        // consultation-fee line so the bill has a non-zero total to pay.
+        $bill = app(OpdBillService::class)->generate($visit->id, $this->actorId, [
+            'auto_bill' => true,
+            'items' => [
+                ['item_type' => 'consultation', 'description' => 'Doctor consultation fee', 'quantity' => 1, 'unit_price' => 800],
+            ],
+        ]);
         $visit->refresh();
         $this->command->info(sprintf(
             '[OpdDemoSeeder] Bill %s generated, total=%.2f, visit status=%s',
@@ -157,19 +166,21 @@ class OpdDemoSeeder extends Seeder
         // 10. Record a full cash payment. The repo will recompute paid / balance
         //     and set status = paid.
         // -------------------------------------------------------------------------
-        $bill = app(OpdBillService::class)->recordPayment(
-            $bill->id,
-            [
-                'opd_bill_id'    => $bill->id,
-                'payment_method' => 'cash',
-                'amount'         => (float) $bill->total,
-                'paid_at'        => now(),
-                'reference_no'   => 'DEMO-CASH-001',
-                'notes'          => 'Full payment at counter (demo seed)',
-            ],
-            $this->receptionistId,
-        );
-        $visit->refresh();
+        if ((float) $bill->total > 0) {
+            $bill = app(OpdBillService::class)->recordPayment(
+                $bill->id,
+                [
+                    'opd_bill_id'    => $bill->id,
+                    'payment_method' => 'cash',
+                    'amount'         => (float) $bill->total,
+                    'paid_at'        => now(),
+                    'reference_no'   => 'DEMO-CASH-001',
+                    'notes'          => 'Full payment at counter (demo seed)',
+                ],
+                $this->receptionistId,
+            );
+            $visit->refresh();
+        }
         $this->command->info(sprintf(
             '[OpdDemoSeeder] Payment recorded: bill %s status=%s, visit status=%s',
             $bill->bill_no,
@@ -216,10 +227,15 @@ class OpdDemoSeeder extends Seeder
         $this->actorId = $doctor->id;
 
         // --- Doctor employee record -----------------------------------------
+        // Keyed by employee_id (stable natural key), not user_id: AuthSeeder
+        // truncates `users` on every full db:seed run, so a doctor's user_id
+        // is not a safe idempotency key across runs (it would otherwise crash
+        // with a duplicate employee_id when a since-truncated user's id is
+        // coincidentally reused by an unrelated employee row).
         $employee = Employee::query()->updateOrCreate(
-            ['user_id' => $doctor->id],
+            ['employee_id' => 'EMP-DOC-001'],
             [
-                'employee_id'   => 'EMP-DOC-001',
+                'user_id'       => $doctor->id,
                 'name_en'       => 'Dr. Demo Doctor',
                 'gender'        => 'male',
                 'mobile'        => '+8801700000001',
@@ -364,21 +380,21 @@ class OpdDemoSeeder extends Seeder
 
     private function captureVitals(OpdVisit $visit): void
     {
-        // Migration columns: systolic, diastolic, pulse, temperature, spo2,
-        // weight, height, bmi. Model $fillable uses different names so we
-        // forceCreate() directly.
+        // A later migration (align_opd_vitals_columns_with_model) renamed these
+        // columns to match the model (bp_systolic, temperature_c, etc.) after
+        // this seeder was originally written.
         $vital = OpdVital::query()->forceCreate([
             'opd_visit_id'  => $visit->id,
             'patient_id'    => $visit->patient_id,
             'recorded_by'   => $this->receptionistId,
             'recorded_at'   => now(),
-            'systolic'      => 128,
-            'diastolic'     => 82,
-            'pulse'         => 92,
-            'temperature'   => 38.4,
-            'spo2'          => 97,
-            'weight'        => 68.5,
-            'height'        => 168.0,
+            'bp_systolic'   => 128,
+            'bp_diastolic'  => 82,
+            'pulse_bpm'     => 92,
+            'temperature_c' => 38.4,
+            'spo2_pct'      => 97,
+            'weight_kg'     => 68.5,
+            'height_cm'     => 168.0,
             'bmi'           => round(68.5 / (1.68 * 1.68), 2),
             'notes'         => 'Mild fever; otherwise stable.',
             'created_by'    => $this->receptionistId,
@@ -416,16 +432,19 @@ class OpdDemoSeeder extends Seeder
 
     private function createDiagnoses(OpdVisit $visit): void
     {
-        // Migration columns for opd_diagnoses: icd10_code, description,
-        // diagnosis_type, sequence. (Model $fillable adds extras that don't
-        // exist on the table; forceCreate skips them.)
+        // A later migration replaced opd_diagnoses.description with
+        // diagnosis_name (plus is_primary/is_confirmed/recorded_by) after this
+        // seeder was originally written.
         OpdDiagnosis::query()->forceCreate([
             'opd_visit_id'  => $visit->id,
             'patient_id'    => $visit->patient_id,
             'icd10_code'    => 'J06.9',
-            'description'   => 'Acute upper respiratory infection, unspecified',
+            'diagnosis_name'=> 'Acute upper respiratory infection, unspecified',
             'diagnosis_type'=> 'primary',
             'sequence'      => 1,
+            'is_primary'    => true,
+            'is_confirmed'  => true,
+            'recorded_by'   => $this->actorId,
             'created_by'    => $this->actorId,
             'updated_by'    => $this->actorId,
             'status_flag'   => 1,
@@ -437,9 +456,12 @@ class OpdDemoSeeder extends Seeder
             'opd_visit_id'  => $visit->id,
             'patient_id'    => $visit->patient_id,
             'icd10_code'    => 'R50.9',
-            'description'   => 'Fever, unspecified',
+            'diagnosis_name'=> 'Fever, unspecified',
             'diagnosis_type'=> 'secondary',
             'sequence'      => 2,
+            'is_primary'    => false,
+            'is_confirmed'  => true,
+            'recorded_by'   => $this->actorId,
             'created_by'    => $this->actorId,
             'updated_by'    => $this->actorId,
             'status_flag'   => 1,
@@ -495,7 +517,7 @@ class OpdDemoSeeder extends Seeder
             'frequency'           => 'TID',
             'duration_days'       => 5,
             'route'               => 'oral',
-            'instructions'        => 'After meals',
+            'instruction'         => 'After meals',
             'sequence'            => 1,
             'created_by'          => $this->actorId,
             'updated_by'          => $this->actorId,
@@ -511,7 +533,7 @@ class OpdDemoSeeder extends Seeder
             'frequency'           => 'OD',
             'duration_days'       => 5,
             'route'               => 'oral',
-            'instructions'        => 'At night',
+            'instruction'         => 'At night',
             'sequence'            => 2,
             'created_by'          => $this->actorId,
             'updated_by'          => $this->actorId,
@@ -543,7 +565,6 @@ class OpdDemoSeeder extends Seeder
         // price_snapshot, sequence.
         $order = OpdInvestigationOrder::query()->forceCreate([
             'opd_visit_id'        => $visit->id,
-            'patient_id'          => $visit->patient_id,
             'ordered_by'          => $this->actorId,
             'ordered_at'          => now(),
             'status'              => 'ordered',
@@ -558,7 +579,12 @@ class OpdDemoSeeder extends Seeder
         $cbc   = LabTest::query()->find($this->cbcLabTestId);
         $lipid = LabTest::query()->find($this->lipidLabTestId);
 
-        OpdInvestigationOrderItem::query()->forceCreate([
+        // OpdInvestigationOrderItem's model default $attributes includes
+        // result_status, a column that doesn't actually exist on this table
+        // (model/migration drift) -- forceFill()+unset() before save() so
+        // forceCreate() doesn't try to insert it.
+        $item1 = new OpdInvestigationOrderItem();
+        $item1->forceFill([
             'opd_investigation_order_id' => $order->id,
             'lab_test_id'                => $this->cbcLabTestId,
             'test_name_snapshot'         => $cbc?->name ?? 'Complete Blood Count',
@@ -570,8 +596,11 @@ class OpdDemoSeeder extends Seeder
             'sort_order'                 => 0,
             'status'                     => 1,
         ]);
+        unset($item1['result_status']);
+        $item1->save();
 
-        OpdInvestigationOrderItem::query()->forceCreate([
+        $item2 = new OpdInvestigationOrderItem();
+        $item2->forceFill([
             'opd_investigation_order_id' => $order->id,
             'lab_test_id'                => $this->lipidLabTestId,
             'test_name_snapshot'         => $lipid?->name ?? 'Lipid Profile',
@@ -583,6 +612,8 @@ class OpdDemoSeeder extends Seeder
             'sort_order'                 => 1,
             'status'                     => 1,
         ]);
+        unset($item2['result_status']);
+        $item2->save();
 
         app(OpdVisitRepository::class)->logAudit(
             $visit,

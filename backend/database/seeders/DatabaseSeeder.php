@@ -21,6 +21,15 @@ class DatabaseSeeder extends Seeder
             RadiologyTestSeeder::class,
             InsuranceCompanySeeder::class,
             OpdDemoSeeder::class,
+            MasterDataDemoSeeder::class,
+            PatientHrDemoSeeder::class,
+            AppointmentOpdDemoSeeder::class,
+            IpdErDemoSeeder::class,
+            LabRadiologyDemoSeeder::class,
+            InventoryDemoSeeder::class,
+            InsuranceBillingDemoSeeder::class,
+            BloodBankOtDemoSeeder::class,
+            PaymentNotificationDemoSeeder::class,
         ]);
     }
 }
