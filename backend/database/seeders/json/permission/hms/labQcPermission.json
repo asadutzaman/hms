@@ -1,0 +1,36 @@
+{
+    "resource": {
+        "permission_type": "RESOURCE",
+        "name": "lab-qc",
+        "display_name": "Lab Quality Control",
+        "resource_uri": "lab-qc",
+        "controller_name": "LabQcController",
+        "server_url_prefix": "auth",
+        "component": "COMMON"
+    },
+    "scopes": [
+        {
+            "scope": "auth:lab-qc:menuAccess",
+            "display_name": "Menu Access",
+            "actions": [
+                { "http_method": "GET", "action_name": "lots", "uri": "/lab-qc/lots" }
+            ]
+        },
+        {
+            "scope": "auth:lab-qc:list",
+            "display_name": "List",
+            "actions": [
+                { "http_method": "GET", "action_name": "lots", "uri": "/lab-qc/lots" },
+                { "http_method": "GET", "action_name": "leveyJennings", "uri": "/lab-qc/lots/*/levey-jennings" }
+            ]
+        },
+        {
+            "scope": "auth:lab-qc:create",
+            "display_name": "Create",
+            "actions": [
+                { "http_method": "POST", "action_name": "createLot", "uri": "/lab-qc/lots" },
+                { "http_method": "POST", "action_name": "recordRun", "uri": "/lab-qc/lots/*/runs" }
+            ]
+        }
+    ]
+}

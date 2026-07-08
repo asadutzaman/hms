@@ -17,6 +17,8 @@ use Illuminate\Support\Facades\DB;
 
 class LabResultService
 {
+    protected const DELTA_THRESHOLD_PERCENT = 20.0;
+
     protected LabOrderItemRepository $orderItemRepository;
 
     public function __construct(LabOrderItemRepository $orderItemRepository)
@@ -32,9 +34,9 @@ class LabResultService
      * deliberately at entry time, not verification time, since patient
      * safety shouldn't wait on the pathologist's sign-off (F-05-08).
      */
-    public function enterResults(int $orderItemId, array $results, int $actorId): LabOrderItem
+    public function enterResults(int $orderItemId, array $results, int $actorId, string $source = 'manual'): LabOrderItem
     {
-        return DB::transaction(function () use ($orderItemId, $results, $actorId) {
+        return DB::transaction(function () use ($orderItemId, $results, $actorId, $source) {
             $item = LabOrderItem::query()->with(['order.patient', 'labTest.parameters.referenceRanges'])->lockForUpdate()->findOrFail($orderItemId);
 
             if ($item->item_status === LabOrderItemStatusEnum::CANCELLED) {
@@ -61,6 +63,8 @@ class LabResultService
                     $anyCritical = true;
                 }
 
+                $delta = $this->computeDeltaCheck($patient->id ?? null, (int) ($row['lab_test_parameter_id'] ?? 0), $orderItemId, $row['result_value'] ?? null);
+
                 LabResult::query()->updateOrCreate(
                     ['lab_order_item_id' => $orderItemId, 'lab_test_parameter_id' => $row['lab_test_parameter_id'] ?? null],
                     [
@@ -74,6 +78,10 @@ class LabResultService
                         'entered_by'              => $actorId,
                         'entered_at'              => now(),
                         'remarks'                 => $row['remarks'] ?? null,
+                        'result_source'           => $source,
+                        'previous_value_snapshot' => $delta['previous_value'],
+                        'delta_percent'           => $delta['delta_percent'],
+                        'delta_flag'              => $delta['delta_flag'],
                     ],
                 );
             }
@@ -132,6 +140,48 @@ class LabResultService
                 $order->save();
             }
         }
+    }
+
+    /**
+     * F-05-09 Delta Check Validation — compares the new value against this
+     * patient's most recent PRIOR result for the same analyte (across any
+     * earlier lab order, not just this one), flagging if the percent
+     * change exceeds a threshold. DELTA_THRESHOLD_PERCENT is a flat
+     * default (20%) — a real deployment would tune this per-analyte, which
+     * is out of scope for this sprint's SP budget.
+     */
+    protected function computeDeltaCheck(?int $patientId, int $parameterId, int $excludeOrderItemId, ?string $newValue): array
+    {
+        $result = ['previous_value' => null, 'delta_percent' => null, 'delta_flag' => false];
+
+        if (!$patientId || !$parameterId || $newValue === null || $newValue === '' || !is_numeric($newValue)) {
+            return $result;
+        }
+
+        $previous = LabResult::query()
+            ->where('lab_test_parameter_id', $parameterId)
+            ->where('lab_order_item_id', '!=', $excludeOrderItemId)
+            ->whereHas('orderItem.order', fn ($q) => $q->where('patient_id', $patientId))
+            ->whereNotNull('result_value')
+            ->orderByDesc('entered_at')
+            ->first();
+
+        if (!$previous || !is_numeric($previous->result_value)) {
+            return $result;
+        }
+
+        $previousValue = (float) $previous->result_value;
+        $result['previous_value'] = $previous->result_value;
+
+        if ($previousValue == 0.0) {
+            return $result;
+        }
+
+        $deltaPercent = round((((float) $newValue - $previousValue) / abs($previousValue)) * 100, 2);
+        $result['delta_percent'] = $deltaPercent;
+        $result['delta_flag'] = abs($deltaPercent) > self::DELTA_THRESHOLD_PERCENT;
+
+        return $result;
     }
 
     protected function matchReferenceRange($ranges, ?int $age, ?string $gender): ?LabTestReferenceRange

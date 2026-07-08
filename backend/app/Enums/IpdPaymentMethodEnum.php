@@ -11,6 +11,7 @@ class IpdPaymentMethodEnum extends BaseEnum
     const INSURANCE = 'insurance';
     const CHEQUE    = 'cheque';
     const ADVANCE   = 'advance';
+    const ONLINE    = 'online';
     const OTHER     = 'other';
 
     public static $valueMap = [
@@ -21,6 +22,7 @@ class IpdPaymentMethodEnum extends BaseEnum
         self::INSURANCE => 'Insurance',
         self::CHEQUE    => 'Cheque',
         self::ADVANCE   => 'Applied Advance',
+        self::ONLINE    => 'Online Payment',
         self::OTHER     => 'Other',
     ];
 

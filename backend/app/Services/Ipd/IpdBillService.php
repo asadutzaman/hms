@@ -262,7 +262,7 @@ class IpdBillService
 
     /* ---------- Payments ---------- */
 
-    public function recordPayment(int $billId, array $data, int $actorId): IpdBill
+    public function recordPayment(int $billId, array $data, ?int $actorId): IpdBill
     {
         return DB::transaction(function () use ($billId, $data, $actorId) {
             $bill = $this->billRepository->show($billId);

@@ -80,7 +80,7 @@ class OpdBillService
     /**
      * Record a payment against a bill.
      */
-    public function recordPayment(int $billId, array $data, int $actorId): OpdBill
+    public function recordPayment(int $billId, array $data, ?int $actorId): OpdBill
     {
         // Validate using OpdBillPaymentValidator (payment-specific rules)
         $rules = (new OpdBillPaymentValidator())->rules();

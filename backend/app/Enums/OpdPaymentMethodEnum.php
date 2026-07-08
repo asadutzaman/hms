@@ -8,6 +8,7 @@ class OpdPaymentMethodEnum extends BaseEnum
     const CARD      = 'card';
     const INSURANCE = 'insurance';
     const MOBILE    = 'mobile';
+    const ONLINE    = 'online';
     const OTHER     = 'other';
 
     public static $valueMap = [
@@ -15,6 +16,7 @@ class OpdPaymentMethodEnum extends BaseEnum
         self::CARD      => 'Card',
         self::INSURANCE => 'Insurance',
         self::MOBILE    => 'Mobile Banking',
+        self::ONLINE    => 'Online Payment',
         self::OTHER     => 'Other',
     ];
 

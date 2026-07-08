@@ -1,0 +1,44 @@
+{
+    "resource": {
+        "permission_type": "RESOURCE",
+        "name": "blood-unit",
+        "display_name": "Blood Unit Inventory",
+        "resource_uri": "blood-unit",
+        "controller_name": "BloodUnitController",
+        "server_url_prefix": "auth",
+        "component": "COMMON"
+    },
+    "scopes": [
+        {
+            "scope": "auth:blood-unit:menuAccess",
+            "display_name": "Menu Access",
+            "actions": [
+                { "http_method": "GET", "action_name": "inventory", "uri": "/blood-unit/inventory" }
+            ]
+        },
+        {
+            "scope": "auth:blood-unit:list",
+            "display_name": "List",
+            "actions": [
+                { "http_method": "GET", "action_name": "index", "uri": "/blood-unit" },
+                { "http_method": "GET", "action_name": "inventory", "uri": "/blood-unit/inventory" },
+                { "http_method": "GET", "action_name": "inventorySummary", "uri": "/blood-unit/inventory-summary" },
+                { "http_method": "GET", "action_name": "expiringSoon", "uri": "/blood-unit/expiring-soon" }
+            ]
+        },
+        {
+            "scope": "auth:blood-unit:view",
+            "display_name": "View",
+            "actions": [
+                { "http_method": "GET", "action_name": "show", "uri": "/blood-unit/*" }
+            ]
+        },
+        {
+            "scope": "auth:blood-unit:edit",
+            "display_name": "Edit",
+            "actions": [
+                { "http_method": "POST", "action_name": "recordScreening", "uri": "/blood-unit/*/screening" }
+            ]
+        }
+    ]
+}

@@ -67,6 +67,15 @@ import _LeaveTypeApi from './Hr/LeaveType.api'
 import _AttendanceRecordApi from './Hr/AttendanceRecord.api'
 import _LeaveRequestApi from './Hr/LeaveRequest.api'
 import _LeaveBalanceApi from './Hr/LeaveBalance.api'
+import _LabQcApi from './Lis/LabQc.api'
+import _AnalyzerInterfaceApi from './Lis/AnalyzerInterface.api'
+import _BloodDonorApi from './BloodBank/BloodDonor.api'
+import _BloodDonationApi from './BloodBank/BloodDonation.api'
+import _BloodUnitApi from './BloodBank/BloodUnit.api'
+import _BloodCrossMatchApi from './BloodBank/BloodCrossMatch.api'
+import _BloodTransfusionApi from './BloodBank/BloodTransfusion.api'
+import _PatientPortalPaymentApi from './PatientPortal/PatientPortalPayment.api'
+import _PaymentTransactionApi from './PaymentTransaction.api'
 // APPOINTMENT
 import _AppointmentApi from './Appointment/Appointment.api'
 import _DoctorScheduleApi from './DoctorSchedule/DoctorSchedule.api'
@@ -208,6 +217,18 @@ export const LeaveTypeApi = new _LeaveTypeApi()
 export const AttendanceRecordApi = new _AttendanceRecordApi()
 export const LeaveRequestApi = new _LeaveRequestApi()
 export const LeaveBalanceApi = new _LeaveBalanceApi()
+// LAB QC & MACHINE INTERFACING (Sprint 10, F-05-06/09/10)
+export const LabQcApi = new _LabQcApi()
+export const AnalyzerInterfaceApi = new _AnalyzerInterfaceApi()
+// BLOOD BANK (Sprint 10, F-11-01/02/03)
+export const BloodDonorApi = new _BloodDonorApi()
+export const BloodDonationApi = new _BloodDonationApi()
+export const BloodUnitApi = new _BloodUnitApi()
+export const BloodCrossMatchApi = new _BloodCrossMatchApi()
+export const BloodTransfusionApi = new _BloodTransfusionApi()
+// ONLINE PAYMENT (Sprint 10, F-17-05 / F-02-09)
+export const PatientPortalPaymentApi = new _PatientPortalPaymentApi()
+export const PaymentTransactionApi = new _PaymentTransactionApi()
 // COMPANY
 export const EmployeeApi = new _EmployeeApi()
 // APPOINTMENT

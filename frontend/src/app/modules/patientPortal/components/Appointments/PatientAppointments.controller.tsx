@@ -1,7 +1,7 @@
 import React, {FC, useEffect, useState} from 'react'
-import {Button, Card, DatePicker, Form, Input, Modal, Select, Spin, Tag, Typography} from 'antd'
+import {Button, Card, DatePicker, Form, Input, InputNumber, Modal, Select, Spin, Tag, Typography} from 'antd'
 import dayjs from 'dayjs'
-import {PatientPortalApi} from 'src/app/api'
+import {PatientPortalApi, PatientPortalPaymentApi} from 'src/app/api'
 import {useEmployeeList} from 'src/app/hooks/lists/useEmployeeList'
 import {Message} from 'src/app/utils'
 
@@ -16,7 +16,12 @@ const PatientAppointmentsController: FC = () => {
   const [slots, setSlots] = useState<any[]>([])
   const [loadingSlots, setLoadingSlots] = useState<boolean>(false)
   const [cancellingId, setCancellingId] = useState<number | null>(null)
+  const [payModalOpen, setPayModalOpen] = useState(false)
+  const [activeAppointment, setActiveAppointment] = useState<any>(null)
+  const [transactionRef, setTransactionRef] = useState<string | null>(null)
+  const [paying, setPaying] = useState(false)
   const [form] = Form.useForm()
+  const [payForm] = Form.useForm()
 
   const {employeeList} = useEmployeeList()
 
@@ -107,6 +112,45 @@ const PatientAppointmentsController: FC = () => {
     })
   }
 
+  const openPay = (appointment: any) => {
+    setActiveAppointment(appointment)
+    payForm.resetFields()
+    payForm.setFieldsValue({amount: Number(appointment.consultation_fee) || undefined})
+    setTransactionRef(null)
+    setPayModalOpen(true)
+  }
+
+  const handleInitiatePay = async () => {
+    try {
+      const values = await payForm.validateFields()
+      setPaying(true)
+      const res: any = await PatientPortalPaymentApi.initiate({
+        payable_type: 'appointment',
+        payable_id: activeAppointment.id,
+        amount: values.amount,
+      })
+      setTransactionRef(res?.data?.transaction_ref)
+    } catch (err: any) {
+      if (err?.errorFields) return
+      Message.error(typeof err?.data === 'string' ? err.data : 'Could not start payment.')
+    } finally {
+      setPaying(false)
+    }
+  }
+
+  const handleConfirmPay = (outcome: 'success' | 'failure') => {
+    if (!transactionRef) return
+    setPaying(true)
+    PatientPortalPaymentApi.confirm(transactionRef, outcome)
+      .then(() => {
+        Message.success(outcome === 'success' ? 'Payment successful — appointment confirmed.' : 'Payment marked as failed.')
+        setPayModalOpen(false)
+        loadAppointments()
+      })
+      .catch(() => Message.error('Could not confirm payment.'))
+      .finally(() => setPaying(false))
+  }
+
   return (
     <Spin spinning={loading}>
       <div className='d-flex justify-content-between align-items-center mb-4'>
@@ -128,13 +172,14 @@ const PatientAppointmentsController: FC = () => {
               <th>Date</th>
               <th>Time</th>
               <th>Status</th>
+              <th>Check-in Code</th>
               <th>Action</th>
             </tr>
           </thead>
           <tbody>
             {rows.length === 0 && (
               <tr>
-                <td colSpan={7} align='center'>
+                <td colSpan={8} align='center'>
                   No appointments found.
                 </td>
               </tr>
@@ -151,7 +196,15 @@ const PatientAppointmentsController: FC = () => {
                     {row.status_label || row.status}
                   </Tag>
                 </td>
+                <td className='fs-8 text-muted' style={{maxWidth: 160, wordBreak: 'break-all'}}>
+                  {row.status !== 'cancelled' && row.status !== 'completed' ? row.uuid : '-'}
+                </td>
                 <td>
+                  {row.status === 'pending' && (
+                    <Button size='small' type='primary' className='me-2' onClick={() => openPay(row)}>
+                      Pay Now
+                    </Button>
+                  )}
                   {row.status !== 'cancelled' && row.status !== 'completed' && (
                     <Button
                       size='small'
@@ -227,6 +280,34 @@ const PatientAppointmentsController: FC = () => {
             <Input.TextArea rows={3} placeholder='Briefly describe the reason for your visit' />
           </Form.Item>
         </Form>
+      </Modal>
+
+      <Modal title='Pay for Appointment' open={payModalOpen} onCancel={() => setPayModalOpen(false)} footer={null}>
+        {!transactionRef ? (
+          <Form form={payForm} layout='vertical' onFinish={handleInitiatePay}>
+            <Form.Item name='amount' label='Amount' rules={[{required: true, message: 'Enter the payment amount'}]}>
+              <InputNumber className='w-100' min={1} />
+            </Form.Item>
+            <Button type='primary' block htmlType='submit' loading={paying}>
+              Proceed to Payment
+            </Button>
+          </Form>
+        ) : (
+          <div>
+            <p className='text-muted'>
+              Transaction <Tag>{transactionRef}</Tag> initiated. This is a demo payment gateway — choose an outcome to
+              simulate the checkout result.
+            </p>
+            <div className='d-flex mt-4' style={{gap: 8}}>
+              <Button type='primary' block loading={paying} onClick={() => handleConfirmPay('success')}>
+                Simulate Successful Payment
+              </Button>
+              <Button danger block loading={paying} onClick={() => handleConfirmPay('failure')}>
+                Simulate Failed Payment
+              </Button>
+            </div>
+          </div>
+        )}
       </Modal>
     </Spin>
   )

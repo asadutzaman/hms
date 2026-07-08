@@ -1,0 +1,35 @@
+{
+    "resource": {
+        "permission_type": "RESOURCE",
+        "name": "blood-transfusion",
+        "display_name": "Blood Transfusion",
+        "resource_uri": "blood-transfusion",
+        "controller_name": "BloodTransfusionController",
+        "server_url_prefix": "auth",
+        "component": "COMMON"
+    },
+    "scopes": [
+        {
+            "scope": "auth:blood-transfusion:menuAccess",
+            "display_name": "Menu Access",
+            "actions": [
+                { "http_method": "GET", "action_name": "byPatient", "uri": "/blood-transfusion/by-patient/*" }
+            ]
+        },
+        {
+            "scope": "auth:blood-transfusion:list",
+            "display_name": "List",
+            "actions": [
+                { "http_method": "GET", "action_name": "byPatient", "uri": "/blood-transfusion/by-patient/*" }
+            ]
+        },
+        {
+            "scope": "auth:blood-transfusion:create",
+            "display_name": "Create",
+            "actions": [
+                { "http_method": "POST", "action_name": "store", "uri": "/blood-transfusion" },
+                { "http_method": "POST", "action_name": "complete", "uri": "/blood-transfusion/*/complete" }
+            ]
+        }
+    ]
+}

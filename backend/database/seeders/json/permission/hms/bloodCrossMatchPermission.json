@@ -1,0 +1,27 @@
+{
+    "resource": {
+        "permission_type": "RESOURCE",
+        "name": "blood-cross-match",
+        "display_name": "Blood Cross Match",
+        "resource_uri": "blood-cross-match",
+        "controller_name": "BloodCrossMatchController",
+        "server_url_prefix": "auth",
+        "component": "COMMON"
+    },
+    "scopes": [
+        {
+            "scope": "auth:blood-cross-match:list",
+            "display_name": "List",
+            "actions": [
+                { "http_method": "GET", "action_name": "byPatient", "uri": "/blood-cross-match/by-patient/*" }
+            ]
+        },
+        {
+            "scope": "auth:blood-cross-match:create",
+            "display_name": "Create",
+            "actions": [
+                { "http_method": "POST", "action_name": "store", "uri": "/blood-cross-match" }
+            ]
+        }
+    ]
+}

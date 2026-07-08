@@ -1,0 +1,49 @@
+{
+    "resource": {
+        "permission_type": "RESOURCE",
+        "name": "blood-donor",
+        "display_name": "Blood Donor",
+        "resource_uri": "blood-donor",
+        "controller_name": "BloodDonorController",
+        "server_url_prefix": "auth",
+        "component": "COMMON"
+    },
+    "scopes": [
+        {
+            "scope": "auth:blood-donor:menuAccess",
+            "display_name": "Menu Access",
+            "actions": [
+                { "http_method": "GET", "action_name": "index", "uri": "/blood-donor" }
+            ]
+        },
+        {
+            "scope": "auth:blood-donor:list",
+            "display_name": "List",
+            "actions": [
+                { "http_method": "GET", "action_name": "index", "uri": "/blood-donor" },
+                { "http_method": "GET", "action_name": "eligible", "uri": "/blood-donor/eligible" }
+            ]
+        },
+        {
+            "scope": "auth:blood-donor:view",
+            "display_name": "View",
+            "actions": [
+                { "http_method": "GET", "action_name": "show", "uri": "/blood-donor/*" }
+            ]
+        },
+        {
+            "scope": "auth:blood-donor:create",
+            "display_name": "Create",
+            "actions": [
+                { "http_method": "POST", "action_name": "store", "uri": "/blood-donor" }
+            ]
+        },
+        {
+            "scope": "auth:blood-donor:edit",
+            "display_name": "Edit",
+            "actions": [
+                { "http_method": "POST", "action_name": "setDeferral", "uri": "/blood-donor/*/defer" }
+            ]
+        }
+    ]
+}

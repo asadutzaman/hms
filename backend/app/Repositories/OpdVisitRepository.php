@@ -288,7 +288,7 @@ class OpdVisitRepository extends BaseRepository
         string $action,
         ?string $fromStatus,
         ?string $toStatus,
-        int $actorId,
+        ?int $actorId,
         ?string $remarks = null,
         array $meta = [],
     ): OpdVisitAuditLog {

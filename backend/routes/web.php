@@ -1826,6 +1826,57 @@ Route::prefix('api')->group(function () {
         Route::post('/verify/{orderItemId}', [App\Http\Controllers\LabResultController::class, 'verify']);
     });
 
+    // ANALYZER INTERFACE (Sprint 10, F-05-06)
+    Route::group(['prefix' => 'analyzer-interface', 'middleware' => ['restrictIp', 'authVerify']], function () {
+        Route::get('/messages', [App\Http\Controllers\AnalyzerInterfaceController::class, 'index']);
+        Route::post('/import', [App\Http\Controllers\AnalyzerInterfaceController::class, 'import']);
+    });
+
+    // LAB QUALITY CONTROL (Sprint 10, F-05-10)
+    Route::group(['prefix' => 'lab-qc', 'middleware' => ['restrictIp', 'authVerify']], function () {
+        Route::get('/lots', [App\Http\Controllers\LabQcController::class, 'lots']);
+        Route::post('/lots', [App\Http\Controllers\LabQcController::class, 'createLot']);
+        Route::get('/lots/{id}/levey-jennings', [App\Http\Controllers\LabQcController::class, 'leveyJennings']);
+        Route::post('/lots/{id}/runs', [App\Http\Controllers\LabQcController::class, 'recordRun']);
+    });
+
+    // BLOOD DONOR (Sprint 10, F-11-01)
+    Route::group(['prefix' => 'blood-donor', 'middleware' => ['restrictIp', 'authVerify']], function () {
+        Route::get('/eligible', [App\Http\Controllers\BloodDonorController::class, 'eligible']);
+        Route::get('/', [App\Http\Controllers\BloodDonorController::class, 'index']);
+        Route::get('/{id}', [App\Http\Controllers\BloodDonorController::class, 'show']);
+        Route::post('/', [App\Http\Controllers\BloodDonorController::class, 'store']);
+        Route::post('/{id}/defer', [App\Http\Controllers\BloodDonorController::class, 'setDeferral']);
+    });
+
+    // BLOOD DONATION (Sprint 10, F-11-01)
+    Route::group(['prefix' => 'blood-donation', 'middleware' => ['restrictIp', 'authVerify']], function () {
+        Route::get('/', [App\Http\Controllers\BloodDonationController::class, 'index']);
+        Route::post('/', [App\Http\Controllers\BloodDonationController::class, 'store']);
+    });
+
+    // BLOOD UNIT / INVENTORY (Sprint 10, F-11-02)
+    Route::group(['prefix' => 'blood-unit', 'middleware' => ['restrictIp', 'authVerify']], function () {
+        Route::get('/inventory', [App\Http\Controllers\BloodUnitController::class, 'inventory']);
+        Route::get('/inventory-summary', [App\Http\Controllers\BloodUnitController::class, 'inventorySummary']);
+        Route::get('/expiring-soon', [App\Http\Controllers\BloodUnitController::class, 'expiringSoon']);
+        Route::get('/', [App\Http\Controllers\BloodUnitController::class, 'index']);
+        Route::get('/{id}', [App\Http\Controllers\BloodUnitController::class, 'show']);
+        Route::post('/{id}/screening', [App\Http\Controllers\BloodUnitController::class, 'recordScreening']);
+    });
+
+    // BLOOD CROSS MATCH & TRANSFUSION (Sprint 10, F-11-03)
+    Route::group(['prefix' => 'blood-cross-match', 'middleware' => ['restrictIp', 'authVerify']], function () {
+        Route::get('/by-patient/{patientId}', [App\Http\Controllers\BloodCrossMatchController::class, 'byPatient']);
+        Route::post('/', [App\Http\Controllers\BloodCrossMatchController::class, 'store']);
+    });
+
+    Route::group(['prefix' => 'blood-transfusion', 'middleware' => ['restrictIp', 'authVerify']], function () {
+        Route::get('/by-patient/{patientId}', [App\Http\Controllers\BloodTransfusionController::class, 'byPatient']);
+        Route::post('/', [App\Http\Controllers\BloodTransfusionController::class, 'store']);
+        Route::post('/{id}/complete', [App\Http\Controllers\BloodTransfusionController::class, 'complete']);
+    });
+
     // NOTIFICATION TEMPLATE
     Route::group(['prefix' => 'notification-template', 'middleware' => ['restrictIp', 'authVerify']], function () {
         Route::post('/bulk', [App\Http\Controllers\NotificationTemplateController::class, 'bulk']);
@@ -2126,6 +2177,24 @@ Route::prefix('api')->group(function () {
             Route::post('/appointments/{id}/cancel', [App\Http\Controllers\PatientPortal\PatientPortalAppointmentController::class, 'cancel']);
 
             Route::get('/timeline', [App\Http\Controllers\PatientPortal\PatientPortalTimelineController::class, 'myTimeline']);
+
+            // ONLINE PAYMENT (Sprint 10, F-17-05 / F-02-09)
+            Route::get('/payments', [App\Http\Controllers\PatientPortal\PatientPortalPaymentController::class, 'index']);
+            Route::post('/payments/initiate', [App\Http\Controllers\PatientPortal\PatientPortalPaymentController::class, 'initiate']);
+            Route::post('/payments/{transactionRef}/confirm', [App\Http\Controllers\PatientPortal\PatientPortalPaymentController::class, 'confirm']);
         });
+    });
+
+    // PAYMENT TRANSACTIONS — staff read-only reconciliation view (Sprint 10)
+    Route::group(['prefix' => 'payment-transaction', 'middleware' => ['restrictIp', 'authVerify']], function () {
+        Route::get('/', [App\Http\Controllers\PaymentTransactionController::class, 'index']);
+    });
+
+    // APPOINTMENT QR CHECK-IN (Sprint 10, F-02-08) — public kiosk endpoint,
+    // gated only by the appointment's own unguessable uuid (see
+    // AppointmentCheckinController docblock).
+    Route::group(['prefix' => 'appointment-checkin', 'middleware' => ['restrictIp']], function () {
+        Route::get('/{uuid}', [App\Http\Controllers\AppointmentCheckinController::class, 'show']);
+        Route::post('/{uuid}', [App\Http\Controllers\AppointmentCheckinController::class, 'checkIn']);
     });
 });

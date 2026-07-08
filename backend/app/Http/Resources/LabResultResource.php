@@ -44,6 +44,10 @@ class LabResultResource extends BaseResource
                 'verified_by_name'         => $verifiedByName,
                 'verified_at'              => $this->verified_at,
                 'remarks'                  => $this->remarks,
+                'result_source'            => $this->result_source,
+                'previous_value_snapshot'  => $this->previous_value_snapshot,
+                'delta_percent'            => $this->delta_percent,
+                'delta_flag'               => $this->delta_flag,
                 'created_at'               => $baseData['created_at'] ?? null,
                 'updated_at'               => $baseData['updated_at'] ?? null,
             ];

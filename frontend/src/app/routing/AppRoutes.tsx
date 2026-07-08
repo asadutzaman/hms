@@ -13,6 +13,7 @@ import { App } from '../App'
 import ProtectedAdminRoute from './NavigationRoute/ProtectedAdminRoute'
 import AuthRoutes from '../modules/auth/AuthRoutes'
 import PatientPortalRoutes from '../modules/patientPortal/PatientPortalRoutes'
+import AppointmentCheckinController from '../modules/kiosk/components/AppointmentCheckin.controller'
 
 /**
  * Base URL of the website.
@@ -34,6 +35,7 @@ const AppRoutes: FC = () => {
 
                     <Route path='auth/*' element={<AuthRoutes />} />
                     <Route path='patient-portal/*' element={<PatientPortalRoutes />} />
+                    <Route path='kiosk/checkin' element={<AppointmentCheckinController />} />
                     <Route path='error/*' element={<ErrorsPage />} />
                 </Route>
             </Routes>

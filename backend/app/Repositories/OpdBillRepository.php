@@ -296,7 +296,7 @@ class OpdBillRepository extends BaseRepository
                     OpdVisitActionEnum::PAYMENT_RECORDED,
                     null,
                     null,
-                    (int) ($data['paid_by'] ?? 0),
+                    $data['paid_by'] ?? null,
                     "Payment of {$amount} via " . ($data['payment_method'] ?? OpdPaymentMethodEnum::CASH),
                     [
                         'bill_id' => $bill->id,

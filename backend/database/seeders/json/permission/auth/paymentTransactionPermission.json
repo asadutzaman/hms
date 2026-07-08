@@ -1,0 +1,27 @@
+{
+    "resource": {
+        "permission_type": "RESOURCE",
+        "name": "payment-transaction",
+        "display_name": "Payment Transactions",
+        "resource_uri": "payment-transaction",
+        "controller_name": "PaymentTransactionController",
+        "server_url_prefix": "auth",
+        "component": "COMMON"
+    },
+    "scopes": [
+        {
+            "scope": "auth:payment-transaction:menuAccess",
+            "display_name": "Menu Access",
+            "actions": [
+                { "http_method": "GET", "action_name": "index", "uri": "/payment-transaction" }
+            ]
+        },
+        {
+            "scope": "auth:payment-transaction:list",
+            "display_name": "List",
+            "actions": [
+                { "http_method": "GET", "action_name": "index", "uri": "/payment-transaction" }
+            ]
+        }
+    ]
+}

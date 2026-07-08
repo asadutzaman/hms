@@ -1,0 +1,34 @@
+{
+    "resource": {
+        "permission_type": "RESOURCE",
+        "name": "blood-donation",
+        "display_name": "Blood Donation",
+        "resource_uri": "blood-donation",
+        "controller_name": "BloodDonationController",
+        "server_url_prefix": "auth",
+        "component": "COMMON"
+    },
+    "scopes": [
+        {
+            "scope": "auth:blood-donation:menuAccess",
+            "display_name": "Menu Access",
+            "actions": [
+                { "http_method": "GET", "action_name": "index", "uri": "/blood-donation" }
+            ]
+        },
+        {
+            "scope": "auth:blood-donation:list",
+            "display_name": "List",
+            "actions": [
+                { "http_method": "GET", "action_name": "index", "uri": "/blood-donation" }
+            ]
+        },
+        {
+            "scope": "auth:blood-donation:create",
+            "display_name": "Create",
+            "actions": [
+                { "http_method": "POST", "action_name": "store", "uri": "/blood-donation" }
+            ]
+        }
+    ]
+}

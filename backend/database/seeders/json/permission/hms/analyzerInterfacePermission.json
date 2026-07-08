@@ -1,0 +1,34 @@
+{
+    "resource": {
+        "permission_type": "RESOURCE",
+        "name": "analyzer-interface",
+        "display_name": "Analyzer Interface",
+        "resource_uri": "analyzer-interface",
+        "controller_name": "AnalyzerInterfaceController",
+        "server_url_prefix": "auth",
+        "component": "COMMON"
+    },
+    "scopes": [
+        {
+            "scope": "auth:analyzer-interface:menuAccess",
+            "display_name": "Menu Access",
+            "actions": [
+                { "http_method": "GET", "action_name": "index", "uri": "/analyzer-interface/messages" }
+            ]
+        },
+        {
+            "scope": "auth:analyzer-interface:list",
+            "display_name": "List",
+            "actions": [
+                { "http_method": "GET", "action_name": "index", "uri": "/analyzer-interface/messages" }
+            ]
+        },
+        {
+            "scope": "auth:analyzer-interface:create",
+            "display_name": "Create",
+            "actions": [
+                { "http_method": "POST", "action_name": "import", "uri": "/analyzer-interface/import" }
+            ]
+        }
+    ]
+}
