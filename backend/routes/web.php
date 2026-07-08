@@ -1592,6 +1592,10 @@ Route::prefix('api')->group(function () {
     });
 
     // BED
+    Route::group(['prefix' => 'hospital-dashboard', 'middleware' => ['restrictIp', 'authVerify']], function () {
+        Route::get('/summary', [App\Http\Controllers\HospitalDashboardController::class, 'getSummary']);
+    });
+
     Route::group(['prefix' => 'bed', 'middleware' => ['restrictIp', 'authVerify']], function () {
         Route::post('/bulk', [App\Http\Controllers\BedController::class, 'bulk']);
         Route::get('/dropdown', [App\Http\Controllers\BedController::class, 'dropdown']);

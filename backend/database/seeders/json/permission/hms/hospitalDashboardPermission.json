@@ -1,0 +1,78 @@
+{
+    "resource": {
+        "permission_type": "RESOURCE",
+        "name": "hospitalDashboard",
+        "display_name": "Hospital Dashboard",
+        "resource_uri": "hospital-dashboard",
+        "controller_name": "HospitalDashboardController",
+        "server_url_prefix": "auth",
+        "component": "COMMON"
+    },
+    "scopes": [
+        {
+            "scope": "auth:hospital-dashboard:appointmentsTodayCard",
+            "display_name": "Appointments Today Card",
+            "actions": null
+        },
+        {
+            "scope": "auth:hospital-dashboard:opdVisitsTodayCard",
+            "display_name": "OPD Visits Today Card",
+            "actions": null
+        },
+        {
+            "scope": "auth:hospital-dashboard:bedOccupancyCard",
+            "display_name": "Bed Occupancy Card",
+            "actions": null
+        },
+        {
+            "scope": "auth:hospital-dashboard:revenueTrendChart",
+            "display_name": "Revenue Trend Chart",
+            "actions": null
+        },
+        {
+            "scope": "auth:hospital-dashboard:pendingLabOrdersCard",
+            "display_name": "Pending Lab Orders Card",
+            "actions": null
+        },
+        {
+            "scope": "auth:hospital-dashboard:radiologyTurnaroundCard",
+            "display_name": "Radiology Turnaround Card",
+            "actions": null
+        },
+        {
+            "scope": "auth:hospital-dashboard:lowStockAlertsCard",
+            "display_name": "Low Stock & Near-Expiry Alerts Card",
+            "actions": null
+        },
+        {
+            "scope": "auth:hospital-dashboard:insuranceClaimsPendingCard",
+            "display_name": "Pending Insurance Claims Card",
+            "actions": null
+        },
+        {
+            "scope": "auth:hospital-dashboard:bloodBankInventoryCard",
+            "display_name": "Blood Bank Inventory Card",
+            "actions": null
+        },
+        {
+            "scope": "auth:hospital-dashboard:otBookingsTodayCard",
+            "display_name": "OT Bookings Today Card",
+            "actions": null
+        },
+        {
+            "scope": "auth:hospital-dashboard:hrAttendanceTodayCard",
+            "display_name": "HR Attendance Today Card",
+            "actions": null
+        },
+        {
+            "scope": "auth:hospital-dashboard:notificationsCard",
+            "display_name": "Notifications Card",
+            "actions": null
+        },
+        {
+            "scope": "auth:hospital-dashboard:quickActionsWidget",
+            "display_name": "Quick Actions Widget",
+            "actions": null
+        }
+    ]
+}

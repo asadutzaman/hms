@@ -1,6 +1,7 @@
 import _ApplicationSettingApi from './ApplicationSetting.api'
 import _FackApi from './Fack.api'
 import _OauthApi from './Oauth.api'
+import _HospitalDashboardApi from './HospitalDashboard.api'
 // SETTING
 import _GroupApi from './Setting/Group.api'
 import _OrganizationApi from './Setting/Organization.api'
@@ -148,6 +149,7 @@ import _PatientPortalApi from './PatientPortal/PatientPortal.api'
 
 export const FackApi = new _FackApi()
 export const OauthApi = new _OauthApi()
+export const HospitalDashboardApi = new _HospitalDashboardApi()
 export const ApplicationSettingApi = new _ApplicationSettingApi()
 // SETTING
 export const ResourceApi = new _ResourceApi()
