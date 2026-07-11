@@ -8,6 +8,7 @@ use App\Models\Branch;
 use App\Models\Brand;
 use App\Models\Department;
 use App\Models\Designation;
+use App\Models\Drug;
 use App\Models\DoctorSchedule;
 use App\Models\DoctorScheduleSlot;
 use App\Models\Employee;
@@ -57,6 +58,7 @@ class MasterDataDemoSeeder extends Seeder
         $this->seedDepartments();
         $this->seedDesignations();
         $this->seedItemCatalogue();
+        $this->seedDrugCatalog();
         $this->seedSuppliers();
         $this->seedShelves();
         $this->seedWardsBeds();
@@ -202,6 +204,48 @@ class MasterDataDemoSeeder extends Seeder
                     'base_unit_id'     => $pcsUnit,
                     'reorder_qty'      => 200,
                     'status'           => 1,
+                ],
+            );
+        }
+    }
+
+    /**
+     * Drug-master rows over the pharmacy items so the prescription
+     * typeahead, interaction checks, and recent-drugs features have a
+     * catalog to link against (drugs.item_id → items).
+     */
+    private function seedDrugCatalog(): void
+    {
+        $drugs = [
+            // [item code, generic, brand, strength, form, controlled]
+            ['PARA-500', 'Paracetamol', 'Napa', '500mg', 'tablet', false],
+            ['AMOX-250', 'Amoxicillin', 'Moxacil', '250mg', 'capsule', false],
+            ['CETI-10', 'Cetirizine', 'Alatrol', '10mg', 'tablet', false],
+            ['OMEP-20', 'Omeprazole', 'Seclo', '20mg', 'capsule', false],
+            ['METF-500', 'Metformin', 'Comet', '500mg', 'tablet', false],
+            ['ATOR-10', 'Atorvastatin', 'Atova', '10mg', 'tablet', false],
+            ['LOSA-50', 'Losartan', 'Losectil', '50mg', 'tablet', false],
+            ['AZIT-500', 'Azithromycin', 'Zimax', '500mg', 'tablet', false],
+            ['IBUP-400', 'Ibuprofen', 'Profen', '400mg', 'tablet', false],
+            ['INSU-GLA', 'Insulin Glargine', 'Lantus', '100IU/ml', 'injection', true],
+        ];
+
+        foreach ($drugs as [$code, $generic, $brand, $strength, $form, $controlled]) {
+            $itemId = Item::query()->where('code', $code)->value('id');
+            if (!$itemId) {
+                continue;
+            }
+
+            Drug::query()->updateOrCreate(
+                ['item_id' => $itemId],
+                [
+                    'generic_name'        => $generic,
+                    'brand_name'          => $brand,
+                    'strength'            => $strength,
+                    'dosage_form'         => $form,
+                    'is_controlled'       => $controlled,
+                    'controlled_schedule' => $controlled ? 'H' : null,
+                    'status'              => 1,
                 ],
             );
         }

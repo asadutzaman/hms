@@ -48,6 +48,21 @@ class PrescriptionTemplateController extends Controller
         }
     }
 
+    public function update(Request $request, $id)
+    {
+        try {
+            $this->validate($request, $this->validator->rules(), $this->validator->messages());
+            $actorId = (new SessionService())->init()->getUserId();
+            $result = app(PrescriptionTemplateService::class)->update((int) $id, $request->all(), $actorId);
+            $response = new $this->resource($result, false);
+            return $this->successResourceResponse($response);
+        } catch (ValidationException $e) {
+            throw new ValidatorException($e);
+        } catch (Exception $e) {
+            return $this->errorResponse($e->getMessage());
+        }
+    }
+
     /**
      * GET /prescription-template/{id}/apply
      */

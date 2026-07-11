@@ -47,10 +47,10 @@ class UserResource extends BaseResource
             'created_at'             => $this->created_at,
             'updated_at'             => $this->updated_at,
             'status'                 => $this->status,
-            'organization_name_list' => $baseData['organization_name_list'],
-            'organogram_name_list'   => $baseData['organogram_name_list'],
-            'created_by_name'        => $baseData['created_by_name'],
-            'updated_by_name'        => $baseData['updated_by_name'],
+            'organization_name_list' => $baseData['organization_name_list'] ?? [],
+            'organogram_name_list'   => $baseData['organogram_name_list'] ?? [],
+            'created_by_name'        => $baseData['created_by_name'] ?? '',
+            'updated_by_name'        => $baseData['updated_by_name'] ?? '',
             'employee_id'            => $this->employee_id,
         ];
 

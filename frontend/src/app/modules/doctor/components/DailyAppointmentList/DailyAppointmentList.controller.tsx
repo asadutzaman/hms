@@ -1,8 +1,9 @@
 import React, {FC, useEffect, useState} from 'react'
 import {Button, Card, DatePicker, Modal, Space, Table, Tag} from 'antd'
-import {HistoryOutlined} from '@ant-design/icons'
+import {EyeOutlined, HistoryOutlined, RightCircleOutlined} from '@ant-design/icons'
 import dayjs from 'dayjs'
-import {DoctorPortalApi} from 'src/app/api'
+import {useNavigate} from 'react-router-dom'
+import {DoctorPortalApi, OpdVisitApi} from 'src/app/api'
 import {useErrorHandler} from 'src/app/hooks/useErrorHandler'
 import {useLang} from 'src/app/hooks/useLang'
 import PatientHistoryPanel from '../PatientHistory/PatientHistoryPanel'
@@ -20,8 +21,10 @@ const DailyAppointmentListController: FC = () => {
   const [date, setDate] = useState(dayjs())
   const [listData, setListData] = useState<any[]>([])
   const [historyPatientId, setHistoryPatientId] = useState<any>(null)
+  const [startingVisitId, setStartingVisitId] = useState<any>(null)
   const {handleErrorMessage} = useErrorHandler()
   const {t} = useLang()
+  const navigate = useNavigate()
 
   useEffect(() => {
     loadData()
@@ -53,19 +56,52 @@ const DailyAppointmentListController: FC = () => {
       render: (status: string) => <Tag color={statusColor[status] || 'default'}>{status}</Tag>,
     },
     {
-      title: t('History'),
+      title: t('Actions'),
       dataIndex: 'action',
       render: (_: any, record: any) => (
-        <Button
-          size='small'
-          icon={<HistoryOutlined />}
-          onClick={() => setHistoryPatientId(record.patient_id)}
-        >
-          {t('View History')}
-        </Button>
+        <Space>
+          <Button
+            size='small'
+            icon={<HistoryOutlined />}
+            onClick={() => setHistoryPatientId(record.patient_id)}
+          >
+            {t('View History')}
+          </Button>
+          {record.opd_visit_id && (
+            <Button
+              size='small'
+              icon={<EyeOutlined />}
+              onClick={() => openVisit(record.opd_visit_id)}
+            >
+              {t('Open Visit')}
+            </Button>
+          )}
+          {record.opd_visit_id &&
+            ['waiting', 'vitals_taken'].includes(record.opd_visit_status) && (
+              <Button
+                size='small'
+                type='primary'
+                icon={<RightCircleOutlined />}
+                loading={startingVisitId === record.opd_visit_id}
+                onClick={() => startConsultation(record.opd_visit_id)}
+              >
+                {t('Start Consultation')}
+              </Button>
+            )}
+        </Space>
       ),
     },
   ]
+
+  const openVisit = (visitId: any) => navigate(`/admin/opd/view/${visitId}`)
+
+  const startConsultation = (visitId: any) => {
+    setStartingVisitId(visitId)
+    OpdVisitApi.transition(visitId, {to_status: 'in_consultation'})
+      .then(() => openVisit(visitId))
+      .catch((err) => handleErrorMessage(err))
+      .finally(() => setStartingVisitId(null))
+  }
 
   return (
     <div className='card'>

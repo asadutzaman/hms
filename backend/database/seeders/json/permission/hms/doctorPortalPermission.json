@@ -33,6 +33,11 @@
                     "http_method": "GET",
                     "action_name": "appointments",
                     "uri": "/doctor-portal/appointments"
+                },
+                {
+                    "http_method": "GET",
+                    "action_name": "recentDrugs",
+                    "uri": "/doctor-portal/recent-drugs"
                 }
             ]
         },
@@ -44,6 +49,11 @@
                     "http_method": "GET",
                     "action_name": "patientHistory",
                     "uri": "/doctor-portal/patient-history/*"
+                },
+                {
+                    "http_method": "GET",
+                    "action_name": "latestPrescription",
+                    "uri": "/doctor-portal/latest-prescription/*"
                 }
             ]
         }

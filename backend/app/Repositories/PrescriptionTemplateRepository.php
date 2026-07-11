@@ -27,4 +27,10 @@ class PrescriptionTemplateRepository extends BaseRepository
         $this->request      = request();
         $this->oDataService = (new ODataService())->init();
     }
+
+    // Detail view always needs the drug lines for edit-prefill.
+    public function show($id)
+    {
+        return $this->model->with('items')->findOrFail($id);
+    }
 }

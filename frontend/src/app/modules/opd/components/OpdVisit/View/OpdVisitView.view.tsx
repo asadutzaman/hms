@@ -43,6 +43,7 @@ import {
   DrugInteractionApi,
   DiagnosisTemplateApi,
   PrescriptionTemplateApi,
+  DoctorPortalApi,
 } from 'src/app/api'
 import AuditLogPanel from 'src/app/components/AuditLog/AuditLogPanel'
 import AllergyBanner from 'src/app/components/Allergy/AllergyBanner'
@@ -88,6 +89,8 @@ const OpdVisitView: FC<any> = ({itemData, handleCallbackFunc}) => {
   const [diagnosisTemplates, setDiagnosisTemplates] = useState<any[]>([])
   const [prescriptionTemplates, setPrescriptionTemplates] = useState<any[]>([])
   const [applyingTemplate, setApplyingTemplate] = useState(false)
+  const [recentDrugs, setRecentDrugs] = useState<any[]>([])
+  const [copyingPreviousRx, setCopyingPreviousRx] = useState(false)
   const [followUpModalOpen, setFollowUpModalOpen] = useState(false)
   const [paymentModalOpen, setPaymentModalOpen] = useState(false)
   const [discountModalOpen, setDiscountModalOpen] = useState(false)
@@ -272,6 +275,10 @@ const OpdVisitView: FC<any> = ({itemData, handleCallbackFunc}) => {
       const drugIds = prescriptionItems.map((it) => it.drug_id).filter(Boolean)
       if (drugIds.length) checkInteractions(drugIds)
     }
+    // Recent drugs are doctor-specific; non-doctor users just get no tags.
+    DoctorPortalApi.recentDrugs()
+      .then((res: any) => setRecentDrugs(res?.data?.data?.drugs ?? res?.data?.drugs ?? []))
+      .catch(() => setRecentDrugs([]))
     setPrescriptionModalOpen(true)
   }
 
@@ -291,6 +298,47 @@ const OpdVisitView: FC<any> = ({itemData, handleCallbackFunc}) => {
     const items = prescriptionForm.getFieldValue('items') || []
     const drugIds = items.map((it: any) => it?.drug_id).filter(Boolean)
     checkInteractions(drugIds)
+  }
+
+  const handleCopyPreviousRx = async (add: (item?: any) => void) => {
+    setCopyingPreviousRx(true)
+    try {
+      const res: any = await DoctorPortalApi.latestPrescription(itemData.patient_id, {
+        exclude_visit_id: itemData.id,
+      })
+      const data = res?.data?.data ?? res?.data
+      const items = data?.items ?? []
+      if (!items.length) {
+        notification.info({message: 'No previous prescription found for this patient'})
+        return
+      }
+      items.forEach((it: any) => add(it))
+      if (data?.prescription?.advice && !prescriptionForm.getFieldValue('advice')) {
+        prescriptionForm.setFieldsValue({advice: data.prescription.advice})
+      }
+      handleDrugSelected()
+    } catch (e: any) {
+      notification.error({
+        message: 'Failed to copy previous prescription',
+        description: e?.response?.data?.message || e?.message || 'Unknown error',
+      })
+    } finally {
+      setCopyingPreviousRx(false)
+    }
+  }
+
+  const handleAddRecentDrug = (add: (item?: any) => void, drug: any) => {
+    add({
+      drug_id: drug.drug_id,
+      drug_name: drug.drug_name,
+      generic_name: drug.generic_name,
+      strength: drug.strength,
+      dosage_form: drug.dosage_form,
+      frequency: 'OD',
+      duration_unit: 'days',
+      route: 'oral',
+    })
+    handleDrugSelected()
   }
 
   const handleSavePrescription = async (values: any) => {
@@ -1072,32 +1120,57 @@ const OpdVisitView: FC<any> = ({itemData, handleCallbackFunc}) => {
           <Form.List name='items'>
             {(fields, {add, remove}) => (
               <>
-                {prescriptionTemplates.length > 0 && (
-                  <Select
-                    className='mb-3'
-                    style={{width: 220}}
-                    placeholder='Apply Template'
-                    onChange={async (templateId) => {
-                      setApplyingTemplate(true)
-                      try {
-                        const res: any = await PrescriptionTemplateApi.apply(templateId)
-                        const items = res?.data?.data?.items ?? res?.data?.items ?? []
-                        items.forEach((it: any) => add(it))
-                        if (items.length) {
-                          const drugIds = items.map((it: any) => it.drug_id).filter(Boolean)
-                          if (drugIds.length) checkInteractions(drugIds)
+                <div className='d-flex align-items-center gap-2 mb-3 flex-wrap'>
+                  {prescriptionTemplates.length > 0 && (
+                    <Select
+                      style={{width: 220}}
+                      placeholder='Apply Template'
+                      loading={applyingTemplate}
+                      onChange={async (templateId) => {
+                        setApplyingTemplate(true)
+                        try {
+                          const res: any = await PrescriptionTemplateApi.apply(templateId)
+                          const items = res?.data?.data?.items ?? res?.data?.items ?? []
+                          items.forEach((it: any) => add(it))
+                          if (items.length) {
+                            const drugIds = items.map((it: any) => it.drug_id).filter(Boolean)
+                            if (drugIds.length) checkInteractions(drugIds)
+                          }
+                        } catch (e) {
+                          notification.error({message: 'Failed to apply prescription template'})
+                        } finally {
+                          setApplyingTemplate(false)
                         }
-                      } catch (e) {
-                        notification.error({message: 'Failed to apply prescription template'})
-                      } finally {
-                        setApplyingTemplate(false)
-                      }
-                    }}
+                      }}
+                    >
+                      {prescriptionTemplates.map((tpl) => (
+                        <Option key={tpl.id} value={tpl.id}>{tpl.name}</Option>
+                      ))}
+                    </Select>
+                  )}
+                  <Button
+                    icon={<FileTextOutlined />}
+                    loading={copyingPreviousRx}
+                    onClick={() => handleCopyPreviousRx(add)}
                   >
-                    {prescriptionTemplates.map((tpl) => (
-                      <Option key={tpl.id} value={tpl.id}>{tpl.name}</Option>
+                    Copy Previous Rx
+                  </Button>
+                </div>
+                {recentDrugs.length > 0 && (
+                  <div className='mb-3'>
+                    <span className='text-muted me-2'>Recent:</span>
+                    {recentDrugs.map((drug: any) => (
+                      <Tag
+                        key={`recent-${drug.drug_id}`}
+                        color='blue'
+                        style={{cursor: 'pointer'}}
+                        onClick={() => handleAddRecentDrug(add, drug)}
+                      >
+                        + {drug.generic_name || drug.drug_name}
+                        {drug.strength ? ` ${drug.strength}` : ''}
+                      </Tag>
                     ))}
-                  </Select>
+                  </div>
                 )}
                 {fields.map((field) => (
                   <div key={field.key} className='border rounded p-3 mb-3'>
@@ -1106,6 +1179,7 @@ const OpdVisitView: FC<any> = ({itemData, handleCallbackFunc}) => {
                         <Form.Item name={[field.name, 'drug_id']} label='Drug (catalog)' valuePropName='drugId'>
                           <DrugSelect
                             drugId={undefined}
+                            serverSearch
                             onSelect={(value: any, drug: any) => {
                               prescriptionForm.setFields([
                                 {

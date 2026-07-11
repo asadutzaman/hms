@@ -330,6 +330,80 @@ class OpdVisitRepository extends BaseRepository
         }
     }
 
+    /* ---------- Doctor portal dashboard ---------- */
+
+    /**
+     * Today's per-status workload counts for one doctor's dashboard tiles.
+     */
+    public function todayStatsForDoctor(int $doctorId): array
+    {
+        $counts = $this->newQuery()
+            ->selectRaw('status, COUNT(*) as total')
+            ->whereDate('visit_date', now()->toDateString())
+            ->where('doctor_id', $doctorId)
+            ->whereNull('deleted_at')
+            ->groupBy('status')
+            ->pluck('total', 'status');
+
+        $sum = fn (array $statuses) => (int) collect($statuses)->sum(fn ($s) => (int) ($counts[$s] ?? 0));
+
+        return [
+            'seen'            => $sum([
+                OpdVisitStatusEnum::COMPLETED,
+                OpdVisitStatusEnum::BILLED,
+                OpdVisitStatusEnum::CLOSED,
+            ]),
+            'pending'         => $sum([
+                OpdVisitStatusEnum::WAITING,
+                OpdVisitStatusEnum::VITALS_TAKEN,
+            ]),
+            'in_consultation' => $sum([OpdVisitStatusEnum::IN_CONSULTATION]),
+        ];
+    }
+
+    /**
+     * Visit counts per day over the trailing 7 days (today inclusive),
+     * zero-filled so the dashboard can render a fixed-width trend row.
+     */
+    public function weeklyVisitTrend(int $doctorId): array
+    {
+        $from = now()->subDays(6)->toDateString();
+
+        $rows = $this->newQuery()
+            ->selectRaw('DATE(visit_date) as day, COUNT(*) as total')
+            ->whereDate('visit_date', '>=', $from)
+            ->where('doctor_id', $doctorId)
+            ->whereNull('deleted_at')
+            ->groupBy(DB::raw('DATE(visit_date)'))
+            ->pluck('total', 'day');
+
+        $trend = [];
+        for ($i = 6; $i >= 0; $i--) {
+            $day = now()->subDays($i)->toDateString();
+            $trend[] = ['date' => $day, 'count' => (int) ($rows[$day] ?? 0)];
+        }
+
+        return $trend;
+    }
+
+    /**
+     * Visits keyed by appointment_id, for decorating appointment rows with
+     * their OPD visit link (id + status).
+     */
+    public function byAppointmentIds(array $appointmentIds)
+    {
+        if (empty($appointmentIds)) {
+            return collect();
+        }
+
+        return $this->newQuery()
+            ->whereIn('appointment_id', $appointmentIds)
+            ->whereNull('deleted_at')
+            ->orderBy('id')
+            ->get(['id', 'appointment_id', 'status'])
+            ->keyBy('appointment_id');
+    }
+
     /* ---------- Reports ---------- */
 
     public function dailyCount(string $dateYmd): int

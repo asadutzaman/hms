@@ -43,6 +43,49 @@ class PrescriptionTemplateService
     }
 
     /**
+     * Replace-style update: header fields are updated and the item set is
+     * rebuilt from the payload (old rows soft-deleted), mirroring how
+     * OpdPrescriptionService::replaceItems treats prescription lines.
+     */
+    public function update(int $templateId, array $data, int $actorId): PrescriptionTemplate
+    {
+        if (empty($data['items']) || !is_array($data['items'])) {
+            throw new ApiException('At least one template item is required.', 422);
+        }
+
+        $template = PrescriptionTemplate::query()->find($templateId);
+        if (!$template) {
+            throw new ApiException('Prescription template not found.', 404);
+        }
+
+        return DB::transaction(function () use ($template, $data, $actorId) {
+            $template->update([
+                'name'       => $data['name'],
+                'is_shared'  => (bool) ($data['is_shared'] ?? false),
+                'updated_by' => $actorId,
+            ]);
+
+            $template->items()->delete();
+
+            foreach (array_values($data['items']) as $i => $row) {
+                if (!empty($row['drug_id'])) {
+                    $row = OpdPrescriptionRepository::snapshotFromDrug($row);
+                }
+
+                PrescriptionTemplateItem::query()->create(array_merge([
+                    'prescription_template_id' => $template->id,
+                    'sequence'                 => $i + 1,
+                    'is_prn'                   => $row['is_prn'] ?? false,
+                    'created_by'               => $actorId,
+                    'updated_by'               => $actorId,
+                ], $row));
+            }
+
+            return $template->fresh('items');
+        });
+    }
+
+    /**
      * Return the template's items shaped for direct injection into
      * OpdPrescriptionForm's items array (drop template-specific fields).
      */

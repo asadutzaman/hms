@@ -1420,6 +1420,8 @@ Route::prefix('api')->group(function () {
         Route::get('/dashboard', [App\Http\Controllers\DoctorPortalController::class, 'dashboard']);
         Route::get('/appointments', [App\Http\Controllers\DoctorPortalController::class, 'appointments']);
         Route::get('/patient-history/{patientId}', [App\Http\Controllers\DoctorPortalController::class, 'patientHistory']);
+        Route::get('/latest-prescription/{patientId}', [App\Http\Controllers\DoctorPortalController::class, 'latestPrescription']);
+        Route::get('/recent-drugs', [App\Http\Controllers\DoctorPortalController::class, 'recentDrugs']);
     });
 
     // PRESCRIPTION TEMPLATE

@@ -13,7 +13,7 @@ import NotificationsCard from './widgets/NotificationsCard'
 import PendingInsuranceClaimsList from './widgets/PendingInsuranceClaimsList'
 import QuickActionsRow from './widgets/QuickActionsRow'
 
-const SCOPE = {
+export const SCOPE = {
   appointments: 'auth:hospital-dashboard:appointmentsTodayCard',
   opdVisits: 'auth:hospital-dashboard:opdVisitsTodayCard',
   bedOccupancy: 'auth:hospital-dashboard:bedOccupancyCard',

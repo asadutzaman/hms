@@ -144,6 +144,57 @@ class OpdPrescriptionRepository extends BaseRepository
         return $item;
     }
 
+    /**
+     * The patient's most recent prescription (any prescriber), optionally
+     * excluding the current visit's own prescription so "Copy Previous Rx"
+     * never copies the form onto itself.
+     */
+    public function latestForPatient(int $patientId, ?int $excludeVisitId = null): ?OpdPrescription
+    {
+        $q = $this->newQuery()
+            ->with('items')
+            ->where('patient_id', $patientId)
+            ->where('status', 1)
+            ->orderByDesc('prescribed_at')
+            ->orderByDesc('id');
+
+        if ($excludeVisitId) {
+            $q->where('opd_visit_id', '!=', $excludeVisitId);
+        }
+
+        return $q->first();
+    }
+
+    /**
+     * Catalog drugs this prescriber has used most recently, deduped by drug,
+     * newest first — derived from their own prescription items so no
+     * favorites table is needed.
+     */
+    public function recentDrugsForPrescriber(int $userId, int $limit = 10)
+    {
+        // No raw aggregates: table names carry a connection prefix that
+        // DB::raw() strings would miss. Scan a bounded window of the
+        // prescriber's newest lines and dedupe by drug in PHP instead.
+        return OpdPrescriptionItem::query()
+            ->join('opd_prescriptions', 'opd_prescriptions.id', '=', 'opd_prescription_items.opd_prescription_id')
+            ->where('opd_prescriptions.prescribed_by', $userId)
+            ->where('opd_prescription_items.status', 1)
+            ->whereNotNull('opd_prescription_items.drug_id')
+            ->whereNull('opd_prescriptions.deleted_at')
+            ->orderByDesc('opd_prescription_items.id')
+            ->limit(200)
+            ->get([
+                'opd_prescription_items.drug_id',
+                'opd_prescription_items.drug_name',
+                'opd_prescription_items.generic_name',
+                'opd_prescription_items.strength',
+                'opd_prescription_items.dosage_form',
+            ])
+            ->unique('drug_id')
+            ->take($limit)
+            ->values();
+    }
+
     public function markPrinted(int $prescriptionId): OpdPrescription
     {
         $rx = $this->newQuery()->findOrFail($prescriptionId);

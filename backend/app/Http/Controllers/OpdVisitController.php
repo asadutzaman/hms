@@ -11,12 +11,12 @@ use App\Repositories\AppointmentRepository;
 use App\Repositories\OpdVisitRepository;
 use App\Repositories\CodeSequenceRepository;
 use App\Services\Opd\OpdVisitService;
+use App\Services\SessionService;
 use App\Traits\Controller\RestControllerTrait;
 use App\Validators\OpdVisitValidator;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 
@@ -37,6 +37,15 @@ class OpdVisitController extends Controller
         $this->repository = $repository;
         $this->validator  = $validator;
         $this->resource   = OpdVisitResource::class;
+    }
+
+    /**
+     * Auth::id() returns null under this app's session handling, which used
+     * to write audit rows with no actor — always resolve via SessionService.
+     */
+    private function actorId(): ?int
+    {
+        return (new SessionService())->init()->getUserId();
     }
 
     /**
@@ -78,7 +87,7 @@ class OpdVisitController extends Controller
                 $data['token_number'] = $this->repository->getNextTokenNumber($data['doctor_id'], $data['visit_date']);
             }
 
-            $actorId = Auth::id();
+            $actorId = $this->actorId();
             $result = app(OpdVisitService::class)->create($data, $actorId);
 
             (new CodeSequenceRepository())->updateNextSequenceByLabel('OPD_VISIT');
@@ -105,7 +114,7 @@ class OpdVisitController extends Controller
             $this->validate($request, $this->validator->rules(), $this->validator->messages(), $this->validator->attributes());
 
             $data = $request->all();
-            $actorId = Auth::id();
+            $actorId = $this->actorId();
             $result = app(OpdVisitService::class)->update($id, $data, $actorId);
 
             DB::commit();
@@ -134,7 +143,7 @@ class OpdVisitController extends Controller
 
             $toStatus = $request->input('to_status');
             $remarks = $request->input('remarks');
-            $actorId = Auth::id();
+            $actorId = $this->actorId();
             $meta = $request->except(['to_status', 'remarks']);
 
             $result = app(OpdVisitService::class)->transition($id, $toStatus, $actorId, $remarks, $meta);
@@ -163,7 +172,7 @@ class OpdVisitController extends Controller
             ]);
 
             $reason = $request->input('cancellation_reason');
-            $actorId = Auth::id();
+            $actorId = $this->actorId();
             $result = app(OpdVisitService::class)->cancel($id, $actorId, $reason);
 
             DB::commit();
@@ -223,7 +232,7 @@ class OpdVisitController extends Controller
     public function call(Request $request, $id)
     {
         try {
-            $actorId = Auth::id();
+            $actorId = $this->actorId();
             $result = $this->repository->callToken((int) $id, $actorId);
 
             $response = new $this->resource($result->fresh(), false);
@@ -279,9 +288,9 @@ class OpdVisitController extends Controller
                 'reason_for_visit'     => 'Follow-up visit',
                 'notes'                => $request->input('notes'),
                 'token_number'         => $appointmentRepo->getNextTokenNumber($doctorId, $followUpDate),
-                'booked_by'            => Auth::id(),
-                'created_by'           => Auth::id(),
-                'updated_by'           => Auth::id(),
+                'booked_by'            => $this->actorId(),
+                'created_by'           => $this->actorId(),
+                'updated_by'           => $this->actorId(),
             ]);
 
             (new CodeSequenceRepository())->updateNextSequenceByLabel('APPOINTMENT');
@@ -291,7 +300,7 @@ class OpdVisitController extends Controller
                 OpdVisitActionEnum::FOLLOW_UP_SCHEDULED,
                 null,
                 null,
-                Auth::id(),
+                $this->actorId(),
                 "Follow-up appointment {$appointment->appointment_no} scheduled for {$followUpDate}",
                 ['appointment_id' => $appointment->id],
             );

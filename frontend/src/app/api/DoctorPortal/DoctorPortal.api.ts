@@ -8,6 +8,8 @@ const endpoints = {
     dashboard: () => `${RESOURCE_ENDPOINT}/dashboard`,
     appointments: () => `${RESOURCE_ENDPOINT}/appointments`,
     patientHistory: (patientId: any) => `${RESOURCE_ENDPOINT}/patient-history/${patientId}`,
+    latestPrescription: (patientId: any) => `${RESOURCE_ENDPOINT}/latest-prescription/${patientId}`,
+    recentDrugs: () => `${RESOURCE_ENDPOINT}/recent-drugs`,
 }
 
 export default class DoctorPortalApi {
@@ -19,4 +21,10 @@ export default class DoctorPortalApi {
 
     public patientHistory = (patientId: any): AxiosPromise<any> =>
         HttpService.get(endpoints.patientHistory(patientId))
+
+    public latestPrescription = (patientId: any, params = {}): AxiosPromise<any> =>
+        HttpService.get(endpoints.latestPrescription(patientId), params)
+
+    public recentDrugs = (): AxiosPromise<any> =>
+        HttpService.get(endpoints.recentDrugs())
 }

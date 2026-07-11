@@ -17,10 +17,16 @@ const QuickActionsRow: FC = () => {
   const navigate = useNavigate()
   const {hasPermission} = usePermissionContext()
 
+  // The `/create` routes render their form controllers standalone with no
+  // props, but isShowForm/handleCallbackFunc only ever come from the parent
+  // list controller (see useCrudFormService) -- so a bare `/create` route
+  // never actually opens anything. The real, working create entry point
+  // everywhere in this codebase is the list page's embedded form, opened via
+  // the `isShowForm` query param (see AppointmentList.controller.tsx).
   const actions: QuickAction[] = [
-    {label: t('New Appointment'), icon: 'calendar-add', permission: 'auth:appointment:create', navigateTo: '/admin/appointment/create'},
-    {label: t('New Patient'), icon: 'profile-user', permission: 'auth:patient:create', navigateTo: '/admin/patient/list'},
-    {label: t('New OPD Visit'), icon: 'hospital', permission: 'auth:opd:create', navigateTo: '/admin/opd/create'},
+    {label: t('New Appointment'), icon: 'calendar-add', permission: 'auth:appointment:create', navigateTo: '/admin/appointment/list?isShowForm=true'},
+    {label: t('New Patient'), icon: 'profile-user', permission: 'auth:patient:create', navigateTo: '/admin/patient/list?isShowForm=true'},
+    {label: t('New OPD Visit'), icon: 'hospital', permission: 'auth:opd:create', navigateTo: '/admin/opd/list?isShowForm=true'},
   ]
 
   const visibleActions = actions.filter((action) => hasPermission(action.permission))
