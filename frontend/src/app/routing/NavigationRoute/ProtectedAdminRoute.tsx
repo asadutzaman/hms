@@ -11,20 +11,20 @@ const ProtectedAdminRoute: FC<any> = ({
 }) => {
   const navigate = useNavigate()
   const location = useLocation()
-  const {isAuthReady, isAuthenticated, isAdmin} = useContext(AuthContext)
+  const {isAuthReady, isAuthenticated} = useContext(AuthContext)
 
   const hasPermission = false
 
   useEffect(() => {
-    if (isAuthReady === true && isAuthenticated === false && isAdmin === false) {
+    if (isAuthReady === true && isAuthenticated === false) {
       const redirectUrl = encodeURI(`${location.pathname}${location.search}`)
       localStorage.setItem('redirectUrl', redirectUrl)
       navigate(`/auth/login`)
     }
-  }, [isAuthenticated, isAdmin])
+  }, [isAuthenticated])
 
   const handleOnIdle = () => {
-    if (isAuthenticated === true && isAdmin === true) {
+    if (isAuthenticated === true) {
       // Perform logout or other actions
       navigate('/auth/logout')
     }
@@ -40,7 +40,11 @@ const ProtectedAdminRoute: FC<any> = ({
     return <Navigate to={`/admin/access/denied`} />
   }
 
-  if (isAuthenticated === true && isAdmin === true) {
+  // Any authenticated staff user may enter the panel; feature access is
+  // gated per-menu/per-route by scopes. Employees (doctors, nurses, etc.)
+  // are not SERVICE_PROVIDER so isAdmin is false for them — gating on it
+  // here blanked the whole panel for every non-admin staff member.
+  if (isAuthenticated === true) {
     return <Outlet />
   }
 
