@@ -41,6 +41,13 @@ class StatusEnum extends BaseEnum
         return (string) isset(self::$valueMap[$value]) && self::$valueMap[$value] ? self::$valueMap[$value] : $value;
     }
 
+    // Alias matching the domain status enums (OpdVisitStatusEnum, etc.) so
+    // resources can uniformly call ::label(); base StatusEnum lacked it.
+    public static function label($value)
+    {
+        return self::getValue($value);
+    }
+
     public static function getValueApprovalStatus($value)
     {
         return (string) isset(self::$valueMapApprovalStatus[$value]) && self::$valueMapApprovalStatus[$value] ? self::$valueMapApprovalStatus[$value] : $value;

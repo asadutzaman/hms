@@ -40,7 +40,7 @@ class DoctorScheduleResource extends BaseResource
                 $includesData['chamber_name'] = $branch->name ?? '';
             }
 
-            $includesData['status_label']    = StatusEnum::label($resource->status ?? null);
+            $includesData['status_label']    = StatusEnum::getValue($resource->status ?? null);
             $includesData['schedule_type_label']    = $resource->schedule_type;
             $includesData['consultation_mode_label'] = $resource->consultation_mode;
             $includesData['slot_count']      = $resource->slots()->count() ?? 0;

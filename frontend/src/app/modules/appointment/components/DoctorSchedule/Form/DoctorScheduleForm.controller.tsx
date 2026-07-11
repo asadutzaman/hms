@@ -118,6 +118,7 @@ const DoctorScheduleFormController: FC<any> = (props) => {
         formRef={formRef}
         initialValues={initialValues}
         component={DoctorScheduleForm}
+        isEditMode={isEditMode}
         handleChange={handleChange}
         handleSubmit={handleSubmit}
         handleSubmitFailed={handleSubmitFailed}
