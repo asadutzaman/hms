@@ -3,7 +3,7 @@
 namespace App\Http\Resources;
 
 use App\Enums\StatusEnum;
-use App\Repositories\EmployeeRepository;
+use App\Repositories\UserRepository;
 
 class AppointmentSlotResource extends BaseResource
 {
@@ -22,9 +22,9 @@ class AppointmentSlotResource extends BaseResource
             $resource = $this->resource;
 
             if (!empty($resource->doctor_id)) {
-                $doctor = (new EmployeeRepository())->getById($resource->doctor_id);
-                $includesData['doctor_name']      = $doctor->name_en ?? '';
-                $includesData['doctor_name_bn']   = $doctor->name_bn ?? '';
+                // Doctor is now a User (was an Employee).
+                $includesData['doctor_name']      = (new UserRepository())->getUserNameById($resource->doctor_id);
+                $includesData['doctor_name_bn']   = '';
             }
 
             $includesData['available_capacity'] = max(($resource->max_capacity ?? 0) - ($resource->booked_count ?? 0), 0);

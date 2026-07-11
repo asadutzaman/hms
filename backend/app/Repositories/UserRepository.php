@@ -67,6 +67,24 @@ class UserRepository extends BaseRepository
         return isset($result->name) ? $result->name : '';
     }
 
+    /**
+     * Active users holding the Doctor role. role_ids is a JSON array of
+     * stringified ids, so match with whereJsonContains on the string value.
+     */
+    public function getDoctors($columns = ['id', 'name', 'designation_id', 'department_id', 'status'])
+    {
+        $roleId = \App\Models\Role::query()->where('name', 'Doctor')->value('id');
+        if (empty($roleId)) {
+            return collect();
+        }
+
+        return $this->model->newQuery()
+            ->whereJsonContains('role_ids', (string) $roleId)
+            ->where('status', 1)
+            ->orderBy('name')
+            ->get($columns);
+    }
+
     public function getGlobalState($userId)
     {
         $data = [];

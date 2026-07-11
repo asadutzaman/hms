@@ -21,8 +21,9 @@ import {
   CopyOutlined,
 } from '@ant-design/icons'
 import dayjs, {Dayjs} from 'dayjs'
-import {DepartmentApi} from 'src/app/api'
 import {DATABASE_DATE_FORMAT} from 'src/app/utils/DateTimeUtils'
+import DepartmentSelect from 'src/app/components/Dropdown/DepartmentSelect'
+import {useDoctorList} from 'src/app/hooks/lists/useDoctorList'
 
 const {TextArea} = Input
 const {Option} = Select
@@ -34,22 +35,8 @@ const {Option} = Select
 // truth) rather than a separate state object.
 const DoctorScheduleForm: FC<any> = (props) => {
   const {formRef, initialValues, handleChange, handleSubmit, handleSubmitFailed, isEditMode} = props
-  const [departments, setDepartments] = useState<any[]>([])
+  const {doctorList, loadingDoctorList} = useDoctorList()
   const slots: any[] = Form.useWatch('slots', formRef) || []
-
-  useEffect(() => {
-    loadDepartments()
-  }, [])
-
-  const loadDepartments = async () => {
-    try {
-      const response: any = await DepartmentApi.dropdown()
-      const data = response?.data?.data || response?.data || []
-      setDepartments(Array.isArray(data) ? data : [])
-    } catch (e) {
-      console.error('Failed to load departments', e)
-    }
-  }
 
   const currentSlots = (): any[] => formRef.getFieldValue('slots') || []
   const setSlots = (updated: any[]) => formRef.setFieldsValue({slots: updated})
@@ -86,19 +73,21 @@ const DoctorScheduleForm: FC<any> = (props) => {
       {
         ...source,
         id: null,
-        day_of_week: source.day_of_week < 7 ? source.day_of_week + 1 : 1,
+        day_of_week: source.day_of_week < 6 ? source.day_of_week + 1 : 0,
       },
     ])
   }
 
+  // Values follow Carbon's dayOfWeek (0=Sunday … 6=Saturday) to match the
+  // backend validator (between:0,6) and materializeSlotsForDate.
   const dayOptions = [
+    {value: 0, label: 'Sunday'},
     {value: 1, label: 'Monday'},
     {value: 2, label: 'Tuesday'},
     {value: 3, label: 'Wednesday'},
     {value: 4, label: 'Thursday'},
     {value: 5, label: 'Friday'},
     {value: 6, label: 'Saturday'},
-    {value: 7, label: 'Sunday'},
   ]
 
   return (
@@ -138,18 +127,31 @@ const DoctorScheduleForm: FC<any> = (props) => {
                 name='doctor_id'
                 rules={[{required: true, message: 'Doctor is required'}]}
               >
-                <Input type='number' placeholder='Doctor ID (from employees table)' />
+                <Select
+                  showSearch
+                  allowClear
+                  loading={loadingDoctorList}
+                  optionFilterProp='children'
+                  placeholder='Select doctor'
+                >
+                  {doctorList.map((doc: any) => (
+                    <Option key={`doctor-${doc.id}`} value={doc.id}>
+                      {doc.name}
+                    </Option>
+                  ))}
+                </Select>
               </Form.Item>
             </Col>
             <Col span={12}>
               <Form.Item label='Department' name='department_id'>
-                <Select allowClear showSearch optionFilterProp='children' placeholder='Select department'>
-                  {departments.map((d: any) => (
-                    <Option key={d.value || d.id} value={d.value || d.id}>
-                      {d.label || d.name}
-                    </Option>
-                  ))}
-                </Select>
+                <DepartmentSelect
+                  departmentId={formRef.getFieldValue('department_id')}
+                  placeholder='Select department'
+                  allowClear
+                  onSelect={(value: any) => formRef.setFieldsValue({department_id: value})}
+                  onChange={(value: any) => formRef.setFieldsValue({department_id: value})}
+                  onLoad={(value: any) => formRef.setFieldsValue({department_id: value})}
+                />
               </Form.Item>
             </Col>
           </Row>
@@ -177,6 +179,37 @@ const DoctorScheduleForm: FC<any> = (props) => {
             <Col span={8}>
               <Form.Item label='Chamber ID' name='chamber_id'>
                 <Input type='number' placeholder='Chamber ID (optional)' />
+              </Form.Item>
+            </Col>
+          </Row>
+
+          <Row gutter={16}>
+            <Col span={6}>
+              <Form.Item
+                label='Slot Duration (min)'
+                name='slot_duration_minutes'
+                rules={[{required: true, message: 'Slot duration is required'}]}
+              >
+                <InputNumber min={5} max={240} step={5} style={{width: '100%'}} />
+              </Form.Item>
+            </Col>
+            <Col span={6}>
+              <Form.Item
+                label='Max Patients / Slot'
+                name='max_patients_per_slot'
+                rules={[{required: true, message: 'Max patients per slot is required'}]}
+              >
+                <InputNumber min={1} max={100} style={{width: '100%'}} />
+              </Form.Item>
+            </Col>
+            <Col span={6}>
+              <Form.Item label='Buffer (min)' name='buffer_minutes'>
+                <InputNumber min={0} max={120} step={5} style={{width: '100%'}} />
+              </Form.Item>
+            </Col>
+            <Col span={6}>
+              <Form.Item label='Consultation Fee' name='consultation_fee'>
+                <InputNumber min={0} style={{width: '100%'}} />
               </Form.Item>
             </Col>
           </Row>

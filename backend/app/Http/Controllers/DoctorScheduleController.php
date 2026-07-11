@@ -51,17 +51,19 @@ class DoctorScheduleController extends Controller
                 $this->errorResponse('Failed to create doctor schedule.');
             }
 
-            // Persist nested slots if provided
+            // Persist nested slots if provided. Only fillable columns of
+            // DoctorScheduleSlot — the FK is doctor_schedule_id (NOT NULL);
+            // there is no schedule_id/consultation_fee column on slots.
             if (!empty($slots) && is_array($slots)) {
                 foreach ($slots as $slot) {
                     DoctorScheduleSlot::create([
-                        'schedule_id'            => $schedule->id,
+                        'doctor_schedule_id'     => $schedule->id,
                         'day_of_week'            => $slot['day_of_week'],
                         'start_time'             => $slot['start_time'],
                         'end_time'               => $slot['end_time'],
                         'slot_duration_minutes'  => $slot['slot_duration_minutes'] ?? ($schedule->slot_duration_minutes ?? 15),
                         'max_patients_per_slot'  => $slot['max_patients_per_slot'] ?? ($schedule->max_patients_per_slot ?? 1),
-                        'consultation_fee'       => $slot['consultation_fee'] ?? ($schedule->consultation_fee ?? 0),
+                        'session_label'          => $slot['session_label'] ?? null,
                     ]);
                 }
             }

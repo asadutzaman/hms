@@ -4,7 +4,7 @@ namespace App\Http\Resources;
 
 use App\Enums\StatusEnum;
 use App\Repositories\DepartmentRepository;
-use App\Repositories\EmployeeRepository;
+use App\Repositories\UserRepository;
 
 class DoctorScheduleResource extends BaseResource
 {
@@ -23,10 +23,10 @@ class DoctorScheduleResource extends BaseResource
             $resource = $this->resource;
 
             if (!empty($resource->doctor_id)) {
-                $doctor = (new EmployeeRepository())->getById($resource->doctor_id);
-                $includesData['doctor_name']        = $doctor->name_en ?? '';
-                $includesData['doctor_name_bn']     = $doctor->name_bn ?? '';
-                $includesData['doctor_employee_id'] = $doctor->employee_id ?? '';
+                // Doctor is now a User (was an Employee).
+                $includesData['doctor_name']        = (new UserRepository())->getUserNameById($resource->doctor_id);
+                $includesData['doctor_name_bn']     = '';
+                $includesData['doctor_employee_id'] = '';
             }
 
             if (!empty($resource->department_id)) {

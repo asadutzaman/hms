@@ -142,6 +142,19 @@ class UserController extends Controller
         }
     }
 
+    /**
+     * GET /user/doctors — active users holding the Doctor role, for the
+     * doctor pickers (Doctor Schedule).
+     */
+    public function doctors()
+    {
+        try {
+            return $this->successResponse($this->repository->getDoctors());
+        } catch (\Exception $e) {
+            return $this->errorResponse($e->getMessage());
+        }
+    }
+
     public function device($id)
     {
         try {

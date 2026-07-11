@@ -240,4 +240,47 @@ class DoctorScheduleRepository extends BaseRepository
             $slot->save();
         });
     }
+
+    /**
+     * Materialize concrete appointment_slots for every date in [$from, $to]
+     * for the schedule's doctor. Returns the total number of slot rows
+     * created/refreshed. Backs POST /doctor-schedule/{id}/generate-slots.
+     */
+    public function generateSlotsForDateRange(int $scheduleId, string $from, string $to): int
+    {
+        $schedule = $this->newQuery()->find($scheduleId);
+        if (!$schedule) {
+            throw new RuntimeException('Schedule not found.');
+        }
+
+        $cursor = Carbon::parse($from)->startOfDay();
+        $end    = Carbon::parse($to)->startOfDay();
+        $total  = 0;
+
+        while ($cursor->lte($end)) {
+            $slots = $this->materializeSlotsForDate((int) $schedule->doctor_id, $cursor->toDateString());
+            $total += count($slots);
+            $cursor->addDay();
+        }
+
+        return $total;
+    }
+
+    /**
+     * Open, bookable slots for a doctor on a date (materializes on demand).
+     * Backs GET /doctor-schedule/available-slots.
+     */
+    public function getAvailableSlots(int $doctorId, string $date): array
+    {
+        $this->materializeSlotsForDate($doctorId, $date);
+
+        return AppointmentSlot::query()
+            ->where('doctor_id', $doctorId)
+            ->whereDate('slot_date', $date)
+            ->where('is_blocked', false)
+            ->where('status', 'open')
+            ->orderBy('start_time')
+            ->get()
+            ->all();
+    }
 }

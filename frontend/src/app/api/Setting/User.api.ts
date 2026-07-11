@@ -14,6 +14,7 @@ const endpoints = {
     delete: (id: Number) => `${RESOURCE_ENDPOINT}/${id}`,
     bulk: () => `${RESOURCE_ENDPOINT}/bulk`,
     dropdown: () => `${RESOURCE_ENDPOINT}/dropdown`,
+    doctors: () => `${RESOURCE_ENDPOINT}/doctors`,
 }
 
 export default class UserApi {
@@ -64,6 +65,11 @@ export default class UserApi {
 
     public dropdown = (params = {}, headers = {}): AxiosPromise<any> => {
         const url = endpoints.dropdown();
+        return HttpService.get(url, params, headers);
+    }
+
+    public doctors = (params = {}, headers = {}): AxiosPromise<any> => {
+        const url = endpoints.doctors();
         return HttpService.get(url, params, headers);
     }
 }

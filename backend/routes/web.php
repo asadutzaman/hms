@@ -137,6 +137,9 @@ Route::prefix('api')->group(function () {
         // Drop Down List
         Route::get('/dropdown', [App\Http\Controllers\UserController::class, 'dropdown']);
 
+        // Doctors only (users holding the Doctor role) — must precede GET /{id}.
+        Route::get('/doctors', [App\Http\Controllers\UserController::class, 'doctors']);
+
         // Create
         Route::post('/update-user-setting', [App\Http\Controllers\UserController::class, 'updateUserSetting']);
 
@@ -1317,6 +1320,8 @@ Route::prefix('api')->group(function () {
     Route::group(['prefix' => 'doctor-schedule', 'middleware' => ['restrictIp', 'authVerify']], function () {
         Route::post('/bulk', [App\Http\Controllers\DoctorScheduleController::class, 'bulk']);
         Route::get('/dropdown', [App\Http\Controllers\DoctorScheduleController::class, 'dropdown']);
+        // Static-segment routes must precede GET /{id}, or `show` captures them.
+        Route::get('/available-slots', [App\Http\Controllers\DoctorScheduleController::class, 'availableSlots']);
         Route::get('/', [App\Http\Controllers\DoctorScheduleController::class, 'index']);
         Route::get('/{id}', [App\Http\Controllers\DoctorScheduleController::class, 'show']);
         Route::post('/', [App\Http\Controllers\DoctorScheduleController::class, 'store']);
@@ -1324,9 +1329,8 @@ Route::prefix('api')->group(function () {
         Route::patch('/{id}', [App\Http\Controllers\DoctorScheduleController::class, 'updateFields']);
         Route::delete('/{id}', [App\Http\Controllers\DoctorScheduleController::class, 'destroy']);
 
-        // Slot materialization
+        // Slot materialization for a schedule over a date range.
         Route::post('/{id}/generate-slots', [App\Http\Controllers\DoctorScheduleController::class, 'generateSlots']);
-        Route::get('/available-slots', [App\Http\Controllers\DoctorScheduleController::class, 'availableSlots']);
     });
 
     // APPOINTMENT WAITLIST

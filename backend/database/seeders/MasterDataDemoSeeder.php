@@ -16,6 +16,7 @@ use App\Models\Item;
 use App\Models\ItemCategory;
 use App\Models\LeaveType;
 use App\Models\Logistic;
+use App\Models\Role;
 use App\Models\Shelve;
 use App\Models\Shift;
 use App\Models\Supplier;
@@ -350,6 +351,9 @@ class MasterDataDemoSeeder extends Seeder
         ];
 
         $seniorDesignationId = Designation::query()->where('title', 'Senior Consultant')->value('id');
+        // Doctor Schedule now keys doctor_id to users; doctor users must carry
+        // the Doctor role so the /user/doctors picker lists them.
+        $doctorRoleId = Role::query()->where('name', 'Doctor')->value('id');
 
         foreach ($doctorRoster as $i => [$name, $gender, $dept]) {
             $slug  = 'doctor' . ($i + 2); // doctor1 already used by OpdDemoSeeder's doctor@hms.local
@@ -359,8 +363,9 @@ class MasterDataDemoSeeder extends Seeder
             $user = User::query()->updateOrCreate(
                 ['email' => $email],
                 [
-                    'first_name' => $name, 'last_name' => '', 'user_type' => 'employee',
+                    'first_name' => $name, 'last_name' => '', 'name' => $name, 'user_type' => 'employee',
                     'phone' => $phone, 'password' => Hash::make('password'),
+                    'role_ids' => $doctorRoleId ? [(string) $doctorRoleId] : [],
                     'web_access' => 1, 'app_access' => 1, 'is_verified' => 1, 'status' => 1,
                 ],
             );
@@ -405,7 +410,7 @@ class MasterDataDemoSeeder extends Seeder
             $user = User::query()->updateOrCreate(
                 ['email' => $email],
                 [
-                    'first_name' => $name, 'last_name' => '', 'user_type' => 'employee',
+                    'first_name' => $name, 'last_name' => '', 'name' => $name, 'user_type' => 'employee',
                     'phone' => $phone, 'password' => Hash::make('password'),
                     'web_access' => 1, 'app_access' => 1, 'is_verified' => 1, 'status' => 1,
                 ],
@@ -432,7 +437,7 @@ class MasterDataDemoSeeder extends Seeder
             $deptId = $this->departments[$doc['department']] ?? null;
 
             $schedule = DoctorSchedule::query()->updateOrCreate(
-                ['doctor_id' => $doc['employee_id'], 'is_default' => true],
+                ['doctor_id' => $doc['user_id'], 'is_default' => true],
                 [
                     'department_id' => $deptId,
                     'name' => 'Regular OPD Schedule',
@@ -485,7 +490,7 @@ class MasterDataDemoSeeder extends Seeder
                     $endAt   = $date->copy()->setTimeFromTimeString($end);
 
                     AppointmentSlot::query()->updateOrCreate(
-                        ['doctor_id' => $doc['employee_id'], 'slot_date' => $date->toDateString(), 'start_time' => $start],
+                        ['doctor_id' => $doc['user_id'], 'slot_date' => $date->toDateString(), 'start_time' => $start],
                         [
                             'department_id' => $deptId,
                             'end_time' => $end,

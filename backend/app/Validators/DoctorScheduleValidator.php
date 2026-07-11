@@ -25,9 +25,9 @@ class DoctorScheduleValidator extends BaseValidator
 
             case 'POST':
                 return [
-                    'doctor_id'              => ['required', 'integer', 'exists:employees,id'],
+                    'doctor_id'              => ['required', 'integer', 'exists:users,id'],
                     'department_id'          => ['nullable', 'integer', 'exists:departments,id'],
-                    'schedule_name'          => ['required', 'string', 'max:191'],
+                    'name'                   => ['required', 'string', 'max:191'],
                     'effective_from'         => ['required', 'date'],
                     'effective_to'           => ['nullable', 'date', 'after_or_equal:effective_from'],
                     'slot_duration_minutes'  => ['required', 'integer', 'min:5', 'max:240'],
@@ -49,9 +49,9 @@ class DoctorScheduleValidator extends BaseValidator
             case 'PUT':
             case 'PATCH':
                 return [
-                    'doctor_id'              => ['nullable', 'integer', 'exists:employees,id'],
+                    'doctor_id'              => ['nullable', 'integer', 'exists:users,id'],
                     'department_id'          => ['nullable', 'integer', 'exists:departments,id'],
-                    'schedule_name'          => ['required', 'string', 'max:191'],
+                    'name'                   => ['required', 'string', 'max:191'],
                     'effective_from'         => ['required', 'date'],
                     'effective_to'           => ['nullable', 'date', 'after_or_equal:effective_from'],
                     'slot_duration_minutes'  => ['required', 'integer', 'min:5', 'max:240'],
@@ -73,7 +73,7 @@ class DoctorScheduleValidator extends BaseValidator
             'doctor_id.required'              => 'Doctor is required.',
             'doctor_id.exists'                => 'Selected doctor does not exist.',
             'department_id.exists'            => 'Selected department does not exist.',
-            'schedule_name.required'          => 'Schedule name is required.',
+            'name.required'                   => 'Schedule name is required.',
             'effective_from.required'         => 'Effective from date is required.',
             'effective_from.date'             => 'Effective from must be a valid date.',
             'effective_to.after_or_equal'     => 'Effective to must be on or after effective from.',
@@ -90,7 +90,7 @@ class DoctorScheduleValidator extends BaseValidator
         $includesAttributes = [
             'doctor_id'             => 'Doctor',
             'department_id'         => 'Department',
-            'schedule_name'         => 'Schedule Name',
+            'name'                  => 'Schedule Name',
             'effective_from'        => 'Effective From',
             'effective_to'          => 'Effective To',
             'slot_duration_minutes' => 'Slot Duration (min)',

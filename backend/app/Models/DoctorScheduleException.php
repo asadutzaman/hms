@@ -62,7 +62,7 @@ class DoctorScheduleException extends BaseModel
 
     public function doctor(): BelongsTo
     {
-        return $this->belongsTo(Employee::class, 'doctor_id');
+        return $this->belongsTo(User::class, 'doctor_id');
     }
 
     public function schedule(): BelongsTo

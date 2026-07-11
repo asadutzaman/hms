@@ -98,11 +98,13 @@ const DoctorScheduleFormController: FC<any> = (props) => {
   }
 
   const handleSubmit = (values: any): void => {
-    if (entityId) {
-      BaseCrudFormService.handleUpdate({...values})
-    } else {
-      BaseCrudFormService.handleCreate({...values})
-    }
+    // handleCreate/handleUpdate already surface errors via Message.error and
+    // then reject; swallow the rejection so a 422 doesn't bubble up as an
+    // unhandled promise rejection (CRA runtime-error overlay).
+    const request = entityId
+      ? BaseCrudFormService.handleUpdate({...values})
+      : BaseCrudFormService.handleCreate({...values})
+    request?.catch(() => {})
   }
 
   return (
