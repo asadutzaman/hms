@@ -9,18 +9,25 @@ class AppointmentSlotRepository extends BaseRepository
 {
     public function __construct(AppointmentSlot $model)
     {
-        parent::__construct($model);
+        // BaseRepository is abstract and defines no constructor, so the previous
+        // parent::__construct($model) call threw "Cannot call constructor" and
+        // left this repository (and the portal available-slots endpoint that
+        // uses it) unusable. Assign the model directly, matching the pattern in
+        // the other repositories (e.g. AppointmentRepository).
+        $this->model = $model;
     }
 
     /**
-     * Get slots for a given doctor on a given date (booked_count < max_capacity).
+     * Get slots for a given doctor on a given date (booked_count < max_patients).
      */
     public function getAvailableSlotsByDoctorAndDate(int $doctorId, string $date)
     {
         return $this->model
             ->where('doctor_id', $doctorId)
             ->where('slot_date', $date)
-            ->whereRaw('booked_count < max_capacity')
+            // Column is max_patients (not max_capacity) — see migration
+            // 2026_06_25_100004_create_appointment_slots_table.
+            ->whereRaw('booked_count < max_patients')
             ->where('status', 1)
             ->orderBy('start_time')
             ->get();
@@ -49,7 +56,7 @@ class AppointmentSlotRepository extends BaseRepository
             if (!$slot) {
                 return null;
             }
-            if ($slot->booked_count >= $slot->max_capacity) {
+            if ($slot->booked_count >= $slot->max_patients) {
                 return null;
             }
             $slot->booked_count = $slot->booked_count + 1;

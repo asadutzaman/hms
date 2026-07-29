@@ -17,6 +17,7 @@ const endpoints = {
     getByWhere: () => `${RESOURCE_ENDPOINT}/get-by-where`,
 
     // schedule ops
+    availableSlots: () => `${RESOURCE_ENDPOINT}/available-slots`,
     byDoctor: (doctorId: any) => `${RESOURCE_ENDPOINT}/by-doctor/${doctorId}`,
     activeSchedules: () => `${RESOURCE_ENDPOINT}/active`,
     slots: (id: any) => `${RESOURCE_ENDPOINT}/${id}/slots`,
@@ -63,6 +64,10 @@ export default class DoctorScheduleApi {
         HttpService.get(endpoints.getByWhere(), params, headers)
 
     // ----- schedule ops -----
+    // Materializes and returns the doctor's open slots for a date.
+    public availableSlots = (params = {}, headers = {}): AxiosPromise<any> =>
+        HttpService.get(endpoints.availableSlots(), params, headers)
+
     public byDoctor = (doctorId: any, params = {}, headers = {}): AxiosPromise<any> =>
         HttpService.get(endpoints.byDoctor(doctorId), params, headers)
 

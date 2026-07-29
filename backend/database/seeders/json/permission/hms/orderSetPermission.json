@@ -1,0 +1,95 @@
+{
+  "resource": {
+    "permission_type": "RESOURCE",
+    "name": "order-set",
+    "display_name": "Order Set",
+    "resource_uri": "order-set",
+    "controller_name": "OrderSetController",
+    "server_url_prefix": "hms",
+    "component": "COMMON"
+  },
+  "scopes": [
+    {
+      "scope": "hms:order-set:menuAccess",
+      "display_name": "Menu Access",
+      "actions": [
+        {
+          "http_method": "GET",
+          "action_name": "index",
+          "uri": "/order-set"
+        }
+      ]
+    },
+    {
+      "scope": "hms:order-set:list",
+      "display_name": "List",
+      "actions": [
+        {
+          "http_method": "GET",
+          "action_name": "index",
+          "uri": "/order-set"
+        }
+      ]
+    },
+    {
+      "scope": "hms:order-set:view",
+      "display_name": "View",
+      "actions": [
+        {
+          "http_method": "GET",
+          "action_name": "show",
+          "uri": "/order-set/*"
+        }
+      ]
+    },
+    {
+      "scope": "hms:order-set:create",
+      "display_name": "Create",
+      "actions": [
+        {
+          "http_method": "POST",
+          "action_name": "store",
+          "uri": "/order-set"
+        }
+      ]
+    },
+    {
+      "scope": "hms:order-set:edit",
+      "display_name": "Edit",
+      "actions": [
+        {
+          "http_method": "PUT",
+          "action_name": "update",
+          "uri": "/order-set/*"
+        },
+        {
+          "http_method": "PATCH",
+          "action_name": "updateFields",
+          "uri": "/order-set/*"
+        }
+      ]
+    },
+    {
+      "scope": "hms:order-set:delete",
+      "display_name": "Delete",
+      "actions": [
+        {
+          "http_method": "DELETE",
+          "action_name": "destroy",
+          "uri": "/order-set/*"
+        }
+      ]
+    },
+    {
+      "scope": "hms:order-set:multiSelect",
+      "display_name": "Multi Select",
+      "actions": [
+        {
+          "http_method": "POST",
+          "action_name": "bulk",
+          "uri": "/order-set/bulk"
+        }
+      ]
+    }
+  ]
+}

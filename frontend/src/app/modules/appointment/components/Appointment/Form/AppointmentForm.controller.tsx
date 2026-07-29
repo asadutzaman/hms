@@ -30,7 +30,7 @@ const initialState = {
     consultation_mode: 'in_person',
     consultation_fee: null,
     follow_up_fee: null,
-    reason: null,
+    reason_for_visit: null,
     symptoms: null,
     notes: null,
     internal_notes: null,
@@ -40,7 +40,9 @@ const initialState = {
     parent_appointment_id: null,
     send_sms_reminder: true,
     send_email_reminder: false,
-    status: 1,
+    // `status` is the backend-managed lifecycle (pending/confirmed/...).
+    // The form's Active toggle maps to status_active.
+    status_active: 1,
   },
   isNewRecord: true,
   loading: false,
@@ -105,7 +107,7 @@ const AppointmentFormController: FC<any> = (props) => {
         consultation_mode: d.consultation_mode,
         consultation_fee: d.consultation_fee,
         follow_up_fee: d.follow_up_fee,
-        reason: d.reason,
+        reason_for_visit: d.reason_for_visit,
         symptoms: d.symptoms,
         notes: d.notes,
         internal_notes: d.internal_notes,
@@ -115,7 +117,7 @@ const AppointmentFormController: FC<any> = (props) => {
         parent_appointment_id: d.parent_appointment_id,
         send_sms_reminder: d.send_sms_reminder,
         send_email_reminder: d.send_email_reminder,
-        status: d.status,
+        status_active: d.status_active,
       }
       handleChange(initFormData)
       formRef.setFieldsValue(initFormData)
@@ -123,11 +125,11 @@ const AppointmentFormController: FC<any> = (props) => {
   }
 
   const handleSubmit = (values: any): void => {
-    if (entityId) {
-      handleUpdate(values)
-    } else {
-      handleCreate(values)
-    }
+    // Errors are already surfaced via Message.error inside handleCreate/
+    // handleUpdate, which then reject; swallow the rejection so a 422 doesn't
+    // surface as an unhandled promise rejection (runtime-error overlay).
+    const request = entityId ? handleUpdate(values) : handleCreate(values)
+    request?.catch(() => {})
   }
 
   const handleCreate = (values: any): Promise<any> =>

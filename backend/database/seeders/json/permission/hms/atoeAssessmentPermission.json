@@ -1,0 +1,95 @@
+{
+  "resource": {
+    "permission_type": "RESOURCE",
+    "name": "atoe-assessment",
+    "display_name": "A-to-E Assessment",
+    "resource_uri": "atoe-assessment",
+    "controller_name": "AtoeAssessmentController",
+    "server_url_prefix": "hms",
+    "component": "COMMON"
+  },
+  "scopes": [
+    {
+      "scope": "hms:atoe-assessment:menuAccess",
+      "display_name": "Menu Access",
+      "actions": [
+        {
+          "http_method": "GET",
+          "action_name": "index",
+          "uri": "/atoe-assessment"
+        }
+      ]
+    },
+    {
+      "scope": "hms:atoe-assessment:list",
+      "display_name": "List",
+      "actions": [
+        {
+          "http_method": "GET",
+          "action_name": "index",
+          "uri": "/atoe-assessment"
+        }
+      ]
+    },
+    {
+      "scope": "hms:atoe-assessment:view",
+      "display_name": "View",
+      "actions": [
+        {
+          "http_method": "GET",
+          "action_name": "show",
+          "uri": "/atoe-assessment/*"
+        }
+      ]
+    },
+    {
+      "scope": "hms:atoe-assessment:create",
+      "display_name": "Create",
+      "actions": [
+        {
+          "http_method": "POST",
+          "action_name": "store",
+          "uri": "/atoe-assessment"
+        }
+      ]
+    },
+    {
+      "scope": "hms:atoe-assessment:edit",
+      "display_name": "Edit",
+      "actions": [
+        {
+          "http_method": "PUT",
+          "action_name": "update",
+          "uri": "/atoe-assessment/*"
+        },
+        {
+          "http_method": "PATCH",
+          "action_name": "updateFields",
+          "uri": "/atoe-assessment/*"
+        }
+      ]
+    },
+    {
+      "scope": "hms:atoe-assessment:delete",
+      "display_name": "Delete",
+      "actions": [
+        {
+          "http_method": "DELETE",
+          "action_name": "destroy",
+          "uri": "/atoe-assessment/*"
+        }
+      ]
+    },
+    {
+      "scope": "hms:atoe-assessment:multiSelect",
+      "display_name": "Multi Select",
+      "actions": [
+        {
+          "http_method": "POST",
+          "action_name": "bulk",
+          "uri": "/atoe-assessment/bulk"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,95 @@
+{
+  "resource": {
+    "permission_type": "RESOURCE",
+    "name": "bleep",
+    "display_name": "Bleep",
+    "resource_uri": "bleep",
+    "controller_name": "BleepController",
+    "server_url_prefix": "hms",
+    "component": "COMMON"
+  },
+  "scopes": [
+    {
+      "scope": "hms:bleep:menuAccess",
+      "display_name": "Menu Access",
+      "actions": [
+        {
+          "http_method": "GET",
+          "action_name": "index",
+          "uri": "/bleep"
+        }
+      ]
+    },
+    {
+      "scope": "hms:bleep:list",
+      "display_name": "List",
+      "actions": [
+        {
+          "http_method": "GET",
+          "action_name": "index",
+          "uri": "/bleep"
+        }
+      ]
+    },
+    {
+      "scope": "hms:bleep:view",
+      "display_name": "View",
+      "actions": [
+        {
+          "http_method": "GET",
+          "action_name": "show",
+          "uri": "/bleep/*"
+        }
+      ]
+    },
+    {
+      "scope": "hms:bleep:create",
+      "display_name": "Create",
+      "actions": [
+        {
+          "http_method": "POST",
+          "action_name": "store",
+          "uri": "/bleep"
+        }
+      ]
+    },
+    {
+      "scope": "hms:bleep:edit",
+      "display_name": "Edit",
+      "actions": [
+        {
+          "http_method": "PUT",
+          "action_name": "update",
+          "uri": "/bleep/*"
+        },
+        {
+          "http_method": "PATCH",
+          "action_name": "updateFields",
+          "uri": "/bleep/*"
+        }
+      ]
+    },
+    {
+      "scope": "hms:bleep:delete",
+      "display_name": "Delete",
+      "actions": [
+        {
+          "http_method": "DELETE",
+          "action_name": "destroy",
+          "uri": "/bleep/*"
+        }
+      ]
+    },
+    {
+      "scope": "hms:bleep:multiSelect",
+      "display_name": "Multi Select",
+      "actions": [
+        {
+          "http_method": "POST",
+          "action_name": "bulk",
+          "uri": "/bleep/bulk"
+        }
+      ]
+    }
+  ]
+}

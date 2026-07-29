@@ -70,19 +70,33 @@ class UserRepository extends BaseRepository
     /**
      * Active users holding the Doctor role. role_ids is a JSON array of
      * stringified ids, so match with whereJsonContains on the string value.
+     *
+     * When $departmentId is given, narrow to doctors of that department —
+     * either by the user's own department, or because they run a schedule
+     * there (schedules carry the department a doctor consults in).
      */
-    public function getDoctors($columns = ['id', 'name', 'designation_id', 'department_id', 'status'])
+    public function getDoctors($departmentId = null, $columns = ['id', 'name', 'designation_id', 'department_id', 'status'])
     {
         $roleId = \App\Models\Role::query()->where('name', 'Doctor')->value('id');
         if (empty($roleId)) {
             return collect();
         }
 
-        return $this->model->newQuery()
+        $query = $this->model->newQuery()
             ->whereJsonContains('role_ids', (string) $roleId)
-            ->where('status', 1)
-            ->orderBy('name')
-            ->get($columns);
+            ->where('status', 1);
+
+        if (!empty($departmentId)) {
+            $query->where(function ($q) use ($departmentId) {
+                $q->where('department_id', $departmentId)
+                    ->orWhereIn('id', \App\Models\DoctorSchedule::query()
+                        ->where('department_id', $departmentId)
+                        ->where('status', 1)
+                        ->select('doctor_id'));
+            });
+        }
+
+        return $query->orderBy('name')->get($columns);
     }
 
     public function getGlobalState($userId)

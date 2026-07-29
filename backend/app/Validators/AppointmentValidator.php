@@ -27,19 +27,27 @@ class AppointmentValidator extends BaseValidator
 
             case 'POST':
                 return [
+                    // Field names follow the actual appointments table: start_time
+                    // (not appointment_time), reason_for_visit (not reason), and
+                    // there is no `type` column (source/consultation_mode cover it).
+                    // doctor_id references users — doctors are users, not employees.
                     'patient_id'           => ['required', 'integer', 'exists:patients,id'],
-                    'doctor_id'            => ['required', 'integer', 'exists:employees,id'],
+                    'doctor_id'            => ['required', 'integer', 'exists:users,id'],
                     'department_id'        => ['nullable', 'integer', 'exists:departments,id'],
                     'appointment_slot_id'  => ['nullable', 'integer', 'exists:appointment_slots,id'],
                     'appointment_date'     => ['required', 'date'],
-                    'appointment_time'     => ['required', 'date_format:H:i'],
-                    'end_time'             => ['nullable', 'date_format:H:i', 'after:appointment_time'],
+                    'start_time'           => ['required', 'date_format:H:i'],
+                    'end_time'             => ['nullable', 'date_format:H:i', 'after:start_time'],
                     'duration_minutes'     => ['nullable', 'integer', 'min:5', 'max:240'],
-                    'type'                 => ['required', Rule::in(AppointmentTypeEnum::getKeys())],
+                    'consultation_mode'    => ['nullable', 'string', 'max:50'],
                     'status'               => ['nullable', Rule::in(AppointmentStatusEnum::getKeys())],
                     'consultation_fee'     => ['nullable', 'numeric', 'min:0'],
-                    'payment_status'       => ['nullable', Rule::in(PaymentStatusEnum::getKeys())],
-                    'reason'               => ['nullable', 'string', 'max:500'],
+                    // Explicit list, not PaymentStatusEnum: that enum's values are
+                    // uppercase and shared with IPD, while the appointments
+                    // payment_status CHECK only accepts these lowercase values.
+                    'payment_status'       => ['nullable', Rule::in(['unpaid', 'partial', 'paid', 'refunded', 'waived'])],
+                    'reason_for_visit'     => ['nullable', 'string', 'max:500'],
+                    'symptoms'             => ['nullable', 'string', 'max:1000'],
                     'notes'                => ['nullable', 'string', 'max:1000'],
                     'source'               => ['nullable', 'string', 'max:50'],
                 ];
@@ -48,18 +56,22 @@ class AppointmentValidator extends BaseValidator
             case 'PATCH':
                 return [
                     'patient_id'           => ['nullable', 'integer', 'exists:patients,id'],
-                    'doctor_id'            => ['nullable', 'integer', 'exists:employees,id'],
+                    'doctor_id'            => ['nullable', 'integer', 'exists:users,id'],
                     'department_id'        => ['nullable', 'integer', 'exists:departments,id'],
                     'appointment_slot_id'  => ['nullable', 'integer', 'exists:appointment_slots,id'],
                     'appointment_date'     => ['required', 'date'],
-                    'appointment_time'     => ['required', 'date_format:H:i'],
-                    'end_time'             => ['nullable', 'date_format:H:i', 'after:appointment_time'],
+                    'start_time'           => ['required', 'date_format:H:i'],
+                    'end_time'             => ['nullable', 'date_format:H:i', 'after:start_time'],
                     'duration_minutes'     => ['nullable', 'integer', 'min:5', 'max:240'],
-                    'type'                 => ['nullable', Rule::in(AppointmentTypeEnum::getKeys())],
+                    'consultation_mode'    => ['nullable', 'string', 'max:50'],
                     'status'               => ['nullable', Rule::in(AppointmentStatusEnum::getKeys())],
                     'consultation_fee'     => ['nullable', 'numeric', 'min:0'],
-                    'payment_status'       => ['nullable', Rule::in(PaymentStatusEnum::getKeys())],
-                    'reason'               => ['nullable', 'string', 'max:500'],
+                    // Explicit list, not PaymentStatusEnum: that enum's values are
+                    // uppercase and shared with IPD, while the appointments
+                    // payment_status CHECK only accepts these lowercase values.
+                    'payment_status'       => ['nullable', Rule::in(['unpaid', 'partial', 'paid', 'refunded', 'waived'])],
+                    'reason_for_visit'     => ['nullable', 'string', 'max:500'],
+                    'symptoms'             => ['nullable', 'string', 'max:1000'],
                     'notes'                => ['nullable', 'string', 'max:1000'],
                     'cancellation_reason'  => ['nullable', 'string', 'max:500'],
                     'rescheduled_from_id'  => ['nullable', 'integer', 'exists:appointments,id'],
@@ -79,10 +91,9 @@ class AppointmentValidator extends BaseValidator
             'doctor_id.required'        => 'Doctor is required.',
             'doctor_id.exists'          => 'Selected doctor does not exist.',
             'appointment_date.required' => 'Appointment date is required.',
-            'appointment_time.required' => 'Appointment time is required.',
-            'appointment_time.date_format'=> 'Appointment time must be HH:MM.',
-            'type.required'             => 'Appointment type is required.',
-            'type.in'                   => 'Appointment type must be one of: ONLINE, WALK_IN, FOLLOW_UP.',
+            'start_time.required'       => 'Appointment time is required.',
+            'start_time.date_format'    => 'Appointment time must be HH:MM.',
+            'end_time.after'            => 'End time must be after the start time.',
         ];
         return array_merge($messages, $includesMessages);
     }
@@ -96,7 +107,7 @@ class AppointmentValidator extends BaseValidator
             'department_id'        => 'Department',
             'appointment_slot_id'  => 'Slot',
             'appointment_date'     => 'Appointment Date',
-            'appointment_time'     => 'Appointment Time',
+            'start_time'           => 'Appointment Time',
             'consultation_fee'     => 'Consultation Fee',
             'payment_status'       => 'Payment Status',
             'cancellation_reason'  => 'Cancellation Reason',

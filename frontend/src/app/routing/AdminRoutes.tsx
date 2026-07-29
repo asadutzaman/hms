@@ -10,6 +10,7 @@ import BuilderPageWrapper from '../pages/layout-builder/BuilderPageWrapper';
 
 const AdminRoutes = () => {
   const ExampleRoutes = lazy(() => import('../modules/example/ExampleRoutes'));
+  const ClinicalRoutes = lazy(() => import('../modules/clinical/ClinicalRoutes'));
   const SettingRoutes = lazy(() => import('../modules/setting/SettingRoutes'));
   const SetupRoutes = lazy(() => import('../modules/setup/SetupRoutes'));
   const InventoryRoutes = lazy(
@@ -40,6 +41,14 @@ const AdminRoutes = () => {
           element={
             <SuspensedView>
               <ExampleRoutes />
+            </SuspensedView>
+          }
+        />
+        <Route
+          path={'/clinical/*'}
+          element={
+            <SuspensedView>
+              <ClinicalRoutes />
             </SuspensedView>
           }
         />

@@ -2153,6 +2153,32 @@ Route::prefix('api')->group(function () {
         Route::post('/{id}/reading', [App\Http\Controllers\PatientChronicConditionController::class, 'addReading']);
     });
 
+    // MOBILE CLINICAL FEATURES — standard web CRUD for the 9 entities that also
+    // back the /api/v1/mobile role apps (SOAP note, code blue, daily review,
+    // handover, discharge checklist, clinical job/task, bleep, A-to-E, order set).
+    foreach ([
+        'soap-note'          => App\Http\Controllers\SoapNoteController::class,
+        'code-blue-event'    => App\Http\Controllers\CodeBlueEventController::class,
+        'daily-review'       => App\Http\Controllers\DailyReviewController::class,
+        'shift-handover'     => App\Http\Controllers\ShiftHandoverController::class,
+        'discharge-checklist'=> App\Http\Controllers\DischargeChecklistController::class,
+        'clinical-job'       => App\Http\Controllers\ClinicalJobController::class,
+        'bleep'              => App\Http\Controllers\BleepController::class,
+        'atoe-assessment'    => App\Http\Controllers\AtoeAssessmentController::class,
+        'order-set'          => App\Http\Controllers\OrderSetController::class,
+    ] as $prefix => $controller) {
+        Route::group(['prefix' => $prefix, 'middleware' => ['restrictIp', 'authVerify']], function () use ($controller) {
+            Route::post('/bulk', [$controller, 'bulk']);
+            Route::get('/dropdown', [$controller, 'dropdown']);
+            Route::get('/', [$controller, 'index']);
+            Route::get('/{id}', [$controller, 'show']);
+            Route::post('/', [$controller, 'store']);
+            Route::put('/{id}', [$controller, 'update']);
+            Route::patch('/{id}', [$controller, 'updateFields']);
+            Route::delete('/{id}', [$controller, 'destroy']);
+        });
+    }
+
     // PATIENT PORTAL (Sprint 8, F-17-xx) — a fully separate auth stack from
     // staff (patientAuthVerify, not authVerify — see project_hms_sprint8_scope
     // memory). The two auth entry points (request-otp/verify-otp) are

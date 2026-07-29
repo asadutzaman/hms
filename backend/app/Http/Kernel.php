@@ -56,6 +56,7 @@ class Kernel extends HttpKernel
         'restrictIp' => \App\Http\Middleware\IpMiddleware::class,
         'authVerify' => \App\Http\Middleware\AuthVerifyMiddleware::class,
         'patientAuthVerify' => \App\Http\Middleware\PatientAuthVerifyMiddleware::class,
+        'mobile.role' => \App\Http\Middleware\MobileRoleMiddleware::class,
         'auth' => \App\Http\Middleware\Authenticate::class,
         'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
         'auth.session' => \Illuminate\Session\Middleware\AuthenticateSession::class,

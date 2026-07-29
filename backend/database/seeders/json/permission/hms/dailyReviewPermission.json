@@ -1,0 +1,95 @@
+{
+  "resource": {
+    "permission_type": "RESOURCE",
+    "name": "daily-review",
+    "display_name": "Daily Review",
+    "resource_uri": "daily-review",
+    "controller_name": "DailyReviewController",
+    "server_url_prefix": "hms",
+    "component": "COMMON"
+  },
+  "scopes": [
+    {
+      "scope": "hms:daily-review:menuAccess",
+      "display_name": "Menu Access",
+      "actions": [
+        {
+          "http_method": "GET",
+          "action_name": "index",
+          "uri": "/daily-review"
+        }
+      ]
+    },
+    {
+      "scope": "hms:daily-review:list",
+      "display_name": "List",
+      "actions": [
+        {
+          "http_method": "GET",
+          "action_name": "index",
+          "uri": "/daily-review"
+        }
+      ]
+    },
+    {
+      "scope": "hms:daily-review:view",
+      "display_name": "View",
+      "actions": [
+        {
+          "http_method": "GET",
+          "action_name": "show",
+          "uri": "/daily-review/*"
+        }
+      ]
+    },
+    {
+      "scope": "hms:daily-review:create",
+      "display_name": "Create",
+      "actions": [
+        {
+          "http_method": "POST",
+          "action_name": "store",
+          "uri": "/daily-review"
+        }
+      ]
+    },
+    {
+      "scope": "hms:daily-review:edit",
+      "display_name": "Edit",
+      "actions": [
+        {
+          "http_method": "PUT",
+          "action_name": "update",
+          "uri": "/daily-review/*"
+        },
+        {
+          "http_method": "PATCH",
+          "action_name": "updateFields",
+          "uri": "/daily-review/*"
+        }
+      ]
+    },
+    {
+      "scope": "hms:daily-review:delete",
+      "display_name": "Delete",
+      "actions": [
+        {
+          "http_method": "DELETE",
+          "action_name": "destroy",
+          "uri": "/daily-review/*"
+        }
+      ]
+    },
+    {
+      "scope": "hms:daily-review:multiSelect",
+      "display_name": "Multi Select",
+      "actions": [
+        {
+          "http_method": "POST",
+          "action_name": "bulk",
+          "uri": "/daily-review/bulk"
+        }
+      ]
+    }
+  ]
+}

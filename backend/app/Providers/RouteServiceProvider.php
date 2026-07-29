@@ -46,7 +46,11 @@ class RouteServiceProvider extends ServiceProvider
     protected function configureRateLimiting()
     {
         RateLimiter::for('api', function (Request $request) {
-            return Limit::perMinute(60)->by($request->user()?->id ?: $request->ip());
+            // Key by IP only. The app's default guard ("token"/"access_token")
+            // is a bespoke concept, not a real Laravel auth driver, so calling
+            // $request->user() here throws. Bearer identity is resolved later
+            // by authVerify, not by the framework guard.
+            return Limit::perMinute(120)->by($request->ip());
         });
     }
 }

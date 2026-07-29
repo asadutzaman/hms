@@ -62,11 +62,11 @@ class AppointmentController extends Controller
                 if (empty($data['appointment_date'])) {
                     $data['appointment_date'] = $slot->slot_date;
                 }
-                if (empty($data['appointment_time'])) {
-                    $data['appointment_time'] = $slot->start_time;
+                if (empty($data['start_time'])) {
+                    $data['start_time'] = $slot->start_time;
                 }
-                if (empty($data['department_id']) && !empty($schedule->department_id)) {
-                    $data['department_id'] = $slot->department_id ?? null;
+                if (empty($data['department_id']) && !empty($slot->department_id)) {
+                    $data['department_id'] = $slot->department_id;
                 }
             }
 

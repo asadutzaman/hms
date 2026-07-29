@@ -1,0 +1,95 @@
+{
+  "resource": {
+    "permission_type": "RESOURCE",
+    "name": "code-blue-event",
+    "display_name": "Code Blue Event",
+    "resource_uri": "code-blue-event",
+    "controller_name": "CodeBlueEventController",
+    "server_url_prefix": "hms",
+    "component": "COMMON"
+  },
+  "scopes": [
+    {
+      "scope": "hms:code-blue-event:menuAccess",
+      "display_name": "Menu Access",
+      "actions": [
+        {
+          "http_method": "GET",
+          "action_name": "index",
+          "uri": "/code-blue-event"
+        }
+      ]
+    },
+    {
+      "scope": "hms:code-blue-event:list",
+      "display_name": "List",
+      "actions": [
+        {
+          "http_method": "GET",
+          "action_name": "index",
+          "uri": "/code-blue-event"
+        }
+      ]
+    },
+    {
+      "scope": "hms:code-blue-event:view",
+      "display_name": "View",
+      "actions": [
+        {
+          "http_method": "GET",
+          "action_name": "show",
+          "uri": "/code-blue-event/*"
+        }
+      ]
+    },
+    {
+      "scope": "hms:code-blue-event:create",
+      "display_name": "Create",
+      "actions": [
+        {
+          "http_method": "POST",
+          "action_name": "store",
+          "uri": "/code-blue-event"
+        }
+      ]
+    },
+    {
+      "scope": "hms:code-blue-event:edit",
+      "display_name": "Edit",
+      "actions": [
+        {
+          "http_method": "PUT",
+          "action_name": "update",
+          "uri": "/code-blue-event/*"
+        },
+        {
+          "http_method": "PATCH",
+          "action_name": "updateFields",
+          "uri": "/code-blue-event/*"
+        }
+      ]
+    },
+    {
+      "scope": "hms:code-blue-event:delete",
+      "display_name": "Delete",
+      "actions": [
+        {
+          "http_method": "DELETE",
+          "action_name": "destroy",
+          "uri": "/code-blue-event/*"
+        }
+      ]
+    },
+    {
+      "scope": "hms:code-blue-event:multiSelect",
+      "display_name": "Multi Select",
+      "actions": [
+        {
+          "http_method": "POST",
+          "action_name": "bulk",
+          "uri": "/code-blue-event/bulk"
+        }
+      ]
+    }
+  ]
+}

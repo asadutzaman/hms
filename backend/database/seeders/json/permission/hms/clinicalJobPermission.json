@@ -1,0 +1,95 @@
+{
+  "resource": {
+    "permission_type": "RESOURCE",
+    "name": "clinical-job",
+    "display_name": "Clinical Task",
+    "resource_uri": "clinical-job",
+    "controller_name": "ClinicalJobController",
+    "server_url_prefix": "hms",
+    "component": "COMMON"
+  },
+  "scopes": [
+    {
+      "scope": "hms:clinical-job:menuAccess",
+      "display_name": "Menu Access",
+      "actions": [
+        {
+          "http_method": "GET",
+          "action_name": "index",
+          "uri": "/clinical-job"
+        }
+      ]
+    },
+    {
+      "scope": "hms:clinical-job:list",
+      "display_name": "List",
+      "actions": [
+        {
+          "http_method": "GET",
+          "action_name": "index",
+          "uri": "/clinical-job"
+        }
+      ]
+    },
+    {
+      "scope": "hms:clinical-job:view",
+      "display_name": "View",
+      "actions": [
+        {
+          "http_method": "GET",
+          "action_name": "show",
+          "uri": "/clinical-job/*"
+        }
+      ]
+    },
+    {
+      "scope": "hms:clinical-job:create",
+      "display_name": "Create",
+      "actions": [
+        {
+          "http_method": "POST",
+          "action_name": "store",
+          "uri": "/clinical-job"
+        }
+      ]
+    },
+    {
+      "scope": "hms:clinical-job:edit",
+      "display_name": "Edit",
+      "actions": [
+        {
+          "http_method": "PUT",
+          "action_name": "update",
+          "uri": "/clinical-job/*"
+        },
+        {
+          "http_method": "PATCH",
+          "action_name": "updateFields",
+          "uri": "/clinical-job/*"
+        }
+      ]
+    },
+    {
+      "scope": "hms:clinical-job:delete",
+      "display_name": "Delete",
+      "actions": [
+        {
+          "http_method": "DELETE",
+          "action_name": "destroy",
+          "uri": "/clinical-job/*"
+        }
+      ]
+    },
+    {
+      "scope": "hms:clinical-job:multiSelect",
+      "display_name": "Multi Select",
+      "actions": [
+        {
+          "http_method": "POST",
+          "action_name": "bulk",
+          "uri": "/clinical-job/bulk"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,95 @@
+{
+  "resource": {
+    "permission_type": "RESOURCE",
+    "name": "discharge-checklist",
+    "display_name": "Discharge Checklist",
+    "resource_uri": "discharge-checklist",
+    "controller_name": "DischargeChecklistController",
+    "server_url_prefix": "hms",
+    "component": "COMMON"
+  },
+  "scopes": [
+    {
+      "scope": "hms:discharge-checklist:menuAccess",
+      "display_name": "Menu Access",
+      "actions": [
+        {
+          "http_method": "GET",
+          "action_name": "index",
+          "uri": "/discharge-checklist"
+        }
+      ]
+    },
+    {
+      "scope": "hms:discharge-checklist:list",
+      "display_name": "List",
+      "actions": [
+        {
+          "http_method": "GET",
+          "action_name": "index",
+          "uri": "/discharge-checklist"
+        }
+      ]
+    },
+    {
+      "scope": "hms:discharge-checklist:view",
+      "display_name": "View",
+      "actions": [
+        {
+          "http_method": "GET",
+          "action_name": "show",
+          "uri": "/discharge-checklist/*"
+        }
+      ]
+    },
+    {
+      "scope": "hms:discharge-checklist:create",
+      "display_name": "Create",
+      "actions": [
+        {
+          "http_method": "POST",
+          "action_name": "store",
+          "uri": "/discharge-checklist"
+        }
+      ]
+    },
+    {
+      "scope": "hms:discharge-checklist:edit",
+      "display_name": "Edit",
+      "actions": [
+        {
+          "http_method": "PUT",
+          "action_name": "update",
+          "uri": "/discharge-checklist/*"
+        },
+        {
+          "http_method": "PATCH",
+          "action_name": "updateFields",
+          "uri": "/discharge-checklist/*"
+        }
+      ]
+    },
+    {
+      "scope": "hms:discharge-checklist:delete",
+      "display_name": "Delete",
+      "actions": [
+        {
+          "http_method": "DELETE",
+          "action_name": "destroy",
+          "uri": "/discharge-checklist/*"
+        }
+      ]
+    },
+    {
+      "scope": "hms:discharge-checklist:multiSelect",
+      "display_name": "Multi Select",
+      "actions": [
+        {
+          "http_method": "POST",
+          "action_name": "bulk",
+          "uri": "/discharge-checklist/bulk"
+        }
+      ]
+    }
+  ]
+}

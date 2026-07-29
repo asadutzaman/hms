@@ -366,6 +366,7 @@ class MasterDataDemoSeeder extends Seeder
                     'first_name' => $name, 'last_name' => '', 'name' => $name, 'user_type' => 'employee',
                     'phone' => $phone, 'password' => Hash::make('password'),
                     'role_ids' => $doctorRoleId ? [(string) $doctorRoleId] : [],
+                    'department_id' => $this->departments[$dept] ?? null,
                     'web_access' => 1, 'app_access' => 1, 'is_verified' => 1, 'status' => 1,
                 ],
             );

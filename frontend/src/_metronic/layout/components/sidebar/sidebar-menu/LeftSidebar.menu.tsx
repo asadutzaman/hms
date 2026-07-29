@@ -331,6 +331,33 @@ export const LeftSidebarMenu = [
 
   {
     type: 'group',
+    title: 'Clinical (Mobile Features)',
+    hidden: false,
+    children: [
+      {
+        type: 'item',
+        title: 'Clinical Features',
+        permission: 'hms:soap-note:menuAccess',
+        link: { to: '/' },
+        icon: 'pulse',
+        subParent: true,
+        subChildren: [
+          { type: 'item', title: 'SOAP Notes', permission: 'hms:soap-note:list', link: { to: '/admin/clinical/soap-notes', exactMatch: true } },
+          { type: 'item', title: 'Code Blue', permission: 'hms:code-blue-event:list', link: { to: '/admin/clinical/code-blue', exactMatch: true } },
+          { type: 'item', title: 'Daily Reviews', permission: 'hms:daily-review:list', link: { to: '/admin/clinical/daily-reviews', exactMatch: true } },
+          { type: 'item', title: 'Shift Handovers', permission: 'hms:shift-handover:list', link: { to: '/admin/clinical/handovers', exactMatch: true } },
+          { type: 'item', title: 'Discharge Checklists', permission: 'hms:discharge-checklist:list', link: { to: '/admin/clinical/discharge-checklists', exactMatch: true } },
+          { type: 'item', title: 'Clinical Tasks', permission: 'hms:clinical-job:list', link: { to: '/admin/clinical/clinical-jobs', exactMatch: true } },
+          { type: 'item', title: 'Bleeps', permission: 'hms:bleep:list', link: { to: '/admin/clinical/bleeps', exactMatch: true } },
+          { type: 'item', title: 'A-to-E Assessments', permission: 'hms:atoe-assessment:list', link: { to: '/admin/clinical/atoe-assessments', exactMatch: true } },
+          { type: 'item', title: 'Order Sets', permission: 'hms:order-set:list', link: { to: '/admin/clinical/order-sets', exactMatch: true } },
+        ],
+      },
+    ],
+  },
+
+  {
+    type: 'group',
     title: 'OPD Management',
     hidden: false,
     children: [

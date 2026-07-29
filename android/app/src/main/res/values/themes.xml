@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Base app theme. The UI is Jetpack Compose (Material 3); this XML theme
+         only configures window attributes, so it parents a stock platform theme
+         and needs no Material Components dependency. -->
+    <style name="Theme.CedarviewCare" parent="@android:style/Theme.Material.Light.NoActionBar">
+        <item name="android:windowBackground">@color/cedar_bg</item>
+        <item name="android:statusBarColor">@color/cedar_primary</item>
+    </style>
+</resources>

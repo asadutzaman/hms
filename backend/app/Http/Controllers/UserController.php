@@ -143,13 +143,15 @@ class UserController extends Controller
     }
 
     /**
-     * GET /user/doctors — active users holding the Doctor role, for the
-     * doctor pickers (Doctor Schedule).
+     * GET /user/doctors[?department_id=] — active users holding the Doctor
+     * role, optionally narrowed to a department (dependent dropdowns).
      */
-    public function doctors()
+    public function doctors(Request $request)
     {
         try {
-            return $this->successResponse($this->repository->getDoctors());
+            return $this->successResponse(
+                $this->repository->getDoctors($request->query('department_id'))
+            );
         } catch (\Exception $e) {
             return $this->errorResponse($e->getMessage());
         }

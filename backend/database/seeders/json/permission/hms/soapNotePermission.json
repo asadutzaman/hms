@@ -1,0 +1,95 @@
+{
+  "resource": {
+    "permission_type": "RESOURCE",
+    "name": "soap-note",
+    "display_name": "SOAP Note",
+    "resource_uri": "soap-note",
+    "controller_name": "SoapNoteController",
+    "server_url_prefix": "hms",
+    "component": "COMMON"
+  },
+  "scopes": [
+    {
+      "scope": "hms:soap-note:menuAccess",
+      "display_name": "Menu Access",
+      "actions": [
+        {
+          "http_method": "GET",
+          "action_name": "index",
+          "uri": "/soap-note"
+        }
+      ]
+    },
+    {
+      "scope": "hms:soap-note:list",
+      "display_name": "List",
+      "actions": [
+        {
+          "http_method": "GET",
+          "action_name": "index",
+          "uri": "/soap-note"
+        }
+      ]
+    },
+    {
+      "scope": "hms:soap-note:view",
+      "display_name": "View",
+      "actions": [
+        {
+          "http_method": "GET",
+          "action_name": "show",
+          "uri": "/soap-note/*"
+        }
+      ]
+    },
+    {
+      "scope": "hms:soap-note:create",
+      "display_name": "Create",
+      "actions": [
+        {
+          "http_method": "POST",
+          "action_name": "store",
+          "uri": "/soap-note"
+        }
+      ]
+    },
+    {
+      "scope": "hms:soap-note:edit",
+      "display_name": "Edit",
+      "actions": [
+        {
+          "http_method": "PUT",
+          "action_name": "update",
+          "uri": "/soap-note/*"
+        },
+        {
+          "http_method": "PATCH",
+          "action_name": "updateFields",
+          "uri": "/soap-note/*"
+        }
+      ]
+    },
+    {
+      "scope": "hms:soap-note:delete",
+      "display_name": "Delete",
+      "actions": [
+        {
+          "http_method": "DELETE",
+          "action_name": "destroy",
+          "uri": "/soap-note/*"
+        }
+      ]
+    },
+    {
+      "scope": "hms:soap-note:multiSelect",
+      "display_name": "Multi Select",
+      "actions": [
+        {
+          "http_method": "POST",
+          "action_name": "bulk",
+          "uri": "/soap-note/bulk"
+        }
+      ]
+    }
+  ]
+}

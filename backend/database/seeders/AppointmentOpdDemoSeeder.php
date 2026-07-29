@@ -34,6 +34,9 @@ use Illuminate\Support\Facades\DB;
 class AppointmentOpdDemoSeeder extends Seeder
 {
     private array $doctorEmployeeIds = [];
+    // Appointments/waitlists key doctor_id to users; OPD visits still key it to
+    // employees. Keep both id spaces so each writes the right one.
+    private array $doctorUserIds = [];
     private array $patientIds = [];
     private int $receptionistId;
     private int $actorId;
@@ -43,6 +46,8 @@ class AppointmentOpdDemoSeeder extends Seeder
         $this->command->info('[AppointmentOpdDemoSeeder] Starting ...');
 
         $this->doctorEmployeeIds = Employee::query()->where('employee_type', 'doctor')->pluck('id')->all();
+        $this->doctorUserIds     = Employee::query()->where('employee_type', 'doctor')
+            ->whereNotNull('user_id')->pluck('user_id')->all();
         $this->patientIds        = Patient::query()->pluck('id')->all();
         $this->receptionistId    = User::query()->where('email', 'reception@hms.local')->value('id') ?? 1;
         $this->actorId           = User::query()->where('email', 'doctor@hms.local')->value('id') ?? 1;
@@ -58,6 +63,12 @@ class AppointmentOpdDemoSeeder extends Seeder
     private function pickDoctor(int $i): int
     {
         return $this->doctorEmployeeIds[$i % count($this->doctorEmployeeIds)];
+    }
+
+    /** Doctor as a user id — for appointments/waitlists (FK -> users). */
+    private function pickDoctorUser(int $i): int
+    {
+        return $this->doctorUserIds[$i % count($this->doctorUserIds)];
     }
 
     private function pickPatient(int $i): int
@@ -79,8 +90,7 @@ class AppointmentOpdDemoSeeder extends Seeder
 
             $dayOffset = rand(-20, 10);
             $date = Carbon::today()->addDays($dayOffset);
-            $doctorId = $this->pickDoctor($i);
-            $employee = Employee::query()->find($doctorId);
+            $doctorId = $this->pickDoctorUser($i); // appointments.doctor_id -> users
             $deptId = Department::query()->where('name', '!=', 'General OPD')->inRandomOrder()->value('id');
 
             $status = $dayOffset < 0 ? $statuses[$i % count($statuses)] : 'confirmed';
@@ -119,7 +129,7 @@ class AppointmentOpdDemoSeeder extends Seeder
     private function seedWaitlist(): void
     {
         for ($i = 1; $i <= 6; $i++) {
-            $doctorId = $this->pickDoctor($i + 3);
+            $doctorId = $this->pickDoctorUser($i + 3); // appointment_waitlists.doctor_id -> users
             $patientId = $this->pickPatient($i + 5);
 
             $exists = DB::table('appointment_waitlists')

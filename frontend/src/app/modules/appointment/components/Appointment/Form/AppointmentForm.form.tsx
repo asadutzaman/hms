@@ -13,9 +13,11 @@ import {
   Divider,
   AutoComplete,
 } from 'antd'
-import {PatientApi, DepartmentApi} from 'src/app/api'
-import {AppointmentApi} from 'src/app/api'
-import {DateTimeUtils, Message} from 'src/app/utils'
+import dayjs from 'dayjs'
+import {PatientApi} from 'src/app/api'
+import {DoctorScheduleApi} from 'src/app/api'
+import {DateTimeUtils} from 'src/app/utils'
+import DepartmentDoctorDependentSelect from 'src/app/components/Dropdown/Dependent/DepartmentDoctorDependentSelect'
 
 const {TextArea} = Input
 const {Option} = Select
@@ -37,13 +39,21 @@ interface SlotOption {
   label?: string
 }
 
-const AppointmentAddOrEditForm: FC<any> = ({formRef, isNewRecord}) => {
+// DrawerForm does NOT provide a <Form> wrapper — each form component owns its
+// own <Form form={formRef}>. Without it the fields never register and
+// formRef.submit() (the drawer's Submit button) does nothing.
+const AppointmentAddOrEditForm: FC<any> = ({
+  formRef,
+  initialValues,
+  handleChange,
+  handleSubmit,
+  handleSubmitFailed,
+}) => {
   const [patientOptions, setPatientOptions] = useState<PatientOption[]>([])
+  const [selectedPatient, setSelectedPatient] = useState<PatientOption | null>(null)
   const [patientSearch, setPatientSearch] = useState<string>('')
-  const [departments, setDepartments] = useState<any[]>([])
   const [availableSlots, setAvailableSlots] = useState<SlotOption[]>([])
   const [loadingSlots, setLoadingSlots] = useState(false)
-  const [submittingInlinePatient, setSubmittingInlinePatient] = useState(false)
 
   const watchedDoctorId = Form.useWatch('doctor_id', formRef)
   const watchedDepartmentId = Form.useWatch('department_id', formRef)
@@ -52,29 +62,32 @@ const AppointmentAddOrEditForm: FC<any> = ({formRef, isNewRecord}) => {
   const watchedIsNewPatient = Form.useWatch('use_new_patient', formRef)
   const watchedPatientId = Form.useWatch('patient_id', formRef)
 
-  useEffect(() => {
-    DepartmentApi.dropdown({status: 1})
-      .then((res: any) => setDepartments(res?.data?.results || []))
-      .catch(() => setDepartments([]))
-  }, [])
-
-  // Fetch slots when doctor/dept/date changes
+  // Fetch the doctor's open slots for the chosen date. Slots come from the
+  // doctor's schedule (materialized on demand); keyed by the doctor's user id.
   useEffect(() => {
     if (watchedDoctorId && watchedDate) {
       setLoadingSlots(true)
-      AppointmentApi.availableSlots({
+      DoctorScheduleApi.availableSlots({
         doctor_id: watchedDoctorId,
-        department_id: watchedDepartmentId,
-        consultation_mode: watchedMode,
         date: DateTimeUtils.formatDate(watchedDate),
       })
-        .then((res: any) => setAvailableSlots(res?.data?.results || []))
+        .then((res: any) => {
+          const list = Array.isArray(res?.data) ? res.data : res?.data?.data ?? res?.data?.results ?? []
+          setAvailableSlots(
+            list.map((s: any) => ({
+              id: s.id,
+              start_time: String(s.start_time || '').slice(0, 5),
+              end_time: String(s.end_time || '').slice(0, 5),
+              available: s.status === 'open' && !s.is_blocked,
+            }))
+          )
+        })
         .catch(() => setAvailableSlots([]))
         .finally(() => setLoadingSlots(false))
     } else {
       setAvailableSlots([])
     }
-  }, [watchedDoctorId, watchedDepartmentId, watchedDate, watchedMode])
+  }, [watchedDoctorId, watchedDate])
 
   // Patient search (debounced simple)
   useEffect(() => {
@@ -111,6 +124,16 @@ const AppointmentAddOrEditForm: FC<any> = ({formRef, isNewRecord}) => {
 
   return (
     <div className='form-page-content'>
+      <Form
+        form={formRef}
+        layout='vertical'
+        name='appointmentForm'
+        scrollToFirstError
+        initialValues={initialValues}
+        onValuesChange={handleChange}
+        onFinish={handleSubmit}
+        onFinishFailed={handleSubmitFailed}
+      >
       <Tabs defaultActiveKey='patient'>
         {/* ============= PATIENT TAB ============= */}
         <TabPane tab='Patient' key='patient'>
@@ -137,32 +160,43 @@ const AppointmentAddOrEditForm: FC<any> = ({formRef, isNewRecord}) => {
                       },
                     ]}
                   >
-                    <AutoComplete
-                      placeholder='Search by name, phone or MRN'
-                      onSearch={setPatientSearch}
-                      onSelect={(_value: any, option: any) => {
-                        formRef.setFieldsValue({patient_id: option.id})
-                      }}
+                    <Select
+                      showSearch
                       allowClear
+                      value={watchedPatientId ?? undefined}
+                      placeholder='Search by name, phone or MRN'
+                      filterOption={false}
+                      optionLabelProp='label'
+                      notFoundContent={null}
+                      onSearch={setPatientSearch}
+                      onChange={(value: any) => {
+                        formRef.setFieldsValue({patient_id: value ?? null})
+                        const picked = patientOptions.find((p) => p.id === value)
+                        setSelectedPatient(picked || null)
+                      }}
                     >
-                      {patientOptions.map((p) => (
-                        <AutoComplete.Option key={p.id} value={p.id}>
-                          <div>
-                            <strong>{p.full_name}</strong>{' '}
-                            <span className='text-muted'>({p.patient_no})</span>
-                          </div>
-                          <div className='text-muted fs-7'>
-                            {p.primary_phone} • MRN {p.mrn}
-                          </div>
-                        </AutoComplete.Option>
-                      ))}
-                    </AutoComplete>
+                      {(selectedPatient && !patientOptions.some((p) => p.id === selectedPatient.id)
+                        ? [selectedPatient, ...patientOptions]
+                        : patientOptions
+                      ).map((p) => {
+                        const name =
+                          p.full_name || [(p as any).first_name, (p as any).last_name].filter(Boolean).join(' ')
+                        const code = p.patient_no || p.mrn
+                        return (
+                          <Option key={p.id} value={p.id} label={code ? `${name} (${code})` : name}>
+                            <div>
+                              <strong>{name}</strong>{' '}
+                              {code && <span className='text-muted'>({code})</span>}
+                            </div>
+                            <div className='text-muted fs-7'>
+                              {p.primary_phone}
+                              {p.mrn ? ` • MRN ${p.mrn}` : ''}
+                            </div>
+                          </Option>
+                        )
+                      })}
+                    </Select>
                   </Form.Item>
-                  {watchedPatientId && patientOptions.length > 0 && (
-                    <div className='text-muted fs-7 mb-3'>
-                      Selected patient ID: <strong>{watchedPatientId}</strong>
-                    </div>
-                  )}
                 </Col>
               </>
             )}
@@ -226,58 +260,30 @@ const AppointmentAddOrEditForm: FC<any> = ({formRef, isNewRecord}) => {
         {/* ============= SCHEDULE TAB ============= */}
         <TabPane tab='Schedule' key='schedule'>
           <Row gutter={[16, 16]}>
-            <Col md={12} xs={24}>
-              <Form.Item
-                name='department_id'
-                label='Department'
-                rules={[{required: true, message: 'Department is required'}]}
-              >
-                <Select
-                  showSearch
-                  placeholder='Select department'
-                  optionFilterProp='children'
-                  filterOption={(input, option: any) =>
-                    option?.children
-                      .toLowerCase()
-                      .indexOf(input.toLowerCase()) >= 0
-                  }
-                >
-                  {departments.map((d: any) => (
-                    <Option key={d.id} value={d.id}>
-                      {d.name}
-                    </Option>
-                  ))}
-                </Select>
-              </Form.Item>
-            </Col>
-
-            <Col md={12} xs={24}>
-              <Form.Item
-                name='doctor_id'
-                label='Doctor'
-                rules={[{required: true, message: 'Doctor is required'}]}
-              >
-                <Select
-                  showSearch
-                  placeholder='Select doctor'
-                  optionFilterProp='children'
-                  filterOption={(input, option: any) =>
-                    option?.children
-                      .toLowerCase()
-                      .indexOf(input.toLowerCase()) >= 0
-                  }
-                >
-                  {/* Options populated from DoctorScheduleApi.byDoctor */}
-                  <Option value={1}>Dr. Sample</Option>
-                </Select>
-              </Form.Item>
-            </Col>
+            {/* Department drives the doctor list (dependent dropdown). */}
+            <DepartmentDoctorDependentSelect
+              formRef={formRef}
+              departmentProps={{
+                fieldName: 'department_id',
+                fieldLabel: 'Department',
+                rules: [{required: true, message: 'Department is required'}],
+                gridCol: {md: 12, xs: 24},
+              }}
+              doctorProps={{
+                fieldName: 'doctor_id',
+                fieldLabel: 'Doctor',
+                rules: [{required: true, message: 'Doctor is required'}],
+                gridCol: {md: 12, xs: 24},
+              }}
+            />
 
             <Col md={8} xs={24}>
               <Form.Item
                 name='appointment_date'
                 label='Appointment Date'
                 rules={[{required: true, message: 'Date is required'}]}
+                getValueProps={(v) => ({value: v ? dayjs(v) : null})}
+                normalize={(v) => (v ? dayjs(v).format('YYYY-MM-DD') : null)}
               >
                 <DatePicker format='YYYY-MM-DD' style={{width: '100%'}} />
               </Form.Item>
@@ -382,7 +388,7 @@ const AppointmentAddOrEditForm: FC<any> = ({formRef, isNewRecord}) => {
           <Row gutter={[16, 16]}>
             <Col span={24}>
               <Form.Item
-                name='reason'
+                name='reason_for_visit'
                 label='Reason for Visit'
                 rules={[{required: true, message: 'Reason is required'}]}
               >
@@ -457,12 +463,16 @@ const AppointmentAddOrEditForm: FC<any> = ({formRef, isNewRecord}) => {
             </Col>
 
             <Col md={8} xs={24}>
-              <Form.Item name='status' label='Status' valuePropName='checked'>
-                <Switch
-                  checkedChildren='Active'
-                  unCheckedChildren='Inactive'
-                  defaultChecked
-                />
+              {/* status_active is the active/inactive flag. `status` is the
+                  appointment lifecycle (pending/confirmed/...) and is managed
+                  by the backend — never send a boolean into it. */}
+              <Form.Item
+                name='status_active'
+                label='Status'
+                getValueProps={(v) => ({checked: !!v})}
+                normalize={(v) => (v ? 1 : 0)}
+              >
+                <Switch checkedChildren='Active' unCheckedChildren='Inactive' />
               </Form.Item>
             </Col>
 
@@ -492,6 +502,7 @@ const AppointmentAddOrEditForm: FC<any> = ({formRef, isNewRecord}) => {
           </Row>
         </TabPane>
       </Tabs>
+      </Form>
     </div>
   )
 }

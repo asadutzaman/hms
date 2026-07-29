@@ -60,9 +60,9 @@ class PatientPortalAppointmentController extends Controller
                 'slot_date'    => $slot->slot_date,
                 'start_time'   => $slot->start_time,
                 'end_time'     => $slot->end_time,
-                'max_capacity' => $slot->max_capacity,
+                'max_capacity' => $slot->max_patients,
                 'booked_count' => $slot->booked_count,
-                'available'    => max(($slot->max_capacity - $slot->booked_count), 0),
+                'available'    => max(($slot->max_patients - $slot->booked_count), 0),
             ]);
 
             return $this->successResponse($result);

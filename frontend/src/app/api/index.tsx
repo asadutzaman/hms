@@ -1,5 +1,15 @@
 import _ApplicationSettingApi from './ApplicationSetting.api'
 import _FackApi from './Fack.api'
+// CLINICAL (mobile-feature web modules)
+import _SoapNoteApi from './Clinical/SoapNote.api'
+import _CodeBlueEventApi from './Clinical/CodeBlueEvent.api'
+import _DailyReviewApi from './Clinical/DailyReview.api'
+import _ShiftHandoverApi from './Clinical/ShiftHandover.api'
+import _DischargeChecklistApi from './Clinical/DischargeChecklist.api'
+import _ClinicalJobApi from './Clinical/ClinicalJob.api'
+import _BleepApi from './Clinical/Bleep.api'
+import _AtoeAssessmentApi from './Clinical/AtoeAssessment.api'
+import _OrderSetApi from './Clinical/OrderSet.api'
 import _OauthApi from './Oauth.api'
 import _HospitalDashboardApi from './HospitalDashboard.api'
 // SETTING
@@ -148,6 +158,15 @@ import _RadiologyReportApi from './Radiology/RadiologyReport.api'
 import _PatientPortalApi from './PatientPortal/PatientPortal.api'
 
 export const FackApi = new _FackApi()
+export const SoapNoteApi = new _SoapNoteApi()
+export const CodeBlueEventApi = new _CodeBlueEventApi()
+export const DailyReviewApi = new _DailyReviewApi()
+export const ShiftHandoverApi = new _ShiftHandoverApi()
+export const DischargeChecklistApi = new _DischargeChecklistApi()
+export const ClinicalJobApi = new _ClinicalJobApi()
+export const BleepApi = new _BleepApi()
+export const AtoeAssessmentApi = new _AtoeAssessmentApi()
+export const OrderSetApi = new _OrderSetApi()
 export const OauthApi = new _OauthApi()
 export const HospitalDashboardApi = new _HospitalDashboardApi()
 export const ApplicationSettingApi = new _ApplicationSettingApi()
