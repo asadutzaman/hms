@@ -82,3 +82,51 @@ data class SlotDto(
     val endTime: String? = null,
     val available: Int? = null,
 )
+
+@Serializable
+data class AppointmentDto(
+    val id: Int? = null,
+    val appointmentNo: String? = null,
+    val appointmentDate: String? = null,
+    val appointmentTime: String? = null,
+    val endTime: String? = null,
+    val type: String? = null,
+    val status: String? = null,
+    val reasonForVisit: String? = null,
+    val consultationFee: Double? = null,
+)
+
+@Serializable
+data class BookAppointmentRequest(
+    val doctorId: Int,
+    val departmentId: Int? = null,
+    val appointmentSlotId: Int? = null,
+    val appointmentDate: String,
+    val appointmentTime: String,
+    val reason: String? = null,
+)
+
+@Serializable
+data class PrescriptionDto(
+    val id: Int? = null,
+    val prescribedAt: String? = null,
+    val advice: String? = null,
+    val followUpDate: String? = null,
+    val itemCount: Int? = null,
+)
+
+@Serializable
+data class BillDto(
+    val id: Int? = null,
+    val billNo: String? = null,
+    val netAmount: Double? = null,
+    val dueAmount: Double? = null,
+    val status: String? = null,
+    val billedAt: String? = null,
+)
+
+@Serializable
+data class BillsData(
+    val opd: List<BillDto> = emptyList(),
+    val ipd: List<BillDto> = emptyList(),
+)

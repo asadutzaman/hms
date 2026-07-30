@@ -2,9 +2,13 @@ package com.cedarview.hms.di
 
 import com.cedarview.hms.BuildConfig
 import com.cedarview.hms.core.network.AuthInterceptor
+import com.cedarview.hms.data.remote.api.AdminApi
 import com.cedarview.hms.data.remote.api.AuthApi
 import com.cedarview.hms.data.remote.api.DoctorApi
+import com.cedarview.hms.data.remote.api.NurseApi
+import com.cedarview.hms.data.remote.api.OnCallApi
 import com.cedarview.hms.data.remote.api.PatientApi
+import com.cedarview.hms.data.remote.api.WardApi
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -71,4 +75,20 @@ object NetworkModule {
     @Provides
     @Singleton
     fun provideDoctorApi(retrofit: Retrofit): DoctorApi = retrofit.create(DoctorApi::class.java)
+
+    @Provides
+    @Singleton
+    fun provideAdminApi(retrofit: Retrofit): AdminApi = retrofit.create(AdminApi::class.java)
+
+    @Provides
+    @Singleton
+    fun provideWardApi(retrofit: Retrofit): WardApi = retrofit.create(WardApi::class.java)
+
+    @Provides
+    @Singleton
+    fun provideNurseApi(retrofit: Retrofit): NurseApi = retrofit.create(NurseApi::class.java)
+
+    @Provides
+    @Singleton
+    fun provideOnCallApi(retrofit: Retrofit): OnCallApi = retrofit.create(OnCallApi::class.java)
 }
