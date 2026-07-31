@@ -41,7 +41,36 @@ data class MarDto(
     val administrationStatusLabel: String? = null,
     val reason: String? = null,
     val notes: String? = null,
-)
+    // Copied through from the parent medication order (N2 needs drug + route).
+    val drugName: String? = null,
+    val genericName: String? = null,
+    val strength: String? = null,
+    val doseValue: String? = null,
+    val doseUnit: String? = null,
+    val route: String? = null,
+    val frequency: String? = null,
+    val isPrn: Boolean = false,
+) {
+    /** "Ceftriaxone 1 g" — what the nurse is giving. */
+    val displayName: String
+        get() = listOfNotNull(drugName ?: genericName, strength).joinToString(" ").ifBlank { "Scheduled dose" }
+
+    /** "IV · 1 g · BD" — how and how much. */
+    val displayRoute: String
+        get() = listOfNotNull(
+            route,
+            listOfNotNull(doseValue, doseUnit).joinToString(" ").ifBlank { null },
+            frequency,
+            if (isPrn) "PRN" else null,
+        ).joinToString(" · ")
+
+    /** Anything other than a still-scheduled slot is off the nurse's due list. */
+    val isSigned: Boolean
+        get() = administeredAt != null || (administrationStatus != null && !administrationStatus.equals("scheduled", ignoreCase = true))
+
+    val isGiven: Boolean
+        get() = administrationStatus.equals("given", ignoreCase = true) || administeredAt != null
+}
 
 @Serializable
 data class CodeBlueDto(
@@ -186,6 +215,8 @@ data class OnCallConsoleDto(
 @Serializable
 data class ShiftBoardDto(
     val inpatients: Int = 0,
+    val medsDueNextHour: Int = 0,
+    val vitalsDue: Int = 0,
     val bedBoard: List<BedTileDto> = emptyList(),
 )
 
@@ -274,7 +305,7 @@ data class NursingNoteRequest(
 // ── MAR administer (N2) ───────────────────────────────────────────────────────
 @Serializable
 data class MarRecordRequest(
-    val administrationStatus: String,   // "administered" | "held" | "refused" | "omitted"
+    val administrationStatus: String,   // IpdMedicationAdministrationStatusEnum: given | held | refused | missed
     val reason: String? = null,
     val notes: String? = null,
 )

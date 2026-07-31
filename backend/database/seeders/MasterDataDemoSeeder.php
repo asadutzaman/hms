@@ -364,7 +364,9 @@ class MasterDataDemoSeeder extends Seeder
                 ['email' => $email],
                 [
                     'first_name' => $name, 'last_name' => '', 'name' => $name, 'user_type' => 'employee',
-                    'phone' => $phone, 'password' => Hash::make('password'),
+                    // Plain text — the User model's saving hook hashes it. Passing an
+                    // already-hashed value here would double-hash and lock the user out.
+                    'phone' => $phone, 'password' => 'password',
                     'role_ids' => $doctorRoleId ? [(string) $doctorRoleId] : [],
                     'department_id' => $this->departments[$dept] ?? null,
                     'web_access' => 1, 'app_access' => 1, 'is_verified' => 1, 'status' => 1,
@@ -412,7 +414,7 @@ class MasterDataDemoSeeder extends Seeder
                 ['email' => $email],
                 [
                     'first_name' => $name, 'last_name' => '', 'name' => $name, 'user_type' => 'employee',
-                    'phone' => $phone, 'password' => Hash::make('password'),
+                    'phone' => $phone, 'password' => 'password', // hashed by the User model saving hook
                     'web_access' => 1, 'app_access' => 1, 'is_verified' => 1, 'status' => 1,
                 ],
             );

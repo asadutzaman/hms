@@ -54,6 +54,12 @@ class SessionManager @Inject constructor(
         applySnapshot(tokenStore.snapshot())
     }
 
+    /** Updates the name/roles of the current session without touching its tokens. */
+    suspend fun updateIdentity(displayName: String?, roles: List<String>) {
+        tokenStore.saveIdentity(displayName, roles)
+        applySnapshot(tokenStore.snapshot())
+    }
+
     suspend fun clear() {
         tokenStore.clear()
         accessToken = null

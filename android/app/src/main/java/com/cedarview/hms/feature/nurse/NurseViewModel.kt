@@ -93,10 +93,19 @@ class NurseViewModel @Inject constructor(
         }
     }
 
-    fun recordVitals(admissionId: Int, systolic: Int?, diastolic: Int?, pulse: Int?, temp: Double?, spo2: Int?, rr: Int?) {
+    fun recordVitals(
+        admissionId: Int,
+        systolic: Int?,
+        diastolic: Int?,
+        pulse: Int?,
+        temp: Double?,
+        spo2: Int?,
+        rr: Int?,
+        painScore: Int? = null,
+    ) {
         viewModelScope.launch {
             repository.recordVitals(
-                VitalRequest(admissionId, systolic, diastolic, pulse, temp, spo2, rr),
+                VitalRequest(admissionId, systolic, diastolic, pulse, temp, spo2, rr, painScore),
             )
             loadInto(_vitals) { repository.vitals(admissionId) }
         }
@@ -151,9 +160,15 @@ class NurseViewModel @Inject constructor(
         viewModelScope.launch { repository.completeTask(id); loadInto(_tasks) { repository.tasks() } }
     }
 
-    fun raiseRapid(location: String, reason: String) {
+    fun raiseRapid(location: String, reason: String, wardId: Int? = null) {
         viewModelScope.launch {
-            repository.raiseRapidResponse(CodeBlueRequest(location = location.ifBlank { null }, reason = reason.ifBlank { null }))
+            repository.raiseRapidResponse(
+                CodeBlueRequest(
+                    wardId = wardId,
+                    location = location.ifBlank { null },
+                    reason = reason.ifBlank { null },
+                ),
+            )
             loadInto(_rapid) { repository.rapidResponse() }
         }
     }

@@ -18,6 +18,12 @@ class AppSessionViewModel @Inject constructor(
 ) : ViewModel() {
     val session: StateFlow<SessionState> = sessionManager.state
 
+    init {
+        // A persisted session carries the roles saved at login time; re-read them so
+        // a role granted (or revoked) since then is reflected on the launcher.
+        viewModelScope.launch { authRepository.refreshStaffProfile() }
+    }
+
     fun logout() {
         viewModelScope.launch { authRepository.logout() }
     }

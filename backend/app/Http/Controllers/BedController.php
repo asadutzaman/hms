@@ -49,6 +49,8 @@ class BedController extends Controller
             $beds = $this->repository->boardBeds();
             $result = $beds->map(function ($bed) {
                 $admission = $bed->admissions->first();
+                $patient = $admission->patient ?? null;
+                $dob = $patient->date_of_birth ?? null;
                 return [
                     'id'             => $bed->id,
                     'ward_id'        => $bed->ward_id,
@@ -60,8 +62,14 @@ class BedController extends Controller
                     'admission_id'   => $admission->id ?? null,
                     'admission_no'   => $admission->admission_no ?? null,
                     'patient_name'   => $admission
-                        ? trim(($admission->patient->first_name ?? '') . ' ' . ($admission->patient->last_name ?? ''))
+                        ? trim(($patient->first_name ?? '') . ' ' . ($patient->last_name ?? ''))
                         : null,
+                    // Demographics + working diagnosis so a board tile can be read
+                    // at a glance without opening the admission.
+                    'patient_age'    => $dob ? \Carbon\Carbon::parse($dob)->age : null,
+                    'patient_gender' => $patient->gender ?? null,
+                    'diagnosis'      => $admission->diagnosis_at_admission ?? null,
+                    'admission_date' => $admission->admission_date ?? null,
                 ];
             });
             return $this->successResponse($result);

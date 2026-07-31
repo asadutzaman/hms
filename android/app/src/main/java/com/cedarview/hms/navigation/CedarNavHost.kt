@@ -7,6 +7,7 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavType
@@ -48,10 +49,16 @@ fun CedarNavHost() {
         }
     }
 
-    val start = when {
-        !session.isAuthenticated -> Routes.LOGIN
-        session.mode == AuthMode.PATIENT -> Routes.PATIENT
-        else -> Routes.LAUNCHER
+    // Resolved once, from the session hydrated before the first composition.
+    // Passing a *changing* startDestination rebuilds the graph and resets the back
+    // stack, which destroys the login destination — and with it the coroutine still
+    // finishing the sign-in. Login and logout navigate explicitly instead.
+    val start = remember {
+        when {
+            !session.isAuthenticated -> Routes.LOGIN
+            session.mode == AuthMode.PATIENT -> Routes.PATIENT
+            else -> Routes.LAUNCHER
+        }
     }
 
     val d = 300

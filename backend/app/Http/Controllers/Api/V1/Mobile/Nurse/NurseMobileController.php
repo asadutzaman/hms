@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\V1\Mobile\Nurse;
 
+use App\Enums\IpdMedicationAdministrationStatusEnum;
 use App\Http\Controllers\Api\V1\Mobile\BaseMobileController;
 use App\Http\Controllers\BedController;
 use App\Http\Controllers\IpdAdmissionController;
@@ -13,6 +14,7 @@ use App\Models\ClinicalJob;
 use App\Models\CodeBlueEvent;
 use App\Models\DischargeChecklist;
 use App\Models\IpdAdmission;
+use App\Models\IpdMedicationAdministration;
 use App\Models\ShiftHandover;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -33,13 +35,40 @@ class NurseMobileController extends BaseMobileController
 
     // ---- N1 Shift board -----------------------------------------------------
 
+    /** Obs are treated as due once a patient has had no vitals for this long. */
+    private const VITALS_DUE_AFTER_HOURS = 4;
+
     public function shiftBoard()
     {
         $admitted = IpdAdmission::query()->where('status', 1)->whereNull('discharge_date')->count();
         return $this->mobileSuccess([
-            'inpatients' => $admitted,
-            'bed_board'  => $this->payload(app(BedController::class)->board()),
+            'inpatients'          => $admitted,
+            'meds_due_next_hour'  => $this->medsDueWithinAnHour(),
+            'vitals_due'          => $this->vitalsDue(),
+            'bed_board'           => $this->payload(app(BedController::class)->board()),
         ]);
+    }
+
+    /** Scheduled doses falling in the next hour on still-admitted patients. */
+    private function medsDueWithinAnHour(): int
+    {
+        return IpdMedicationAdministration::query()
+            ->where('status', 1)
+            ->where('administration_status', IpdMedicationAdministrationStatusEnum::SCHEDULED)
+            ->whereBetween('scheduled_at', [now(), now()->addHour()])
+            ->whereHas('order.admission', fn ($q) => $q->where('admission_status', 'admitted'))
+            ->count();
+    }
+
+    /** Admitted patients with no observation in the last VITALS_DUE_AFTER_HOURS. */
+    private function vitalsDue(): int
+    {
+        $cutoff = now()->subHours(self::VITALS_DUE_AFTER_HOURS);
+        return IpdAdmission::query()
+            ->where('status', 1)
+            ->where('admission_status', 'admitted')
+            ->whereDoesntHave('vitals', fn ($q) => $q->where('recorded_at', '>=', $cutoff))
+            ->count();
     }
 
     // ---- N2 MAR + N6 barcode verify ----------------------------------------

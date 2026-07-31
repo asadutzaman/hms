@@ -217,7 +217,9 @@ class OpdDemoSeeder extends Seeder
                 'last_name'   => 'Doctor',
                 'user_type'   => 'employee',
                 'phone'       => '+8801700000001',
-                'password'    => Hash::make('password'),
+                // Plain text — the User model's saving hook hashes it. Passing an
+                // already-hashed value here would double-hash and lock the user out.
+                'password'    => 'password',
                 'web_access'  => 1,
                 'app_access'  => 1,
                 'is_verified' => 1,
@@ -253,7 +255,7 @@ class OpdDemoSeeder extends Seeder
                 'last_name'   => 'Receptionist',
                 'user_type'   => 'employee',
                 'phone'       => '+8801700000002',
-                'password'    => Hash::make('password'),
+                'password'    => 'password', // hashed by the User model saving hook
                 'web_access'  => 1,
                 'app_access'  => 1,
                 'is_verified' => 1,

@@ -8,6 +8,8 @@ import com.cedarview.hms.data.remote.api.AuthApi
 import com.cedarview.hms.data.remote.dto.LoginRequest
 import com.cedarview.hms.data.remote.dto.OtpRequest
 import com.cedarview.hms.data.remote.dto.VerifyOtpRequest
+import kotlinx.coroutines.NonCancellable
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -24,16 +26,39 @@ class AuthRepository @Inject constructor(
         return when (val login = apiCall { api.staffLogin(LoginRequest(username, password)) }) {
             is ApiResult.Success -> {
                 val token = login.data
-                // Persist first so the interceptor authorises the /me call.
-                session.saveStaffSession(token.accessToken, token.refreshToken, null, emptyList())
-                when (val me = apiCall { api.me() }) {
-                    is ApiResult.Success ->
-                        session.saveStaffSession(token.accessToken, token.refreshToken, me.data.user?.name, me.data.roles)
-                    is ApiResult.Error -> Unit // signed in; profile can be refreshed later
+                // NonCancellable: this runs in LoginViewModel's scope, which is cleared
+                // as soon as saving the token flips the session to authenticated and
+                // navigation leaves the login screen. Without it the /me call is
+                // cancelled mid-flight ("SocketException: Socket closed") and the
+                // session is left with no name and no roles — every role app then
+                // shows "No access" on the launcher.
+                withContext(NonCancellable) {
+                    // Persist first so the interceptor authorises the /me call.
+                    session.saveStaffSession(token.accessToken, token.refreshToken, null, emptyList())
+                    loadStaffProfile()
                 }
                 ApiResult.Success(Unit)
             }
             is ApiResult.Error -> login
+        }
+    }
+
+    /**
+     * Re-reads /auth/me into the session. Called on app start so a cold start with
+     * a persisted token has current roles, and as a retry when login-time
+     * enrichment failed. No-op unless a staff session is active.
+     */
+    suspend fun refreshStaffProfile() {
+        val current = session.state.value
+        if (!current.isAuthenticated || current.mode != AuthMode.STAFF) return
+        withContext(NonCancellable) { loadStaffProfile() }
+    }
+
+    /** Enriches the active session with the signed-in user's name + roles. */
+    private suspend fun loadStaffProfile() {
+        when (val me = apiCall { api.me() }) {
+            is ApiResult.Success -> session.updateIdentity(me.data.user?.name, me.data.roles)
+            is ApiResult.Error -> Unit // signed in; profile can be refreshed later
         }
     }
 

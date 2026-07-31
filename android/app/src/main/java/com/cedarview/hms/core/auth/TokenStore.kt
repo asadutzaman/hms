@@ -65,6 +65,14 @@ class TokenStore @Inject constructor(
         }
     }
 
+    /** Refreshes only the identity fields, leaving the tokens and mode untouched. */
+    suspend fun saveIdentity(displayName: String?, roles: List<String>) {
+        context.authDataStore.edit { p ->
+            if (displayName != null) p[Keys.NAME] = displayName
+            p[Keys.ROLES] = roles.joinToString("|")
+        }
+    }
+
     suspend fun clear() {
         context.authDataStore.edit { it.clear() }
     }

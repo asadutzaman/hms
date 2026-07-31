@@ -57,7 +57,21 @@ data class BedTileDto(
     val admissionId: Int? = null,
     val admissionNo: String? = null,
     val patientName: String? = null,
-)
+    val patientAge: Int? = null,
+    val patientGender: String? = null,
+    val diagnosis: String? = null,
+    val admissionDate: String? = null,
+) {
+    /** "Meera Joshi · 71 F" — the shift-board row title. */
+    val nameWithDemographics: String
+        get() = listOfNotNull(
+            patientName?.takeIf { it.isNotBlank() } ?: "Patient",
+            listOfNotNull(patientAge?.toString(), genderInitial).joinToString(" ").takeIf { it.isNotBlank() },
+        ).joinToString(" · ")
+
+    private val genderInitial: String?
+        get() = patientGender?.takeIf { it.isNotBlank() && !it.equals("unknown", true) }?.first()?.uppercase()
+}
 
 // ── A1 Dashboard (AdminMobileController::dashboard) ───────────────────────────
 @Serializable
